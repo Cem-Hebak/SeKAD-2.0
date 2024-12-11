@@ -51,7 +51,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="index.html" class="nav-item nav-link active">Home</a>
+                <a href="index.blade.php" class="nav-item nav-link active">Home</a>
                 <a href="setting.html" class="nav-item nav-link">Settings</a>
                 <a href="setting.html" class="nav-item nav-link">Attendance Record</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
