@@ -25,7 +25,7 @@
             <div class="alert alert-danger"><?php echo htmlspecialchars($_GET['error']); ?></div>
         <?php endif; ?>
 
-        <form action="login_handling.php" method="POST">
+        <form action="login_handling.blade.php" method="POST">
             <input type="text" name="ic_number" placeholder="IC number" required>
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit" class="btn-login">Log In</button>

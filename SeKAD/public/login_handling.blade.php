@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['blood_type'] = $user['blood_type'];
             $_SESSION['allergies'] = $user['allergies'];
             // Redirect to home page
-            header("Location: home.php");
+            header("Location: index.blade.php");
             exit();
         } else {
             // Redirect back to login with error message

@@ -63,11 +63,11 @@ include ('db_connection.php');
                     <div class="dropdown-menu fade-down m-0">
                         <a href="team.html" class="dropdown-item">Our Team</a>
                         <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                        <a href="Teacher Assign.php" class="dropdown-item">Teacher Assign</a>
+                        <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="404.html" class="dropdown-item">404 Page</a>
-                        <a href="profile.php" class="dropdown-item">Profile</a>
-                        <a href="login.php" class="dropdown-item">Log In</a>
-                        <a href="register.php" class="dropdown-item">Register</a>
+                        <a href="profile.blade.php" class="dropdown-item">Profile</a>
+                        <a href="login.blade.php" class="dropdown-item">Log In</a>
+                        <a href="register.blade.php" class="dropdown-item">Register</a>
                         
                     </div>
                 </div>
