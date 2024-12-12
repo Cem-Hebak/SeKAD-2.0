@@ -12,14 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$class, $user_id]);
 
         // Redirect back to the profile or table page with a success message
-        header("Location: profile.php?message=Class updated successfully");
-        exit();
+        header("Location: Teacher Assign.blade.php?message=Class updated successfully");
+        // exit();
     } catch (PDOException $e) {
         die("Error updating class: " . $e->getMessage());
     }
 } else {
     // Redirect back if the request method is not POST
-    header("Location: profile.php");
+    header("Location: Teacher Assign.blade.php");
     exit();
 }
 ?>
