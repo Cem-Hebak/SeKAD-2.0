@@ -12,7 +12,7 @@
     <div class="register-box">
         <h2>Register</h2>
         <p>Please fill in the form to create an account.</p>
-        <form class="form-container" action="registration_handling.php" method="POST" enctype="multipart/form-data">
+        <form class="form-container" action="registration_handling.blade.php" method="POST" enctype="multipart/form-data">
             <!-- User Details -->
             <div class="form-column">
                 <h3>Personal Details</h3>
