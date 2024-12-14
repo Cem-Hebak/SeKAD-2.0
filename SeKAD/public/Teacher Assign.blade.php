@@ -150,7 +150,7 @@ include('db_connection.php'); // Include database connection
                                         <?php
                                         try {
                                             // Query to fetch all names from the 'users' table
-                                            $stmt = $pdo->prepare("SELECT name FROM users ORDER BY name ASC");
+                                            $stmt = $pdo->prepare("SELECT name FROM users WHERE role = 'Teacher' ORDER BY name ASC");
                                             $stmt->execute();
                                         
                                             // Fetch all rows
