@@ -51,15 +51,22 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="index.html" class="nav-item nav-link active">Home</a>
-                <a href="setting.html" class="nav-item nav-link">Settings</a>
+                <a href="index.blade.php" class="nav-item nav-link active">Home</a>
+                <a href="about.html" class="nav-item nav-link">About</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
                         <a href="team.html" class="dropdown-item">Our Team</a>
                         <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="404.html" class="dropdown-item">404 Page</a>
+                        <a href="profile.blade.php" class="dropdown-item">Profile</a>
+                        <a href="setting.blade.php" class="dropdown-item">Setting</a>
+                        <a href="login.blade.php" class="dropdown-item">Log In</a>
+                        <a href="logout.blade.php" class="dropdown-item">Log Out</a>
+                        <a href="register.blade.php" class="dropdown-item">Register</a>
+                        
                     </div>
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
@@ -70,51 +77,11 @@
     <!-- Navbar End -->
 
 
-    <!-- Carousel Start -->
-    <!-- <div class="container-fluid p-0 mb-5">
-        <div class="owl-carousel header-carousel position-relative">
-            <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="img/carousel-1.jpg" alt="">
-                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
-                    <div class="container">
-                        <div class="row justify-content-start">
-                            <div class="col-sm-10 col-lg-8">
-                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Best Online Courses</h5>
-                                <h1 class="display-3 text-white animated slideInDown">The Best FAIZ Learning Platform</h1>
-                                <p class="fs-5 text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea sanctus eirmod elitr.</p>
-                                <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
-                                <a href="" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Join Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="img/carousel-2.jpg" alt="">
-                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
-                    <div class="container">
-                        <div class="row justify-content-start">
-                            <div class="col-sm-10 col-lg-8">
-                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Best Online Courses</h5>
-                                <h1 class="display-3 text-white animated slideInDown">Get Educated Online From Your Home</h1>
-                                <p class="fs-5 text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea sanctus eirmod elitr.</p>
-                                <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
-                                <a href="" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Join Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Carousel End -->
-
-
-    <!-- Service Start -->
-    <div class="container-xxl py-5">
+     <!-- Service Start -->
+     <div class="container-xxl py-5">
         <div class="container">
             <div class="row g-4">
-                <div onclick="window.location.href='profileManagement.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div onclick="window.location.href='profile.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
@@ -122,7 +89,7 @@
                         </div>
                     </div>
                 </div>
-                <div onclick="window.location.href='notification.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                <div onclick="window.location.href='notification.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-globe text-primary mb-4"></i>
@@ -130,7 +97,7 @@
                         </div>
                     </div>
                 </div>
-                <div onclick="window.location.href='accessability.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+                <div onclick="window.location.href='accessability.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-home text-primary mb-4"></i>
@@ -138,7 +105,7 @@
                         </div>
                     </div>
                 </div>
-                <div onclick="window.location.href='language.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                <div onclick="window.location.href='language.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
@@ -146,7 +113,7 @@
                         </div>
                     </div>
                 </div>
-                <div onclick="window.location.href='payment.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.9s">
+                <div onclick="window.location.href='payment.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.9s">
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
@@ -159,33 +126,142 @@
     </div>
     <!-- Service End -->
 
-    <div class="container3">
-        <h11>Payment Information</h11>
-        <div class="subheading">
-            <span>Business location and currency</span><br>
-            Malaysia, Malaysian Ringgit MYR
-        </div>
-        <div class="divider1"></div>
+    <div class="container2">
+        <h1>Notification Settings</h1>
+        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
+        <div class="divider"></div>
         <div>
-            <h2>Add payment method</h2>
-            <div class="payment-option">
-                <input type="radio" id="credit-card" name="payment-method" value="credit-card">
-                <label for="credit-card">Debit or credit card</label>
+            <h2>Reminders</h2>
+            <p>Push, Email, SMS</p>
+            <div class="notification-option">
+                <label><i class="fas fa-desktop"></i> Push</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
-            <div class="payment-option">
-                <input type="radio" id="grabpay" name="payment-method" value="grabpay">
-                <label for="grabpay">Grabpay</label>
+            <div class="notification-option">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
-            <div class="payment-option">
-                <input type="radio" id="fpx" name="payment-method" value="fpx">
-                <label for="fpx">FPX</label>
+            <div class="notification-option">
+                <label><i class="fas fa-comment-alt"></i> SMS</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
-        <div class="button-container">
-            <button class="btn-next">Next</button>
+        <div class="footer">
+            Thank you very much for doing business with us.
         </div>
     </div>
 
+    <div class="container2">
+        <h1>Notification Settings</h1>
+        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
+        <div class="divider"></div>
+        <div>
+            <h2>Events</h2>
+            <p>Push, Email, SMS</p>
+            <div class="notification-option">
+                <label><i class="fas fa-desktop"></i> Push</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-comment-alt"></i> SMS</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="footer">
+            Thank you very much for doing business with us.
+        </div>
+    </div>
+
+    <div class="container2">
+        <h1>Notification Settings</h1>
+        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
+        <div class="divider"></div>
+        <div>
+            <h2>Chat</h2>
+            <p>Push, Email, SMS</p>
+            <div class="notification-option">
+                <label><i class="fas fa-desktop"></i> Push</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-comment-alt"></i> SMS</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="footer">
+            Thank you very much for doing business with us.
+        </div>
+    </div>
+
+    <div class="container2">
+        <h1>Notification Settings</h1>
+        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
+        <div class="divider"></div>
+        <div>
+            <h2>Other Notifications</h2>
+            <p>Push, Email, SMS</p>
+            <div class="notification-option">
+                <label><i class="fas fa-desktop"></i> Push</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-comment-alt"></i> SMS</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="footer">
+            Thank you very much for doing business with us.
+        </div>
+    </div>
+   
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">

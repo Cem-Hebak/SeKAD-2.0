@@ -29,9 +29,14 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <link href="css/font-size.css" rel="stylesheet">
+
+    <link id="light-mode" rel="stylesheet" href="{{ asset('css/light.css') }}">
+    <link id="dark-mode" rel="stylesheet" href="{{ asset('css/dark.css') }}" disabled>
 </head>
 
-<body>
+<body >
     <!-- Spinner Start -->
     <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
@@ -51,15 +56,22 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="index.html" class="nav-item nav-link active">Home</a>
-                <a href="setting.html" class="nav-item nav-link">Settings</a>
+                <a href="index.blade.php" class="nav-item nav-link active">Home</a>
+                <a href="about.html" class="nav-item nav-link">About</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
                         <a href="team.html" class="dropdown-item">Our Team</a>
                         <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="404.html" class="dropdown-item">404 Page</a>
+                        <a href="profile.blade.php" class="dropdown-item">Profile</a>
+                        <a href="setting.blade.php" class="dropdown-item">Setting</a>
+                        <a href="login.blade.php" class="dropdown-item">Log In</a>
+                        <a href="logout.blade.php" class="dropdown-item">Log Out</a>
+                        <a href="register.blade.php" class="dropdown-item">Register</a>
+                        
                     </div>
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
@@ -69,52 +81,11 @@
     </nav>
     <!-- Navbar End -->
 
-
-    <!-- Carousel Start -->
-    <!-- <div class="container-fluid p-0 mb-5">
-        <div class="owl-carousel header-carousel position-relative">
-            <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="img/carousel-1.jpg" alt="">
-                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
-                    <div class="container">
-                        <div class="row justify-content-start">
-                            <div class="col-sm-10 col-lg-8">
-                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Best Online Courses</h5>
-                                <h1 class="display-3 text-white animated slideInDown">The Best FAIZ Learning Platform</h1>
-                                <p class="fs-5 text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea sanctus eirmod elitr.</p>
-                                <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
-                                <a href="" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Join Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="img/carousel-2.jpg" alt="">
-                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
-                    <div class="container">
-                        <div class="row justify-content-start">
-                            <div class="col-sm-10 col-lg-8">
-                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Best Online Courses</h5>
-                                <h1 class="display-3 text-white animated slideInDown">Get Educated Online From Your Home</h1>
-                                <p class="fs-5 text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea sanctus eirmod elitr.</p>
-                                <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
-                                <a href="" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Join Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Carousel End -->
-
-
-    <!-- Service Start -->
-    <div class="container-xxl py-5">
+     <!-- Service Start -->
+     <div class="container-xxl py-5">
         <div class="container">
             <div class="row g-4">
-                <div onclick="window.location.href='profileManagement.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div onclick="window.location.href='profile.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
@@ -122,7 +93,7 @@
                         </div>
                     </div>
                 </div>
-                <div onclick="window.location.href='notification.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                <div onclick="window.location.href='notification.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-globe text-primary mb-4"></i>
@@ -130,7 +101,7 @@
                         </div>
                     </div>
                 </div>
-                <div onclick="window.location.href='accessability.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+                <div onclick="window.location.href='accessability.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-home text-primary mb-4"></i>
@@ -138,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                <div onclick="window.location.href='language.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                <div onclick="window.location.href='language.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
@@ -146,7 +117,7 @@
                         </div>
                     </div>
                 </div>
-                <div onclick="window.location.href='payment.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.9s">
+                <div onclick="window.location.href='payment.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.9s">
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
@@ -158,142 +129,136 @@
         </div>
     </div>
     <!-- Service End -->
-    <div class="container2">
-        <h1>Notification Settings</h1>
-        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
-        <div class="divider"></div>
-        <div>
-            <h2>Reminders</h2>
-            <p>Push, Email, SMS</p>
-            <div class="notification-option">
-                <label><i class="fas fa-desktop"></i> Push</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="notification-option">
-                <label><i class="fas fa-envelope"></i> Email</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="notification-option">
-                <label><i class="fas fa-comment-alt"></i> SMS</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-        <div class="footer">
-            Thank you very much for doing business with us.
-        </div>
+
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card">
+                <div class="card-body invoice-head">
+                    <div class="row">
+                        <p><strong class="font-40">Accessibility</strong></p>
+                        <p><strong class="font-20">These options enhance accessibility on the SeKAD website.</strong></p>
+                    </div><!--end row-->
+                </div><!--end card-body-->
+                
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <h4 class="text-start">Display</h4>
+                        </div>
+                        <div class="col-lg-6 text-end">
+                            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter1">
+                            view
+                            </button>
+                            
+                        </div>
+                    </div>
+
+                    <div class="row align-items-center mt-3">
+                        <div class="col-lg-6">
+                            <h4 class="text-start">Size</h4>
+                        </div>
+                        <div class="col-lg-6 text-end">
+                            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter3">
+                            view
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h6 class="modal-title m-0" id="exampleModalCenterTitle">App Display Mode</h6>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-9">
+                                            <h5>Choose Display Mode</h5>
+                                            <p>Toggle between light and dark modes for the website.</p>
+                                            <select id="displayModeSelector" class="form-select mt-3">
+                                                <option value="light">Light Mode</option>
+                                                <option value="dark">Dark Mode</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-soft-primary btn-sm" onclick="saveDisplayMode()" data-bs-dismiss="modal">Save changes</button>
+                                    <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Font Size Modal  -->
+                    <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h6 class="modal-title m-0" id="exampleModalCenterTitle">Change size</h6>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div><!--end modal-header-->
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-lg-9">
+                                                <h5>Pick the size</h5>
+                                                <p>Adjust the sizing of words according to your preference.</p>
+                                                <select id="fontSizeSelector" class="form-select mt-3">
+                                                    <option value="small">Small</option>
+                                                    <option value="medium" selected>Medium</option>
+                                                    <option value="large">Large</option>
+                                                </select>
+                                            </div><!--end col-->
+                                        </div><!--end row-->
+                                </div><!--end modal-body-->
+                                <div class="modal-footer">
+                                    <button type="button" id="saveFontSizeBtn" class="btn btn-soft-primary btn-sm" data-bs-dismiss="modal">Save changes</button>
+                                    <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                </div><!--end modal-footer-->
+                            </div><!--end modal-content-->
+                        </div><!--end modal-dialog-->
+                    </div><!--end modal-->
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="table-responsive project-invoice">
+                                <!-- Table content goes here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6 align-self-end">
+                            <!-- Additional content if needed -->
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-lg-12 col-xl-4 ms-auto align-self-center">
+                            <div class="text-center"><small class="font-12">Thank you very much for doing business with us.</small></div>
+                        </div>
+                        <div class="col-lg-12 col-xl-4">
+                        </div>
+                    </div>
+                </div><!--end card-body-->
+            </div><!--end card-->
+        </div><!--end col-->
     </div>
 
-    <div class="container2">
-        <h1>Notification Settings</h1>
-        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
-        <div class="divider"></div>
-        <div>
-            <h2>Events</h2>
-            <p>Push, Email, SMS</p>
-            <div class="notification-option">
-                <label><i class="fas fa-desktop"></i> Push</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="notification-option">
-                <label><i class="fas fa-envelope"></i> Email</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="notification-option">
-                <label><i class="fas fa-comment-alt"></i> SMS</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-        <div class="footer">
-            Thank you very much for doing business with us.
-        </div>
-    </div>
+    <style>
 
-    <div class="container2">
-        <h1>Notification Settings</h1>
-        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
-        <div class="divider"></div>
-        <div>
-            <h2>Chat</h2>
-            <p>Push, Email, SMS</p>
-            <div class="notification-option">
-                <label><i class="fas fa-desktop"></i> Push</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="notification-option">
-                <label><i class="fas fa-envelope"></i> Email</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="notification-option">
-                <label><i class="fas fa-comment-alt"></i> SMS</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-        <div class="footer">
-            Thank you very much for doing business with us.
-        </div>
-    </div>
+        body.dark {
+            background-color:#A9A9A9;
+            color: #ffffff;
+        }
 
-    <div class="container2">
-        <h1>Notification Settings</h1>
-        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
-        <div class="divider"></div>
-        <div>
-            <h2>Other Notifications</h2>
-            <p>Push, Email, SMS</p>
-            <div class="notification-option">
-                <label><i class="fas fa-desktop"></i> Push</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="notification-option">
-                <label><i class="fas fa-envelope"></i> Email</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="notification-option">
-                <label><i class="fas fa-comment-alt"></i> SMS</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-        <div class="footer">
-            Thank you very much for doing business with us.
-        </div>
-    </div>
-   
+        body.light {
+            background-color: #ffffff;
+            color:#A9A9A9;
+        }
+    </style>
+
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
@@ -386,9 +351,8 @@
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-
-    <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="assets/global.js"></script>
 </body>
 
 </html>

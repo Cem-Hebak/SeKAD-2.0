@@ -1,4 +1,37 @@
-<!DOCTYPE html>
+<?php
+session_start(); // Start the session
+include('db_connection.php'); // Include database connection
+
+    
+
+    // Retrieve user data from the session
+    $id = htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8');
+    $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
+    $email = htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8');
+    $mobilenumber = htmlspecialchars($_SESSION['mobilenumber'], ENT_QUOTES, 'UTF-8');
+    $emergencymobilenumber = htmlspecialchars($_SESSION['emergencymobilenumber'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
+    $class = htmlspecialchars($_SESSION['class'] ?? 'Not Assigned', ENT_QUOTES, 'UTF-8');
+    $date_of_birth = htmlspecialchars($_SESSION['date_of_birth'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $gender = htmlspecialchars($_SESSION['gender'] ?? 'Not Specified', ENT_QUOTES, 'UTF-8');
+    $ic_number = htmlspecialchars($_SESSION['ic_number'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
+    $nationality = htmlspecialchars($_SESSION['nationality'], ENT_QUOTES, 'UTF-8');
+    $address = htmlspecialchars($_SESSION['address'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
+    $fname = htmlspecialchars($_SESSION['fname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $fcontact = htmlspecialchars($_SESSION['fcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $foccupation = htmlspecialchars($_SESSION['foccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $mname = htmlspecialchars($_SESSION['mname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $mcontact = htmlspecialchars($_SESSION['mcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $moccupation = htmlspecialchars($_SESSION['moccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $gname = htmlspecialchars($_SESSION['gname'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    $gcontact = htmlspecialchars($_SESSION['gcontact'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    $goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
+    $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
+
+?>
+
+<!DOCTYPE html>;
 <html lang="en">
 <!-- "include('db_connection.php')" ni untuk import database -->
 <head>
@@ -69,6 +102,28 @@
         </div>
     </nav>
     <!-- Navbar End -->
+
+    <!-- resources/views/attendanceRecord1.blade.php -->
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>IC Number</th>
+                <th>Checkbox</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($students as $student)
+                <tr>
+                    <td>{{ $student->name }}</td>
+                <td>{{ $student->ic_number }}</td>
+                <td><input type="checkbox" name="attendance[]" value="{{ $student->id }}"></td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
