@@ -72,8 +72,29 @@ include('db_connection.php'); // Include database connection
     </div>
     <!-- Spinner End -->
 
-
-
+    <div class="container-fluid bg-primary py-5 mb-5 page-header">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1 class="display-3 text-white animated slideInDown">
+                        SeKAD
+                        
+                    </h1>
+                    
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center">
+                            <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
+                            <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
+                            <li class="breadcrumb-item text-white active" aria-current="page">Profile</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+     
+   
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
@@ -103,26 +124,61 @@ include('db_connection.php'); // Include database connection
     </nav>
     <!-- Navbar End -->
 
-    <!-- resources/views/attendanceRecord1.blade.php -->
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>IC Number</th>
-                <th>Checkbox</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($students as $student)
+    <div style="width: 90%; margin: 0 auto;">
+    <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Biodata</h4>
+    
+    <!-- Form starts here -->
+    <form method="POST" action="update_attendance.php">
+        <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
+            <thead>
                 <tr>
-                    <td>{{ $student->name }}</td>
-                <td>{{ $student->ic_number }}</td>
-                <td><input type="checkbox" name="attendance[]" value="{{ $student->id }}"></td>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
+                    <th style="width: 40%;">Name</th>
+                    <th style="width: 40%;">IC Number</th>
+                    <th style="width: 20%; text-align: center;">Attendance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                    try {
+                        // Query to fetch 'name' and 'ic_number' for users with role = 'Student'
+                        $stmt = $pdo->prepare("SELECT id, name, ic_number FROM users WHERE role = 'Student' ORDER BY name ASC");
+                        $stmt->execute();
+                        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                        // Check if any students are returned
+                        if (!empty($students)) {
+                            foreach ($students as $row) {
+                                echo "<tr>";
+                                echo "<td>" . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . "</td>"; // Name column
+                                echo "<td>" . htmlspecialchars($row['ic_number'], ENT_QUOTES, 'UTF-8') . "</td>"; // IC Number column
+                                
+                                // Checkbox for attendance
+                                echo "<td style='text-align: center;'>";
+                                echo "<input type='checkbox' name='attendance[" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "]' value='1'>";
+                                echo "<input type='hidden' name='user_ids[]' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>";
+                                echo "</td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='3' style='text-align: center;'>No students found in the database.</td></tr>";
+                        }
+                    } catch (PDOException $e) {
+                        die("Error: " . $e->getMessage());
+                    }
+                ?>
+            </tbody>
+        </table>
+
+        <!-- Submit button for attendance -->
+        <div style="text-align: center; margin-top: 10px;">
+            <button type="submit" class="btn btn-primary">Submit Attendance</button>
+        </div>
+    </form> <!-- Form ends here -->
+</div>
+
+
+
+                                
 
 
     <!-- Footer Start -->
