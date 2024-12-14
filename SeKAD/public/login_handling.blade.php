@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         } else {
             // Redirect back to login with error message
-            header("Location: login.php?error=Invalid IC number or password");
+            header("Location: login.blade.php?error=Invalid IC number or password");
             exit();
         }
     } catch (PDOException $e) {

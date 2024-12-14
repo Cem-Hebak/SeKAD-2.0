@@ -137,7 +137,7 @@ include('db_connection.php'); // Include database connection
     <!-- Header End -->
      
     <div style="width: 90%; margin: 0 auto;">
-    <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Biodata</h4>
+    <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Teacher's Name</h4>
     <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
                                     <thead>
                                         
@@ -145,52 +145,82 @@ include('db_connection.php'); // Include database connection
                                     <tbody>
                                         
                                         <td style="width: 1100px;">Name</td>
-                                        <td>Class</td>
+                                        <td style="width: 200px;">Class</td>
 
-                                        <?php
-                                        try {
-                                            // Query to fetch all names from the 'users' table
-                                            $stmt = $pdo->prepare("SELECT name FROM users WHERE role = 'Teacher' ORDER BY name ASC");
-                                            $stmt->execute();
                                         
-                                            // Fetch all rows
-                                            $stmt = $pdo->query("SELECT id, name FROM users");
-                                            $names = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                        
-                                            if (!empty($names)) {
-                                                echo "<tr>"; // Start an unordered list
-                                                foreach ($names as $row) {
-                                                    echo "<tr>";
-                                                    echo "<td>" . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . "</td>"; // Name column
-
-                                                    // Check if 'id' exists before using it
-                                                    $user_id = $row['id'] ?? 'Unknown ID';
-                                                    echo '<td>';
-                                                    echo '<form method="POST" action="update_class.blade.php">';
-                                                    echo '<div class="dropdown">';
-                                                    echo '<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">Select Class</button>';
-                                                    echo '<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
-                                                    echo '<li><button class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" class="dropdown-item" type="submit" name="class" value="Class A">Class A</button></li>';
-                                                    echo '<li><button class="dropdown-item" type="submit" name="class" value="Class B">Class B</button></li>';
-                                                    echo '<li><button class="dropdown-item" type="submit" name="class" value="Class C">Class C</button></li>';
-                                                    echo '</ul>';
-                                                    echo '</div>';
-                                                    echo '<input type="hidden" name="user_id" value="' . htmlspecialchars($user_id, ENT_QUOTES, 'UTF-8') . '">'; // Include user_id
-                                                    echo '</form>';
-                                                    echo '</td>';
-                                                    echo "</tr>";
-                                                    // <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
-                                                }
-                                                echo "</tr>"; // End the unordered list
-                                            } else {
-                                                echo "No names found in the database.";
-                                            }
-                                        } catch (PDOException $e) {
-                                            die("Error: " . $e->getMessage());
-                                        }
-                                        ?>
                                        
                                         
+                                       <?php
+                try {
+                    $stmt = $pdo->prepare("
+                        SELECT id, name, class 
+                        FROM users 
+                        WHERE role = :role 
+                        ORDER BY name ASC
+                    ");
+                    $stmt->execute(['role' => 'Teacher']);
+                    $teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+                    if (!empty($teachers)) {
+                        foreach ($teachers as $teacher) {
+                            // Handle undefined or null 'class' field
+                            $currentClass = $teacher['class'] ?? '';
+                            
+                            echo "<tr>";
+                            echo "<td>" . htmlspecialchars($teacher['name'], ENT_QUOTES, 'UTF-8') . "</td>";
+                            echo "<td>
+                                <form method='POST' action='update_class.blade.php'>
+                                    <input type='hidden' name='user_id' value='" . htmlspecialchars($teacher['id'], ENT_QUOTES, 'UTF-8') . "'>
+                                    <select name='class' class='form-select' onchange='this.form.submit()'>
+                                        <option value='' " . (empty($currentClass) ? "selected" : "") . ">Select Class</option>
+                                        
+                                        // Form 1
+                                        <option value='1 Pendeta' " . ($currentClass === '1 Pendeta' ? "selected" : "") . ">1 Pendeta</option>
+                                        <option value='1 Cendekiawan' " . ($currentClass === '1 Cendekiawan' ? "selected" : "") . ">1 Cendekiawan</option>
+                                        <option value='1 Intelek' " . ($currentClass === '1 Intelek' ? "selected" : "") . ">1 Intelek</option>
+                                        <option value='1 Sarjana' " . ($currentClass === '1 Sarjana' ? "selected" : "") . ">1 Sarjana</option>
+
+                                        // Form 2
+                                        
+                                        <option value='2 Pendeta' " . ($currentClass === '2 Pendeta' ? "selected" : "") . ">2 Pendeta</option>
+                                        <option value='2 Cendekiawan' " . ($currentClass === '2 Cendekiawan' ? "selected" : "") . ">2 Cendekiawan</option>
+                                        <option value='2 Intelek' " . ($currentClass === '2 Intelek' ? "selected" : "") . ">2 Intelek</option>
+                                        <option value='2 Sarjana' " . ($currentClass === '2 Sarjana' ? "selected" : "") . ">2 Sarjana</option>
+
+                                        // Form 3
+                                        
+                                        <option value='3 Pendeta' " . ($currentClass === '3 Pendeta' ? "selected" : "") . ">3 Pendeta</option>
+                                        <option value='3 Cendekiawan' " . ($currentClass === '3 Cendekiawan' ? "selected" : "") . ">3 Cendekiawan</option>
+                                        <option value='3 Intelek' " . ($currentClass === '3 Intelek' ? "selected" : "") . ">3 Intelek</option>
+                                        <option value='3 Sarjana' " . ($currentClass === '3 Sarjana' ? "selected" : "") . ">3 Sarjana</option>
+
+                                        // Form 4
+                                        
+                                        <option value='4 Pendeta' " . ($currentClass === '4 Pendeta' ? "selected" : "") . ">4 Pendeta</option>
+                                        <option value='4 Cendekiawan' " . ($currentClass === '4 Cendekiawan' ? "selected" : "") . ">4 Cendekiawan</option>
+                                        <option value='4 Intelek' " . ($currentClass === '4 Intelek' ? "selected" : "") . ">4 Intelek</option>
+                                        <option value='4 Sarjana' " . ($currentClass === '4 Sarjana' ? "selected" : "") . ">4 Sarjana</option>
+
+                                        // Form 5
+                                        
+                                        <option value='5 Pendeta' " . ($currentClass === '1 Pendeta' ? "selected" : "") . ">5 Pendeta</option>
+                                        <option value='5 Cendekiawan' " . ($currentClass === '1 Cendekiawan' ? "selected" : "") . ">5 Cendekiawan</option>
+                                        <option value='5 Intelek' " . ($currentClass === '1 Intelek' ? "selected" : "") . ">5 Intelek</option>
+                                        <option value='5 Sarjana' " . ($currentClass === '1 Sarjana' ? "selected" : "") . ">5 Sarjana</option>
+                                        
+                                    </select>
+                                </form>
+                            </td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='2'>No teachers found.</td></tr>";
+                    }
+                } catch (PDOException $e) {
+                    echo "<tr><td colspan='2'>Error: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . "</td></tr>";
+                }
+                
+                ?>
 
 
                                         </tbody>

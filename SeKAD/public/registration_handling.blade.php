@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ]);
 
         // Redirect to login page with success message
-        header("Location: login.php?success=1");
+        header("Location: login.blade.php?success=1");
         exit();
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
