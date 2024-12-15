@@ -1,7 +1,7 @@
 <?php
 // db.php
 $host = 'localhost';
-$db = 'admin1';
+$db = 'admin';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
