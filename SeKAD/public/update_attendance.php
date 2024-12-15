@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($user_ids as $user_id) {
             $present = isset($attendance[$user_id]) ? 1 : 0; // Check if user ID is checked (present)
 
-            // Only proceed if the user is present (present = 1)
-            if ($present == 1) {
+          
+            
                 // Fetch the user's name and IC number
                 $stmt = $pdo->prepare("SELECT id, name, ic_number FROM users WHERE id = ?");
                 $stmt->execute([$user_id]);
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $user['name'],
                         $user['ic_number']
                     ]);
-                }
+                
             }
         }
 
