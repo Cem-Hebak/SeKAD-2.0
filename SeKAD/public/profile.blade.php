@@ -96,6 +96,7 @@ include('db_connection.php'); // Include database connection
                         <a href="404.html" class="dropdown-item">404 Page</a>
                         <a href="profile.blade.php" class="dropdown-item">Profile</a>
                         <a href="setting.blade.php" class="dropdown-item">Setting</a>
+                        <a href="announce.blade.php" class="dropdown-item">Announcement</a>
                         <a href="login.blade.php" class="dropdown-item">Log In</a>
                         <a href="logout.blade.php" class="dropdown-item">Log Out</a>
                         <a href="register.blade.php" class="dropdown-item">Register</a>
@@ -108,7 +109,6 @@ include('db_connection.php'); // Include database connection
         </div>
     </nav>
     <!-- Navbar End -->
-
 
     <!-- Header Start -->
     <div class="container-fluid bg-primary py-5 mb-5 page-header">

@@ -1,37 +1,4 @@
-<?php
-session_start(); // Start the session
-include('db_connection.php'); // Include database connection
-
-    
-
-    // Retrieve user data from the session
-    $id = htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8');
-    $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
-    $email = htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8');
-    $mobilenumber = htmlspecialchars($_SESSION['mobilenumber'], ENT_QUOTES, 'UTF-8');
-    $emergencymobilenumber = htmlspecialchars($_SESSION['emergencymobilenumber'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
-    $class = htmlspecialchars($_SESSION['class'] ?? 'Not Assigned', ENT_QUOTES, 'UTF-8');
-    $date_of_birth = htmlspecialchars($_SESSION['date_of_birth'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $gender = htmlspecialchars($_SESSION['gender'] ?? 'Not Specified', ENT_QUOTES, 'UTF-8');
-    $ic_number = htmlspecialchars($_SESSION['ic_number'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
-    $nationality = htmlspecialchars($_SESSION['nationality'], ENT_QUOTES, 'UTF-8');
-    $address = htmlspecialchars($_SESSION['address'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
-    $fname = htmlspecialchars($_SESSION['fname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $fcontact = htmlspecialchars($_SESSION['fcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $foccupation = htmlspecialchars($_SESSION['foccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $mname = htmlspecialchars($_SESSION['mname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $mcontact = htmlspecialchars($_SESSION['mcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $moccupation = htmlspecialchars($_SESSION['moccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $gname = htmlspecialchars($_SESSION['gname'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $gcontact = htmlspecialchars($_SESSION['gcontact'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
-    $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
-
-?>
-
-<!DOCTYPE html>;
+<!DOCTYPE html>
 <html lang="en">
 <!-- "include('db_connection.php')" ni untuk import database -->
 <head>
@@ -41,7 +8,8 @@ include('db_connection.php'); // Include database connection
     <meta content="" name="keywords">
     <meta content="" name="description">
 
-  
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -76,9 +44,8 @@ include('db_connection.php'); // Include database connection
     </div>
     <!-- Spinner End -->
 
-    
-    <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+<!-- Navbar Start -->
+<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
             <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>eLEARNING</h2>
         </a>
@@ -114,82 +81,92 @@ include('db_connection.php'); // Include database connection
     </nav>
     <!-- Navbar End -->
 
-    <div class="container-fluid bg-primary py-5 mb-5 page-header">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-10 text-center">
-                    <h1 class="display-3 text-white animated slideInDown">
-                        SeKAD
-                        
-                    </h1>
-                    
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb justify-content-center">
-                            <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
-                            <li class="breadcrumb-item"><a class="text-white" href="#">Attendance Record</a></li>
-                        </ol>
-                    </nav>
+    <!-- Service Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div onclick="window.location.href='announce.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
+                            <h5 class="mb-3">Damage Report</h5>
+                        </div>
+                    </div>
+                </div>
+                <div onclick="window.location.href='event.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-globe text-primary mb-4"></i>
+                            <h5  class="mb-3">Event Submission</h5>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Service End -->
 
-    <div style="width: 90%; margin: 0 auto;">
-    <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Biodata</h4>
-    
-    <!-- Form starts here -->
-    <form method="POST" action="update_attendance.php">
-        <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
-            <thead>
-                <tr>
-                    <th style="width: 40%;">Name</th>
-                    <th style="width: 40%;">IC Number</th>
-                    <th style="width: 20%; text-align: center;">Attendance</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                    try {
-                        // Query to fetch 'name' and 'ic_number' for users with role = 'Student'
-                        $stmt = $pdo->prepare("SELECT id, name, ic_number FROM users WHERE role = 'Student' ORDER BY name ASC");
-                        $stmt->execute();
-                        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    <div class="container2">
+        <h4 style="margin-bottom: 20px; color: #333;">Event Submission Form</h4>
+            <form method="POST" action="letak database ke mana" enctype="multipart/form-data">
+                <div style="margin-bottom: 15px;">
+                    <label for="pic_name" style="font-weight: bold; display: block; margin-bottom: 5px;">Person in Charge / Company</label>
+                    <input type="text" id="pic_name" name="pic_name" placeholder="Enter name of person or company" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="pic_name" style="font-weight: bold; display: block; margin-bottom: 5px;">Phone Number</label>
+                    <input type="text" id="pic_name" name="pic_name" placeholder="Enter phone number of person in charge / company" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="event_name" style="font-weight: bold; display: block; margin-bottom: 5px;">Event Name</label>
+                    <input type="text" id="event_name" name="event_name" placeholder="Enter name of the event" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                </div>
+                <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label for="event_start_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Start Date</label>
+                        <input type="date" id="event_start_date" name="event_start_date" 
+                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="event_start_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Start Time</label>
+                        <input type="time" id="event_start_time" name="event_start_time" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label for="event_finish_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Finish Date</label>
+                        <input type="date" id="event_finish_date" name="event_finish_date" 
+                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="event_finish_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Finish Time</label>
+                        <input type="time" id="event_finish_time" name="event_finish_time" 
+                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                    </div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="event_description" style="font-weight: bold; display: block; margin-bottom: 5px;">Event Description</label>
+                    <textarea id="event_description" name="event_description" rows="4" placeholder="Provide a brief description of the event" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required></textarea>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="event_poster" style="font-weight: bold; display: block; margin-bottom: 5px;">Event Poster (Optional)</label>
+                    <input type="file" id="event_poster" name="event_poster" accept="image/*" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+                <div style="text-align: right; margin-top: 20px;">
+                    <button type="submit" style="background-color: #007BFF; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                        Submit Event
+                    </button>
+                </div>
+            </form>
+    </div>
 
-                        // Check if any students are returned
-                        if (!empty($students)) {
-                            foreach ($students as $row) {
-                                echo "<tr>";
-                                echo "<td>" . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . "</td>"; // Name column
-                                echo "<td>" . htmlspecialchars($row['ic_number'], ENT_QUOTES, 'UTF-8') . "</td>"; // IC Number column
-                                
-                                // Checkbox for attendance
-                                echo "<td style='text-align: center;'>";
-                                echo "<input type='checkbox' name='attendance[" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "]' value='1'>";
-                                echo "<input type='hidden' name='user_ids[]' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>";
-                                echo "</td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='3' style='text-align: center;'>No students found in the database.</td></tr>";
-                        }
-                    } catch (PDOException $e) {
-                        die("Error: " . $e->getMessage());
-                    }
-                ?>
-            </tbody>
-        </table>
-
-        <!-- Submit button for attendance -->
-        <div style="text-align: center; margin-top: 10px;">
-            <button type="submit" class="btn btn-primary">Submit Attendance</button>
-        </div>
-    </form> <!-- Form ends here -->
-</div>
-
-
-
-                                
-
+   
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">

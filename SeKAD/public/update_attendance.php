@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         foreach ($user_ids as $user_id) {
-            $present = isset($attendance[$user_id]) ? 1 : 0; // Check if user ID is checked (present)
+            $present = isset($attendance[$user_id]) ? 1 : 2; // Check if user ID is checked (present)
 
           
             
