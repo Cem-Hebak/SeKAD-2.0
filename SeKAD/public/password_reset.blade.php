@@ -17,9 +17,9 @@
         <h2>SeKAD</h2>
         <p>Forgot Password</p>
 
-        <form action="password/email" method="POST">
+        <form action="forgot_password_check.blade.php" method="POST">
             <input type="email" name="email" placeholder="Email Address" required>
-            <button type="submit" class="btn-login">Reset Password</button>
+            <button type="submit" name="forgot" class="btn-login">Reset Password</button>
         </form>
 
         <a href="login.blade.php">Log In</a>
