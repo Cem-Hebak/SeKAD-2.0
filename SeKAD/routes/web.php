@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\indexController;
 use App\Http\Controllers\StudentController;
 
-Route::get('/students', [StudentController::class, 'index'])->name('students.index');
-Route::post('/students/assign', [StudentController::class, 'assign'])->name('students.assign');
+Route::get('/assign-student', [StudentController::class, 'showAssignForm'])->name('assign-student');
+Route::post('/assign-student', [StudentController::class, 'assignStudent'])->name('assign-student.submit');
 
 
 Route::get('/', function () {
