@@ -1,4 +1,5 @@
 <!-- <?php
+require_once '../vendor/autoload.php'; // Load Laravel’s dependencies
 // Fetch the two latest announcements
 // $sql = "SELECT Title, Description, TimeStamp FROM announcement ORDER BY TimeStamp DESC LIMIT 2";
 // $result = $conn->query($sql);
@@ -41,9 +42,31 @@
 <head>
     <meta charset="utf-8">
     <title>eLEARNING - eLearning HTML Template</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
+
+    <!-- Low Attendance Alert -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/low-attendance') // Call Laravel route
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        const alertBox = document.createElement('div');
+                        alertBox.innerHTML = `
+                            <div class="alert alert-warning">
+                                <strong>Low Attendance Alert!</strong> Some students have attendance below 75%.
+                                <a href="/attendance/warning" class="btn btn-primary">See More</a>
+                            </div>
+                        `;
+                        document.body.prepend(alertBox); // Add alert to the top of the page
+                    }
+                })
+                .catch(error => console.error('Error fetching attendance data:', error));
+        });
+    </script>
 
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
