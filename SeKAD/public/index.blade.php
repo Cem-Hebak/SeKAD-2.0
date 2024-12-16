@@ -1,5 +1,5 @@
 <!-- <?php
-require_once '../vendor/autoload.php'; // Load Laravel’s dependencies
+// require_once '../vendor/autoload.php'; // Load Laravel’s dependencies
 // Fetch the two latest announcements
 // $sql = "SELECT Title, Description, TimeStamp FROM announcement ORDER BY TimeStamp DESC LIMIT 2";
 // $result = $conn->query($sql);
@@ -42,12 +42,12 @@ require_once '../vendor/autoload.php'; // Load Laravel’s dependencies
 <head>
     <meta charset="utf-8">
     <title>eLEARNING - eLearning HTML Template</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"> -->
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
 
-    <!-- Low Attendance Alert -->
+    <!-- Low Attendance Alert
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             fetch('/low-attendance') // Call Laravel route
@@ -66,7 +66,7 @@ require_once '../vendor/autoload.php'; // Load Laravel’s dependencies
                 })
                 .catch(error => console.error('Error fetching attendance data:', error));
         });
-    </script>
+    </script> -->
 
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
@@ -115,8 +115,9 @@ require_once '../vendor/autoload.php'; // Load Laravel’s dependencies
                 <a href="about.html" class="nav-item nav-link">About</a>
                 <a href="login.php" class="nav-item nav-link">Log In</a>
                 <a href="register.php" class="nav-item nav-link">Register</a>
-                <a href="profile.php" class="nav-item nav-link">Profile</a>
+                <a href="profile.blade.php" class="nav-item nav-link">Profile</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
+                <a href="low-attendance.php" class="nav-item nav-link">low</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
