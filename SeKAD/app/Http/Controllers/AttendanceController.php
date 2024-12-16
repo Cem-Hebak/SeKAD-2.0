@@ -15,5 +15,12 @@ class AttendanceController extends Controller
         // Return as JSON (for AJAX call)
         return response()->json($lowAttendanceStudents);
     }
+
+    public function warningPage()
+    {
+        $month = now()->month;
+        $lowAttendanceStudents = Attendance::lowAttendance($month)->get();
+        return view('warning', compact('lowAttendanceStudents'));
+    }
 }
 
