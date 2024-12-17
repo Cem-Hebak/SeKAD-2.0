@@ -89,7 +89,7 @@
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
-                            <h5 class="mb-3">Damage Report</h5>
+                            <h5 class="mb-3">Maintainence Report</h5>
                         </div>
                     </div>
                 </div>
@@ -107,8 +107,8 @@
     <!-- Service End -->
 
     <div class="container2">
-        <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Damage Report Form</h4>
-            <form method="POST" action="nnti tukar ke database" enctype="multipart/form-data">
+        <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Maintainence Report Form</h4>
+            <form method="POST" action="update_maintainence.php" enctype="multipart/form-data">
                 <div style="margin-bottom: 15px;">
                     <label for="reporter_name" style="font-weight: bold; display: block; margin-bottom: 5px;">Name</label>
                     <input type="text" id="reporter_name" name="reporter_name" placeholder="Enter your name" 
