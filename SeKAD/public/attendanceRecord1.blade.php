@@ -29,6 +29,11 @@ include('db_connection.php'); // Include database connection
     $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
     $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
 
+    $form = isset($_GET['form']) ? $_GET['form'] : '1';
+    $class = isset($_GET['class']) ? $_GET['class'] : 'CENDEKIAWAN';
+    $present = isset($row['present']) ? $row['present'] : 0;  // Default to 0 if not set
+    $checked = ($present == 1) ? "checked" : "";  // Apply 'checked' if present == 1
+
 ?>
 
 <!DOCTYPE html>;
@@ -135,11 +140,50 @@ include('db_connection.php'); // Include database connection
     </div>
 
     <div style="width: 90%; margin: 0 auto;">
-    <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Biodata</h4>
-    
-    <!-- Form starts here -->
+
+    <div class="container mt-5">
+    <h2 class="mb-4">Attendance Record</h2>
+
+    <!-- Filter Form -->
+    <form method="GET" action="">
+        <div class="row mb-3">
+            <!-- Form Dropdown -->
+            <div class="col-md-4">
+                <label for="formSelect">Select Form:</label>
+                <select name="form" id="formSelect" class="form-control">
+                    <option value="1" <?php echo ($form === '1') ? 'selected' : ''; ?>>Form 1</option>
+                    <option value="2" <?php echo ($form === '2') ? 'selected' : ''; ?>>Form 2</option>
+                    <option value="3" <?php echo ($form === '3') ? 'selected' : ''; ?>>Form 3</option>
+                    <option value="4" <?php echo ($form === '4') ? 'selected' : ''; ?>>Form 4</option>
+                    <option value="5" <?php echo ($form === '5') ? 'selected' : ''; ?>>Form 5</option>
+                </select>
+            </div>
+
+            <!-- Class Dropdown -->
+            <div class="col-md-4">
+                <label for="classSelect">Select Class:</label>
+                <select name="class" id="classSelect" class="form-control">
+                    <option value="CENDEKIAWAN" <?php echo ($class === 'CENDEKIAWAN') ? 'selected' : ''; ?>>CENDEKIAWAN</option>
+                    <option value="PENDETA" <?php echo ($class === 'PENDETA') ? 'selected' : ''; ?>>PENDETA</option>
+                    <option value="SARJANA" <?php echo ($class === 'SARJANA') ? 'selected' : ''; ?>>SARJANA</option>
+                    <option value="INTELEK" <?php echo ($class === 'INTELEK') ? 'selected' : ''; ?>>INTELEK</option>
+                </select>
+            </div>
+
+            <!-- Date Picker -->
+            <div class="col-md-4">
+                <label for="dateSelect">Select Date:</label>
+                <input type="date" name="date" id="dateSelect" class="form-control" value="<?php echo htmlspecialchars($date ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+
+    <!-- Attendance Table -->
     <form method="POST" action="update_attendance.php">
-        <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
+        <table class="table table-striped table-bordered mt-3">
             <thead>
                 <tr>
                     <th style="width: 40%;">Name</th>
@@ -149,46 +193,58 @@ include('db_connection.php'); // Include database connection
             </thead>
             <tbody>
                 <?php
-                    try {
-                        // Query to fetch 'name' and 'ic_number' for users with role = 'Student'
-                        $stmt = $pdo->prepare("SELECT id, name, ic_number FROM users WHERE role = 'Student' ORDER BY name ASC");
-                        $stmt->execute();
-                        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                try {
+                    // Retrieve GET parameters
+                    $form = isset($_GET['form']) ? $_GET['form'] : '1';
+                    $class = isset($_GET['class']) ? $_GET['class'] : 'CENDEKIAWAN';
+                    $date = isset($_GET['date']) ? $_GET['date'] : '';
 
-                        // Check if any students are returned
-                        if (!empty($students)) {
-                            foreach ($students as $row) {
-                                echo "<tr>";
-                                echo "<td>" . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . "</td>"; // Name column
-                                echo "<td>" . htmlspecialchars($row['ic_number'], ENT_QUOTES, 'UTF-8') . "</td>"; // IC Number column
-                                
-                                // Checkbox for attendance
-                                echo "<td style='text-align: center;'>";
-                                echo "<input type='checkbox' name='attendance[" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "]' value='1'>";
-                                echo "<input type='hidden' name='user_ids[]' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>";
-                                echo "</td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='3' style='text-align: center;'>No students found in the database.</td></tr>";
+                    if (isset($_GET['form']) && isset($_GET['class'])) {
+                        $targetName = $form . " " . $class;
+                    
+                        $sql = "SELECT b.id, b.name, b.class, u.ic_number
+                                FROM biodata_stud b
+                                JOIN users u ON b.name = u.name
+                                WHERE b.class = ? AND u.role = 'Student'";
+                        $params = [$targetName];
+                    
+                        if (!empty($date)) {
+                            $sql .= " AND ? IS NOT NULL";
+                            $params[] = $date; // Add date as placeholder
                         }
-                    } catch (PDOException $e) {
-                        die("Error: " . $e->getMessage());
+                    
+                        // Execute query
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->execute($params);
+                        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     }
+
+                    if (!empty($students)) {
+                        foreach ($students as $row) {
+                            echo "<tr>";
+                            echo "<td>" . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . "</td>";
+                            echo "<td>" . htmlspecialchars($row['ic_number'], ENT_QUOTES, 'UTF-8') . "</td>";
+                            echo "<td style='text-align: center;'>";
+                            $checked = $row['present'] ? "checked" : "";
+                            echo "<input type='checkbox' name='attendance[" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "]' value='1' $checked>";
+                            echo "<input type='hidden' name='user_ids[]' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>";
+                            echo "</td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='3' style='text-align: center;'>No records found for Form $form - $class on $date.</td></tr>";
+                    }
+                } catch (PDOException $e) {
+                    die("Error: " . $e->getMessage());
+                }
                 ?>
             </tbody>
         </table>
 
-        <!-- Submit button for attendance -->
-        <div style="text-align: center; margin-top: 10px;">
-            <button type="submit" class="btn btn-primary">Submit Attendance</button>
-        </div>
-    </form> <!-- Form ends here -->
+        <!-- Submit Attendance Button -->
+        <button type="submit" class="btn btn-success">Update Attendance</button>
+    </form>
 </div>
-
-
-
-                                
 
 
     <!-- Footer Start -->
