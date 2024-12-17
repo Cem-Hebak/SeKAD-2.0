@@ -284,18 +284,7 @@ include('db_connection.php'); // Include database connection
         </select>
 
 
-        <!--  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                    <div class="dropdown-menu fade-down m-0">
-                        <a href="team.html" class="dropdown-item">Our Team</a>
-                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                        <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
-                        <a href="404.html" class="dropdown-item">404 Page</a>
-                        <a href="profile.blade.php" class="dropdown-item">Profile</a>
-                        <a href="login.blade.php" class="dropdown-item">Log In</a>
-                        <a href="logout.blade.php" class="dropdown-item">Log Out</a>
-                        <a href="register.blade.php" class="dropdown-item">Register</a>
-                        
-                    </div> -->
+       
 
         <label for="dateFilter">Filter by Date:</label>
         <select id="dateFilter">
@@ -374,7 +363,7 @@ include('db_connection.php'); // Include database connection
                         <h3>${className} - ${date}</h3>
                         <canvas id="chart_${className}_${date.replace(/-/g, '_')}"></canvas>
                         <div class="chart-summary">Attendance: ${attendance.attend} / ${total}</div>
-                         <div class="chart-summary">Attendance: ${attendance.attend} / ${total}</div>
+                         
                         <div class="chart-summary">Absence: ${attendance.absence} / ${total}</div>
                         <div class="chart-summary">Pending: ${attendance.pending} / ${total}</div>
                         <div class="chart-summary">Medical Leave: ${attendance.medical} / ${total}</div>
@@ -382,6 +371,7 @@ include('db_connection.php'); // Include database connection
                     chartsContainer.appendChild(chartItem);
 
                     // Render the chart
+                   
                     const ctx = document.getElementById(`chart_${className}_${date.replace(/-/g, '_')}`).getContext('2d');
                     new Chart(ctx, {
                         type: 'doughnut',
@@ -421,9 +411,14 @@ include('db_connection.php'); // Include database connection
                                     }
                                 }
                             }
+                            
                         }
+                        
                     });
+                    
                 });
+
+                
             });
         }
 
@@ -451,6 +446,21 @@ include('db_connection.php'); // Include database connection
 
             renderCharts(filteredData);
         }
+        function displayStudentDetails(names, containerId) {
+        const detailsContainer = document.getElementById(containerId);
+        detailsContainer.innerHTML = `<h4>Students (${names.length}):</h4>`;
+        if (names.length === 0) {
+            detailsContainer.innerHTML += '<p>No students in this category.</p>';
+        } else {
+            const list = document.createElement('ul');
+            names.forEach(name => {
+                const listItem = document.createElement('li');
+                listItem.textContent = name;
+                list.appendChild(listItem);
+            });
+            detailsContainer.appendChild(list);
+        }
+}
     </script>
 </body>
 
