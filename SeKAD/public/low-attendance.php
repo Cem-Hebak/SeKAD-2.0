@@ -1,23 +1,34 @@
 <?php
+session_start(); // Start the session to access session variables
+
+// Check if the user is logged in
+if (!isset($_SESSION['ic_number'])) {
+    die("You must log in to view this page.");
+}
+
 // Assuming you have a database connection here
 include 'db_connection.php'; // Include your DB connection file
 
 try {
-    // Query to fetch student attendance records
+    // Get the logged-in student's IC number from the session
+    $loggedInICNumber = $_SESSION['ic_number'];
+
+    // Query to fetch attendance records for the logged-in student only
     $query = "SELECT ic_number, name, 
                      COUNT(CASE WHEN present IN (1, 4) THEN 1 END) AS total_attendances,
                      COUNT(CASE WHEN present IN (2, 3) THEN 1 END) AS total_absences,
                      COUNT(*) AS total_records
               FROM attendance
+              WHERE ic_number = :ic_number
               GROUP BY ic_number, name";
 
     // Prepare and execute the query
     $stmt = $pdo->prepare($query);
-    $stmt->execute();
+    $stmt->execute(['ic_number' => $loggedInICNumber]);
     $results = $stmt->fetchAll();
 
     // Display results in an HTML table
-    echo "<h2>Low Attendance Report</h2>";
+    echo "<h2>My Attendance Report</h2>";
     echo "<table border='1' cellpadding='10'>";
     echo "<tr>
             <th>IC Number</th>
@@ -39,7 +50,7 @@ try {
         $attendancePercentage = ($totalRecords > 0) ? ($totalAttendances / $totalRecords) * 100 : 0;
 
         // Check if the attendance percentage is below 75%
-        $present = ($attendancePercentage < 75) ? "<span style='color:red;'>Warning</span>" : "Normal";
+        $status = ($attendancePercentage < 75) ? "<span style='color:red;'>Warning</span>" : "Normal";
 
         echo "<tr>
                 <td>{$ic_number}</td>
@@ -47,7 +58,7 @@ try {
                 <td>{$totalAttendances}</td>
                 <td>{$totalAbsences}</td>
                 <td>" . number_format($attendancePercentage, 2) . "%</td>
-                <td>{$present}</td>
+                <td>{$status}</td>
               </tr>";
     }
 
