@@ -1,65 +1,61 @@
 <?php
-// Start the session to access session variables
-session_start();
-
-// Include database connection
-require_once 'db_connection.php';
-
-// Ensure that IC number is stored in the session
-if (isset($_SESSION['ic_number'])) {
-    $ic_number = $_SESSION['ic_number'];  // Get IC number from session
-} else {
-    // Handle the case where the IC number is not found in session
-    echo "IC number not found in session.";
-    exit;
-}
-
-// Prepare the query to get the total days and attendance count based on IC number
-$sql_attendance = "SELECT COUNT(*) AS total_days, SUM(present) AS attend
-                   FROM attendance
-                   WHERE ic_number = ?
-                   GROUP BY ic_number";
+// Assuming you have a database connection here
+include 'db_connection.php'; // Include your DB connection file
 
 try {
-    // Execute the query
-    $stmt = $pdo->prepare($sql_attendance);
-    $stmt->execute([$ic_number]);
+    // Query to fetch student attendance records
+    $query = "SELECT ic_number, name, 
+                     COUNT(CASE WHEN present IN (1, 4) THEN 1 END) AS total_attendances,
+                     COUNT(CASE WHEN present IN (2, 3) THEN 1 END) AS total_absences,
+                     COUNT(*) AS total_records
+              FROM attendance
+              GROUP BY ic_number, name";
 
-    // Fetch the results
-    $attendance = $stmt->fetch();
-    
-    // Debug output for checking query result
-    var_dump($attendance);  // Check if any results are returned
+    // Prepare and execute the query
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    $results = $stmt->fetchAll();
 
-    // If attendance data exists for the student
-    if ($attendance) {
-        $total_days = $attendance['total_days'];
-        $attend = $attendance['attend'];
-        
-        // Calculate absence and attendance percentage
-        $absence = $total_days - $attend;
-        $attendance_percentage = ($total_days > 0) ? ($attend / $total_days) * 100 : 0;
-        
-        // Check if attendance is below the threshold (e.g., 75%)
-        $low_attendance = ($attendance_percentage < 75);
+    // Display results in an HTML table
+    echo "<h2>Low Attendance Report</h2>";
+    echo "<table border='1' cellpadding='10'>";
+    echo "<tr>
+            <th>IC Number</th>
+            <th>Student Name</th>
+            <th>Total Attendances</th>
+            <th>Total Absences</th>
+            <th>Attendance Percentage</th>
+            <th>Status</th>
+          </tr>";
 
-        // Output the data
-        echo "<h2>Attendance Report for IC Number: $ic_number</h2>";
-        echo "<p>Total Attendance Days: $total_days</p>";
-        echo "<p>Days Present: $attend</p>";
-        echo "<p>Days Absent: $absence</p>";
-        echo "<p>Attendance Percentage: " . number_format($attendance_percentage, 2) . "%</p>";
+    foreach ($results as $row) {
+        $ic_number = $row['ic_number'];
+        $studentName = $row['name'];
+        $totalAttendances = $row['total_attendances'];
+        $totalAbsences = $row['total_absences'];
+        $totalRecords = $row['total_records'];
 
-        // Display message if attendance is low
-        if ($low_attendance) {
-            echo "<p style='color: red; font-weight: bold;'>Warning: Your attendance is below 75%! Please attend more classes.</p>";
-        } else {
-            echo "<p style='color: green; font-weight: bold;'>Great job! Your attendance is above 75%.</p>";
-        }
-    } else {
-        echo "<p>No attendance records found for this student (IC Number: $ic_number).</p>";
+        // Calculate attendance percentage
+        $attendancePercentage = ($totalRecords > 0) ? ($totalAttendances / $totalRecords) * 100 : 0;
+
+        // Check if the attendance percentage is below 75%
+        $present = ($attendancePercentage < 75) ? "<span style='color:red;'>Warning</span>" : "Normal";
+
+        echo "<tr>
+                <td>{$ic_number}</td>
+                <td>{$studentName}</td>
+                <td>{$totalAttendances}</td>
+                <td>{$totalAbsences}</td>
+                <td>" . number_format($attendancePercentage, 2) . "%</td>
+                <td>{$present}</td>
+              </tr>";
     }
+
+    echo "</table>";
 } catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
+    die("Error fetching data: " . $e->getMessage());
 }
+
+// Close the database connection (optional with PDO)
+$pdo = null;
 ?>
