@@ -34,6 +34,56 @@
 // atas ni untuk attendance chart
 //
 // for announcement ambik dari database
+
+// low attendance alert
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['ic_number'])) {
+    header("Location: login.php");
+    exit;
+}
+
+// Include the database connection
+include 'db_connection.php';
+
+try {
+    // Define attendance thresholds
+    $presentValues = [1, 4];
+    $attendanceThreshold = 75;
+
+    // Get logged-in student's IC number
+    $loggedInICNumber = $_SESSION['ic_number'];
+
+    // Query to calculate attendance percentage
+    $query = "SELECT 
+                 COUNT(CASE WHEN present IN (" . implode(',', $presentValues) . ") THEN 1 END) AS total_attendances,
+                 COUNT(*) AS total_records
+              FROM attendance
+              WHERE ic_number = :ic_number";
+
+    // Prepare and execute the query
+    $stmt = $pdo->prepare($query);
+    $stmt->execute(['ic_number' => $loggedInICNumber]);
+    $result = $stmt->fetch();
+
+    // Calculate attendance percentage
+    $totalAttendances = $result['total_attendances'] ?? 0;
+    $totalRecords = $result['total_records'] ?? 0;
+    $attendancePercentage = ($totalRecords > 0) ? ($totalAttendances / $totalRecords) * 100 : 0;
+
+    // Check if attendance is below the threshold
+    $lowAttendanceAlert = "";
+    if ($attendancePercentage < $attendanceThreshold) {
+        $lowAttendanceAlert = true; // Set a flag to trigger the pop-up notification
+    }
+
+} catch (PDOException $e) {
+    die("Error fetching attendance data: " . $e->getMessage());
+}
+
+// Close the connection
+$pdo = null;
 ?> -->
 
 <!DOCTYPE html>
@@ -46,6 +96,40 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
+
+    <!-- css for low attendance alert -->
+    <style>
+        /* Styling for the pop-up notification */
+        #attendanceAlert {
+            display: none;
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%); /* Center it horizontally */
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px 30px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 1000; /* Ensure it stays above other content */
+            transition: all 0.3s ease;
+        }
+
+        #attendanceAlert:hover {
+            background-color: #f5c6cb; /* Lighten on hover for a better user experience */
+            color: #471122;
+        }
+
+        #attendanceAlert a {
+            color: #721c24;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+    </style>
 
     <!-- Low Attendance Alert
     <script>
@@ -92,6 +176,25 @@
 </head>
 
 <body>
+
+    <!-- Pop-up notification for low attendance -->
+    <?php if ($lowAttendanceAlert): ?>
+        <div id="attendanceAlert" onclick="window.location.href='low-attendance.php';">
+            <strong>Alert:</strong> Your attendance is below the required threshold! 
+            <a href="low-attendance.php">Click here to view details.</a>
+        </div>
+    <?php endif; ?>
+
+    <script>
+        // JavaScript to show the pop-up notification
+        window.onload = function() {
+            var alertBox = document.getElementById('attendanceAlert');
+            if (alertBox) {
+                alertBox.style.display = 'block';
+            }
+        };
+    </script>
+
     <!-- Spinner Start -->
     <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
