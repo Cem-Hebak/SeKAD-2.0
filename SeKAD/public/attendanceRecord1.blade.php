@@ -4,6 +4,7 @@ include('db_connection.php'); // Include database connection
 
     
 
+
     // Retrieve user data from the session
     $id = htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8');
     $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
@@ -46,7 +47,7 @@ include('db_connection.php'); // Include database connection
     <meta content="" name="keywords">
     <meta content="" name="description">
 
-  
+
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -81,7 +82,6 @@ include('db_connection.php'); // Include database connection
     </div>
     <!-- Spinner End -->
 
-    
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
@@ -109,7 +109,6 @@ include('db_connection.php'); // Include database connection
                         <a href="login.blade.php" class="dropdown-item">Log In</a>
                         <a href="logout.blade.php" class="dropdown-item">Log Out</a>
                         <a href="register.blade.php" class="dropdown-item">Register</a>
-                        
                     </div>
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
@@ -125,9 +124,9 @@ include('db_connection.php'); // Include database connection
                 <div class="col-lg-10 text-center">
                     <h1 class="display-3 text-white animated slideInDown">
                         SeKAD
-                        
+
                     </h1>
-                    
+
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb justify-content-center">
                             <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
@@ -241,10 +240,16 @@ include('db_connection.php'); // Include database connection
             </tbody>
         </table>
 
-        <!-- Submit Attendance Button -->
-        <button type="submit" class="btn btn-success">Update Attendance</button>
-    </form>
+        <!-- Submit button for attendance -->
+        <div style="text-align: center; margin-top: 10px;">
+            <button type="submit" class="btn btn-primary">Submit Attendance</button>
+        </div>
+    </form> <!-- Form ends here -->
 </div>
+
+
+
+
 
 
     <!-- Footer Start -->

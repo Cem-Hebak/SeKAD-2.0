@@ -11,6 +11,7 @@ Route::get('/assign-student', function () {
 
 use App\Http\Controllers\LanguageController;
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -26,3 +27,4 @@ Route::get('/',[indexController::class],'index');
 Route::get('/low-attendance', [LowAttendanceController::class, 'index'])->name('low-attendance');
 // Language switch route
 Route::get('/switch-language/{lang}', [LanguageController::class, 'switchLanguage'])->name('switch.language');
+Route::get('/', [indexController::class], 'index');
