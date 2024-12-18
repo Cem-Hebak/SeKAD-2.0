@@ -1,4 +1,42 @@
-<!DOCTYPE html>
+<?php
+session_start(); // Start the session
+include('db_connection.php'); // Include database connection
+
+    
+
+    // Retrieve user data from the session
+    $id = htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8');
+    $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
+    $email = htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8');
+    $mobilenumber = htmlspecialchars($_SESSION['mobilenumber'], ENT_QUOTES, 'UTF-8');
+    $emergencymobilenumber = htmlspecialchars($_SESSION['emergencymobilenumber'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
+    $class = htmlspecialchars($_SESSION['class'] ?? 'Not Assigned', ENT_QUOTES, 'UTF-8');
+    $date_of_birth = htmlspecialchars($_SESSION['date_of_birth'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $gender = htmlspecialchars($_SESSION['gender'] ?? 'Not Specified', ENT_QUOTES, 'UTF-8');
+    $ic_number = htmlspecialchars($_SESSION['ic_number'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
+    $nationality = htmlspecialchars($_SESSION['nationality'], ENT_QUOTES, 'UTF-8');
+    $address = htmlspecialchars($_SESSION['address'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
+    $fname = htmlspecialchars($_SESSION['fname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $fcontact = htmlspecialchars($_SESSION['fcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $foccupation = htmlspecialchars($_SESSION['foccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $mname = htmlspecialchars($_SESSION['mname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $mcontact = htmlspecialchars($_SESSION['mcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $moccupation = htmlspecialchars($_SESSION['moccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $gname = htmlspecialchars($_SESSION['gname'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    $gcontact = htmlspecialchars($_SESSION['gcontact'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    $goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
+    $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
+
+    $form = isset($_GET['form']) ? $_GET['form'] : '1';
+    $class = isset($_GET['class']) ? $_GET['class'] : 'CENDEKIAWAN';
+    $present = isset($row['present']) ? $row['present'] : 0;  // Default to 0 if not set
+    $checked = ($present == 1) ? "checked" : "";  // Apply 'checked' if present == 1
+
+?>
+
+<!DOCTYPE html>;
 <html lang="en">
 <!-- "include('db_connection.php')" ni untuk import database -->
 <head>
@@ -28,6 +66,10 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/font-size.css" rel="stylesheet">
+
+    <link id="light-mode" rel="stylesheet" href="{{ asset('css/light.css') }}">
+    <link id="dark-mode" rel="stylesheet" href="{{ asset('css/dark.css') }}" disabled>
 </head>
 
 <body>
@@ -39,8 +81,7 @@
     </div>
     <!-- Spinner End -->
 
-
-
+    
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
@@ -52,15 +93,23 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
                 <a href="index.blade.php" class="nav-item nav-link active">Home</a>
-                <a href="setting.html" class="nav-item nav-link">Settings</a>
-                <a href="setting.html" class="nav-item nav-link">Attendance Record</a>
+                <a href="about.html" class="nav-item nav-link">About</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
+                <a href="attendanceRecord1.blade.php" class="nav-item nav-link">Attendance Record</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
                         <a href="team.html" class="dropdown-item">Our Team</a>
                         <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="404.html" class="dropdown-item">404 Page</a>
+                        <a href="profile.blade.php" class="dropdown-item">Profile</a>
+                        <a href="setting.blade.php" class="dropdown-item">Setting</a>
+                        <a href="announce.blade.php" class="dropdown-item">Announcement</a>
+                        <a href="login.blade.php" class="dropdown-item">Log In</a>
+                        <a href="logout.blade.php" class="dropdown-item">Log Out</a>
+                        <a href="register.blade.php" class="dropdown-item">Register</a>
+                        
                     </div>
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
@@ -69,6 +118,134 @@
         </div>
     </nav>
     <!-- Navbar End -->
+
+    <div class="container-fluid bg-primary py-5 mb-5 page-header">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1 class="display-3 text-white animated slideInDown">
+                        SeKAD
+                        
+                    </h1>
+                    
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center">
+                            <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
+                            <li class="breadcrumb-item"><a class="text-white" href="#">Attendance Record</a></li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="width: 90%; margin: 0 auto;">
+
+    <div class="container mt-5">
+    <h2 class="mb-4">Attendance Record</h2>
+
+    <!-- Filter Form -->
+    <form method="GET" action="">
+        <div class="row mb-3">
+            <!-- Form Dropdown -->
+            <div class="col-md-4">
+                <label for="formSelect">Select Form:</label>
+                <select name="form" id="formSelect" class="form-control">
+                    <option value="1" <?php echo ($form === '1') ? 'selected' : ''; ?>>Form 1</option>
+                    <option value="2" <?php echo ($form === '2') ? 'selected' : ''; ?>>Form 2</option>
+                    <option value="3" <?php echo ($form === '3') ? 'selected' : ''; ?>>Form 3</option>
+                    <option value="4" <?php echo ($form === '4') ? 'selected' : ''; ?>>Form 4</option>
+                    <option value="5" <?php echo ($form === '5') ? 'selected' : ''; ?>>Form 5</option>
+                </select>
+            </div>
+
+            <!-- Class Dropdown -->
+            <div class="col-md-4">
+                <label for="classSelect">Select Class:</label>
+                <select name="class" id="classSelect" class="form-control">
+                    <option value="CENDEKIAWAN" <?php echo ($class === 'CENDEKIAWAN') ? 'selected' : ''; ?>>CENDEKIAWAN</option>
+                    <option value="PENDETA" <?php echo ($class === 'PENDETA') ? 'selected' : ''; ?>>PENDETA</option>
+                    <option value="SARJANA" <?php echo ($class === 'SARJANA') ? 'selected' : ''; ?>>SARJANA</option>
+                    <option value="INTELEK" <?php echo ($class === 'INTELEK') ? 'selected' : ''; ?>>INTELEK</option>
+                </select>
+            </div>
+
+            <!-- Date Picker -->
+            <div class="col-md-4">
+                <label for="dateSelect">Select Date:</label>
+                <input type="date" name="date" id="dateSelect" class="form-control" value="<?php echo htmlspecialchars($date ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+
+    <!-- Attendance Table -->
+    <form method="POST" action="update_attendance.php">
+        <table class="table table-striped table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th style="width: 40%;">Name</th>
+                    <th style="width: 40%;">IC Number</th>
+                    <th style="width: 20%; text-align: center;">Attendance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                try {
+                    // Retrieve GET parameters
+                    $form = isset($_GET['form']) ? $_GET['form'] : '1';
+                    $class = isset($_GET['class']) ? $_GET['class'] : 'CENDEKIAWAN';
+                    $date = isset($_GET['date']) ? $_GET['date'] : '';
+
+                    if (isset($_GET['form']) && isset($_GET['class'])) {
+                        $targetName = $form . " " . $class;
+                    
+                        $sql = "SELECT b.id, b.name, b.class, u.ic_number
+                                FROM biodata_stud b
+                                JOIN users u ON b.name = u.name
+                                WHERE b.class = ? AND u.role = 'Student'";
+                        $params = [$targetName];
+                    
+                        if (!empty($date)) {
+                            $sql .= " AND ? IS NOT NULL";
+                            $params[] = $date; // Add date as placeholder
+                        }
+                    
+                        // Execute query
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->execute($params);
+                        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    }
+
+                    if (!empty($students)) {
+                        foreach ($students as $row) {
+                            echo "<tr>";
+                            echo "<td>" . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . "</td>";
+                            echo "<td>" . htmlspecialchars($row['ic_number'], ENT_QUOTES, 'UTF-8') . "</td>";
+                            echo "<td style='text-align: center;'>";
+                            $checked = $row['present'] ? "checked" : "";
+                            echo "<input type='checkbox' name='attendance[" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "]' value='1' $checked>";
+                            echo "<input type='hidden' name='user_ids[]' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>";
+                            echo "</td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='3' style='text-align: center;'>No records found for Form $form - $class on $date.</td></tr>";
+                    }
+                } catch (PDOException $e) {
+                    die("Error: " . $e->getMessage());
+                }
+                ?>
+            </tbody>
+        </table>
+
+        <!-- Submit Attendance Button -->
+        <button type="submit" class="btn btn-success">Update Attendance</button>
+    </form>
+</div>
+
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
@@ -162,6 +339,7 @@
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="assets/global.js"></script>
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>

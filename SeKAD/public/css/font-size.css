@@ -1,0 +1,58 @@
+.font-small * {
+    font-size: 12px;
+}
+
+.font-medium * {
+    font-size: 16px;
+}
+
+.font-large * {
+    font-size: 20px;
+}
+
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.attendance-table th, .attendance-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+/* Adjust column widths */
+.attendance-table th:first-child,
+.attendance-table td:first-child {
+    width: 95%; /* Allocate 80% of the table width for the Name column */
+}
+
+.attendance-table th:last-child,
+.attendance-table td:last-child {
+    width: 5%; 
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Light mode styles */
+body.light .attendance-table th {
+    background-color: #f4f4f4;
+    color: #000;
+}
+
+body.light .attendance-table td {
+    background-color: #fff;
+    color: #000;
+}
+
+/* Dark mode styles */
+body.dark .attendance-table th {
+    background-color: #333;
+    color: #fff;
+}
+
+body.dark .attendance-table td {
+    background-color: #121212;
+    color: #fff;
+}
+

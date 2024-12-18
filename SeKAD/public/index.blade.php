@@ -267,6 +267,10 @@ include('db_connection.php'); // Include database connection
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/font-size.css" rel="stylesheet">
+
+    <link id="light-mode" rel="stylesheet" href="{{ asset('css/light.css') }}">
+    <link id="dark-mode" rel="stylesheet" href="{{ asset('css/dark.css') }}" disabled>
 </head>
 
 <body>
@@ -315,6 +319,7 @@ include('db_connection.php'); // Include database connection
                 <a href="profile.blade.php" class="nav-item nav-link">Profile</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
                 <a href="low-attendance.php" class="nav-item nav-link">low</a>
+                <a href="attendanceRecord1.blade.php" class="nav-item nav-link">Attendance Record</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
@@ -323,6 +328,13 @@ include('db_connection.php'); // Include database connection
                         <a href="404.html" class="dropdown-item">404 Page</a>
                         <a href="login.php" class="dropdown-item">Log In</a>
                         <a href="register.php" class="dropdown-item">Register</a>
+                        <a href="profile.blade.php" class="dropdown-item">Profile</a>
+                        <a href="setting.blade.php" class="dropdown-item">Setting</a>
+                        <a href="announce.blade.php" class="dropdown-item">Announcement</a>
+                        <a href="login.blade.php" class="dropdown-item">Log In</a>
+                        <a href="logout.blade.php" class="dropdown-item">Log Out</a>
+                        <a href="register.blade.php" class="dropdown-item">Register</a>
+                        
                     </div>
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
@@ -757,6 +769,7 @@ include('db_connection.php'); // Include database connection
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="assets/global.js"></script>
 </body>
 
 </html>
