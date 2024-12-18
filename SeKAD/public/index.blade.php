@@ -35,6 +35,38 @@
 // for announcement ambik dari database
 ?> -->
 
+// $announcements = [];
+// if ($result->num_rows > 0) {
+//     while ($row = $result->fetch_assoc()) {
+//         $announcements[] = $row;
+//     }
+// }
+    // atas ni for announcement    
+
+// $student_id = 1; // Replace with the actual student's ID or a dynamic value
+// $sql = "SELECT attend, total_days FROM attendance WHERE student_id = ?";
+// $stmt = $conn->prepare($sql);
+// $stmt->bind_param("i", $student_id);
+// $stmt->execute();
+// $stmt->bind_result($attend, $total_days);
+// $stmt->fetch();
+// $stmt->close();
+// $conn->close();
+
+// Calculate absence
+// $absence = $total_days - $attend;
+
+// Send data as JSON for the frontend
+// echo json_encode([
+//     "attend" => $attend,
+//     "absence" => $absence,
+//     "total_days" => $total_days
+// ]);
+// atas ni untuk attendance chart
+//
+// for announcement ambik dari database
+?> -->
+
 <?php
 session_start(); // Start the session
 include('db_connection.php'); // Include database connection
@@ -132,7 +164,6 @@ include('db_connection.php'); // Include database connection
                         <a href="404.html" class="dropdown-item">404 Page</a>
                         <a href="login.php" class="dropdown-item">Log In</a>
                         <a href="register.php" class="dropdown-item">Register</a>
-                        <a href="Attendance Analytics.blade.php" class="dropdown-item">Attendance Analytics</a>
                     </div>
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
@@ -211,10 +242,10 @@ include('db_connection.php'); // Include database connection
             <div class="row g-4">
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="service-item text-center pt-3">
-                        <a href="profile.blade.php" target="_blank">
+                        <a href="https://www.google.com" target="_blank">
                         <div class="p-4">
                             <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
-                            <h5 class="mb-3">Profile</h5>
+                            <h5 class="mb-3">Profie</h5>
                             <p>View or Edit your credentials here !</p>
                         </div>
                         </a>
@@ -242,7 +273,6 @@ include('db_connection.php'); // Include database connection
                         </a>
                     </div>
                 </div>
-                <?php    if ($role === 'Teacher'): ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
                         <a href="https://www.google.com" target="_blank">
@@ -254,7 +284,6 @@ include('db_connection.php'); // Include database connection
                         </a>
                     </div>
                 </div>
-                <?php endif; ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
                         <a href="https://www.google.com" target="_blank">
@@ -310,7 +339,7 @@ include('db_connection.php'); // Include database connection
         <script>
             // Dummy attendance data
             const data = {
-                attend: 25,
+                attend: 85,
                 total_days: 100
             };
     
