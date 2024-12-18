@@ -122,7 +122,7 @@ include('db_connection.php'); // Include database connection
                 <a href="about.html" class="nav-item nav-link">About</a>
                 <a href="login.php" class="nav-item nav-link">Log In</a>
                 <a href="register.php" class="nav-item nav-link">Register</a>
-                <a href="profile.php" class="nav-item nav-link">Profile</a>
+                <a href="profile.blade.php" class="nav-item nav-link">Profile</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
