@@ -11,10 +11,12 @@
 <body>
     <div class="register-box">
         <h2>Register</h2>
-        <form class="" action="" enctype = "multipart/form-data" method="post">
+        
+        <form action="registration_handling.blade.php" method="POST" enctype = "multipart/form-data" >
             <input type="file" name="excel" required value="">
-            <button type="submit" name="import">Import</button>
+            <button type="submit" name="import">Import Excel</button>
         </form>
+
         <p>Please fill in the form to create an account.</p>
         <form class="form-container" action="registration_handling.blade.php" method="POST" enctype="multipart/form-data">
             <!-- User Details -->

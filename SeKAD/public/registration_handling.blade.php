@@ -1,97 +1,87 @@
 <?php
-// Include database connection file
 include("db_connection.php");
 
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Collect form data
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Securely hash password
-    $mobilenumber = $_POST['mobilenumber'];
-    $emergencymobilenumber = $_POST['emergencymobilenumber'];
-    $date_of_birth = $_POST['date_of_birth'];
-    $gender = $_POST['gender'];
-    $role = $_POST['role'];
-    $ic_number = $_POST['ic_number'];
-    $nationality = $_POST['nationality'];
-    $address = $_POST['address'];
-    $fname = $_POST['fname'];
-    $fcontact = $_POST['fcontact'];
-    $foccupation = $_POST['foccupation'];
-    $mname = $_POST['mname'];
-    $mcontact = $_POST['mcontact'];
-    $moccupation = $_POST['moccupation'];
-    $gname = $_POST['gname'];
-    $gcontact = $_POST['gcontact'];
-    $goccupation = $_POST['goccupation'];
-    $blood_type = $_POST['blood_type'];
-    $allergies = $_POST['allergies'];
+if (isset($_POST['import'])) {
+    $fileName = $_FILES['excel']['name'];
+    $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+    $allowedType = ['xls', 'xlsx', 'csv'];
 
-    // Handle file upload for avatar
-    $avatar = 'default.png'; // Default avatar if no file is uploaded
-    if (!empty($_FILES['avatar']['name'])) {
-        $upload_dir = 'img/';
-        $avatar_name = time() . '_' . basename($_FILES['avatar']['name']);
-        $target_file = $upload_dir . $avatar_name;
+    if (in_array($fileExtension, $allowedType)) {
+        $targetPath = 'uploads/' . basename($fileName);
+        move_uploaded_file($_FILES['excel']['tmp_name'], $targetPath);
 
-        // Validate file type
-        $allowed_types = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-        if (in_array($_FILES['avatar']['type'], $allowed_types)) {
-            // Move the uploaded file
-            if (move_uploaded_file($_FILES['avatar']['tmp_name'], $target_file)) {
-                $avatar = $avatar_name; // Save the new file name
-            } else {
-                echo "Error uploading avatar. Using default avatar instead.";
+        require 'excelReader/excel_reader2.php';
+        require 'excelReader/SpreadsheetReader.php';
+
+        try {
+            $reader = new SpreadsheetReader($targetPath);
+            foreach ($reader as $key => $row) {
+                if ($key === 0) continue; // Skip header row
+
+                $name = $row[0];
+                $email = $row[1];
+                $mobilenumber = $row[2];
+                $emergencymobilenumber = $row[3];
+                $role = $row[4];
+                $class = $row[5];
+                $date_of_birth = $row[6];
+                $gender = $row[7];
+                $ic_number = $row[8];
+                $nationality = $row[9];
+                $address = $row[10];
+                $fname = $row[11];
+                $fcontact = $row[12];
+                $foccupation = $row[13];
+                $mname = $row[14];
+                $mcontact = $row[15];
+                $moccupation = $row[16];
+                $gname = $row[17];
+                $gcontact = $row[18];
+                $goccupation = $row[19];
+                $blood_type = $row[20];
+                $allergies = $row[21];
+
+                $generatedPassword = '1234567890';
+                $hashedPassword = password_hash($generatedPassword, PASSWORD_BCRYPT);
+
+                $stmt = $pdo->prepare("
+                    INSERT INTO users 
+                    (name, email, mobilenumber, emergencymobilenumber, role, class, date_of_birth, gender, ic_number, nationality, address, fname, fcontact, foccupation, mname, mcontact, moccupation, gname, gcontact, goccupation, blood_type, allergies, password) 
+                    VALUES 
+                    (:name, :email, :mobilenumber, :emergencymobilenumber, :role, :class, :date_of_birth, :gender, :ic_number, :nationality, :address, :fname, :fcontact, :foccupation, :mname, :mcontact, :moccupation, :gname, :gcontact, :goccupation, :blood_type, :allergies, :password)
+                ");
+                $stmt->execute([
+                    ':name' => $name,
+                    ':email' => $email,
+                    ':mobilenumber' => $mobilenumber,
+                    ':emergencymobilenumber' => $emergencymobilenumber,
+                    ':role' => $role,
+                    ':class' => $class,
+                    ':date_of_birth' => $date_of_birth,
+                    ':gender' => $gender,
+                    ':ic_number' => $ic_number,
+                    ':nationality' => $nationality,
+                    ':address' => $address,
+                    ':fname' => $fname,
+                    ':fcontact' => $fcontact,
+                    ':foccupation' => $foccupation,
+                    ':mname' => $mname,
+                    ':mcontact' => $mcontact,
+                    ':moccupation' => $moccupation,
+                    ':gname' => $gname,
+                    ':gcontact' => $gcontact,
+                    ':goccupation' => $goccupation,
+                    ':blood_type' => $blood_type,
+                    ':allergies' => $allergies,
+                    ':password' => $hashedPassword,
+                ]);
             }
-        } else {
-            echo "Invalid file type. Only JPEG, PNG, JPG, and GIF files are allowed.";
+            echo "<script>alert('Data Imported Successfully'); window.location.href = 'register.php';</script>";
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
         }
+    } else {
+        echo "<script>alert('Invalid file type'); window.location.href = 'register.php';</script>";
     }
-
-    // Prepare and execute the SQL query securely
-    $sql = "INSERT INTO users 
-            (name, email, password, mobilenumber, emergencymobilenumber, date_of_birth, gender, role, ic_number, nationality, address, fname, fcontact, foccupation, mname, mcontact, moccupation, gname, gcontact, goccupation, blood_type, allergies, avatar) 
-            VALUES 
-            (:name, :email, :password, :mobilenumber, :emergencymobilenumber, :date_of_birth, :gender, :role, :ic_number, :nationality, :address, :fname, :fcontact, :foccupation, :mname, :mcontact, :moccupation, :gname, :gcontact, :goccupation, :blood_type, :allergies, :avatar)";
-    
-    try {
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':name' => $name,
-            ':email' => $email,
-            ':password' => $password,
-            ':mobilenumber' => $mobilenumber,
-            ':emergencymobilenumber' => $emergencymobilenumber,
-            ':date_of_birth' => $date_of_birth,
-            ':gender' => $gender,
-            ':role' => $role,
-            ':ic_number' => $ic_number,
-            ':nationality' => $nationality,
-            ':address' => $address,
-            ':fname' => $fname,
-            ':fcontact' => $fcontact,
-            ':foccupation' => $foccupation,
-            ':mname' => $mname,
-            ':mcontact' => $mcontact,
-            ':moccupation' => $moccupation,
-            ':gname' => $gname,
-            ':gcontact' => $gcontact,
-            ':goccupation' => $goccupation,
-            ':blood_type' => $blood_type,
-            ':allergies' => $allergies,
-            ':avatar' => $avatar,
-        ]);
-
-        // Redirect to login page with success message
-        header("Location: login.php?success=1");
-        exit();
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-    }
-
-    // Close statement and connection
-    $stmt->close();
-    $conn->close();
 }
 ?>
