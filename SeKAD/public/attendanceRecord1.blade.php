@@ -202,16 +202,12 @@ include('db_connection.php'); // Include database connection
                     if (isset($_GET['form']) && isset($_GET['class'])) {
                         $targetName = $form . " " . $class;
                     
-                        $sql = "SELECT b.id, b.name, b.class, u.ic_number
+                        $sql = "SELECT b.id, b.name, b.class, u.ic_number, a.present
                                 FROM biodata_stud b
                                 JOIN users u ON b.name = u.name
+                                LEFT JOIN attendance a ON b.id = a.user_id AND a.date = ?
                                 WHERE b.class = ? AND u.role = 'Student'";
-                        $params = [$targetName];
-                    
-                        if (!empty($date)) {
-                            $sql .= " AND ? IS NOT NULL";
-                            $params[] = $date; // Add date as placeholder
-                        }
+                        $params = [$date, $targetName];
                     
                         // Execute query
                         $stmt = $pdo->prepare($sql);
@@ -221,22 +217,25 @@ include('db_connection.php'); // Include database connection
 
                     if (!empty($students)) {
                         foreach ($students as $row) {
+                            $present = $row['present'] ?? 0; // Default to 0 if 'present' key is missing
+                            $checked = $present == 1 ? "checked" : "";
                             echo "<tr>";
                             echo "<td>" . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . "</td>";
                             echo "<td>" . htmlspecialchars($row['ic_number'], ENT_QUOTES, 'UTF-8') . "</td>";
                             echo "<td style='text-align: center;'>";
-                            $checked = $row['present'] ? "checked" : "";
                             echo "<input type='checkbox' name='attendance[" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "]' value='1' $checked>";
                             echo "<input type='hidden' name='user_ids[]' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>";
                             echo "</td>";
                             echo "</tr>";
                         }
-                    } else {
+                        } 
+                        else {
                         echo "<tr><td colspan='3' style='text-align: center;'>No records found for Form $form - $class on $date.</td></tr>";
+                        }
+                    } 
+                        catch (PDOException $e) {
+                        die("Error: " . $e->getMessage());
                     }
-                } catch (PDOException $e) {
-                    die("Error: " . $e->getMessage());
-                }
                 ?>
             </tbody>
         </table>

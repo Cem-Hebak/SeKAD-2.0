@@ -97,7 +97,7 @@
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-globe text-primary mb-4"></i>
-                            <h5  class="mb-3">Event Submission</h5>
+                            <h5  class="mb-3">Programme Submission</h5>
                         </div>
                     </div>
                 </div>

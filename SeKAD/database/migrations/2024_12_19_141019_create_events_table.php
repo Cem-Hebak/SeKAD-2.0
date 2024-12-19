@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,15 +12,15 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id(); // Auto-incrementing ID
-            $table->string('event_name'); // Event name
-            $table->string('pic_name'); // Person in charge
+            $table->string('pic_name'); // Person in charge or company
             $table->string('phone_number'); // Phone number
-            $table->date('start_date'); // Start date
-            $table->time('start_time'); // Start time
-            $table->date('finish_date'); // Finish date
-            $table->time('finish_time'); // Finish time
-            $table->text('description'); // Description
-            $table->string('poster')->nullable(); // Poster path (nullable)
+            $table->string('event_name'); // Event name
+            $table->date('start_date'); // Event start date
+            $table->time('start_time'); // Event start time
+            $table->date('finish_date'); // Event finish date
+            $table->time('finish_time'); // Event finish time
+            $table->text('description'); // Event description
+            $table->string('poster_path')->nullable(); // Event poster (nullable)
             $table->timestamps(); // created_at and updated_at
         });
     }

@@ -89,7 +89,7 @@
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
-                            <h5 class="mb-3">Damage Report</h5>
+                            <h5 class="mb-3">Maintainence Report</h5>
                         </div>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-globe text-primary mb-4"></i>
-                            <h5  class="mb-3">Event Submission</h5>
+                            <h5  class="mb-3">Programme Submission</h5>
                         </div>
                     </div>
                 </div>
@@ -106,17 +106,20 @@
     </div>
     <!-- Service End -->
 
+    
+  
+
     <div class="container2">
         <h4 style="margin-bottom: 20px; color: #333;">Event Submission Form</h4>
-            <form method="POST" action="letak database ke mana" enctype="multipart/form-data">
+            <form method="POST" action="update_event.php" enctype="multipart/form-data">
                 <div style="margin-bottom: 15px;">
                     <label for="pic_name" style="font-weight: bold; display: block; margin-bottom: 5px;">Person in Charge / Company</label>
                     <input type="text" id="pic_name" name="pic_name" placeholder="Enter name of person or company" 
                         style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <label for="pic_name" style="font-weight: bold; display: block; margin-bottom: 5px;">Phone Number</label>
-                    <input type="text" id="pic_name" name="pic_name" placeholder="Enter phone number of person in charge / company" 
+                    <label for="phone_number" style="font-weight: bold; display: block; margin-bottom: 5px;">Phone Number</label>
+                    <input type="text" id="phone_number" name="phone_number" placeholder="Enter phone number of person in charge / company" 
                         style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
                 </div>
                 <div style="margin-bottom: 15px;">
@@ -126,36 +129,36 @@
                 </div>
                 <div style="display: flex; gap: 20px; margin-bottom: 15px;">
                     <div style="flex: 1;">
-                        <label for="event_start_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Start Date</label>
-                        <input type="date" id="event_start_date" name="event_start_date" 
+                        <label for="start_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Start Date</label>
+                        <input type="date" id="start_date" name="start_date" 
                             style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
                     </div>
                     <div style="flex: 1;">
-                        <label for="event_start_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Start Time</label>
-                        <input type="time" id="event_start_time" name="event_start_time" 
+                        <label for="start_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Start Time</label>
+                        <input type="time" id="start_time" name="start_time" 
                         style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
                     </div>
                 </div>
                 <div style="display: flex; gap: 20px; margin-bottom: 15px;">
                     <div style="flex: 1;">
-                        <label for="event_finish_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Finish Date</label>
-                        <input type="date" id="event_finish_date" name="event_finish_date" 
+                        <label for="finish_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Finish Date</label>
+                        <input type="date" id="finish_date" name="finish_date" 
                             style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
                     </div>
                     <div style="flex: 1;">
-                        <label for="event_finish_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Finish Time</label>
-                        <input type="time" id="event_finish_time" name="event_finish_time" 
+                        <label for="finish_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Finish Time</label>
+                        <input type="time" id="finish_time" name="finish_time" 
                             style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
                     </div>
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <label for="event_description" style="font-weight: bold; display: block; margin-bottom: 5px;">Event Description</label>
-                    <textarea id="event_description" name="event_description" rows="4" placeholder="Provide a brief description of the event" 
+                    <label for="description" style="font-weight: bold; display: block; margin-bottom: 5px;">Event Description</label>
+                    <textarea id="description" name="description" rows="4" placeholder="Provide a brief description of the event" 
                         style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required></textarea>
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <label for="event_poster" style="font-weight: bold; display: block; margin-bottom: 5px;">Event Poster (Optional)</label>
-                    <input type="file" id="event_poster" name="event_poster" accept="image/*" 
+                    <label for="poster" style="font-weight: bold; display: block; margin-bottom: 5px;">Event Poster (Optional)</label>
+                    <input type="file" id="poster" name="poster" accept="image/*" 
                         style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
                 </div>
                 <div style="text-align: right; margin-top: 20px;">
