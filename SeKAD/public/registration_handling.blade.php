@@ -18,28 +18,35 @@ if (isset($_POST['import'])) {
             foreach ($reader as $key => $row) {
                 if ($key === 0) continue; // Skip header row
 
-                $name = $row[0];
-                $email = $row[1];
-                $mobilenumber = $row[2];
-                $emergencymobilenumber = $row[3];
-                $role = $row[4];
-                $class = $row[5];
-                $date_of_birth = $row[6];
-                $gender = $row[7];
-                $ic_number = $row[8];
-                $nationality = $row[9];
-                $address = $row[10];
-                $fname = $row[11];
-                $fcontact = $row[12];
-                $foccupation = $row[13];
-                $mname = $row[14];
-                $mcontact = $row[15];
-                $moccupation = $row[16];
-                $gname = $row[17];
-                $gcontact = $row[18];
-                $goccupation = $row[19];
-                $blood_type = $row[20];
-                $allergies = $row[21];
+                if (empty(array_filter($row))) {
+                    continue; // Skip empty rows
+                }
+
+                // Log the current row for debugging
+                error_log(print_r($row, true));
+
+                $name = $row[0] ?? null;
+                $email = $row[1] ?? null;
+                $mobilenumber = $row[2] ?? null;
+                $emergencymobilenumber = $row[3] ?? null;
+                $role = $row[4] ?? null;
+                $class = $row[5] ?? null;
+                $date_of_birth = $row[6] ?? null;
+                $gender = $row[7] ?? null;
+                $ic_number = $row[8] ?? null;
+                $nationality = $row[9] ?? null;
+                $address = $row[10] ?? null;
+                $fname = $row[11] ?? null;
+                $fcontact = $row[12] ?? null;
+                $foccupation = $row[13] ?? null;
+                $mname = $row[14] ?? null;
+                $mcontact = $row[15] ?? null;
+                $moccupation = $row[16] ?? null;
+                $gname = $row[17] ?? null;
+                $gcontact = $row[18] ?? null;
+                $goccupation = $row[19] ?? null;
+                $blood_type = $row[20] ?? null;
+                $allergies = $row[21] ?? null;
 
                 $generatedPassword = '1234567890';
                 $hashedPassword = password_hash($generatedPassword, PASSWORD_BCRYPT);
