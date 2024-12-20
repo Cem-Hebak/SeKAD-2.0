@@ -64,7 +64,7 @@ if (isset($_POST['forgot'])) {
             if ($stmt2->rowCount() > 0) {
                 echo '<script>
                     alert("Temporary password has been sent to your registered email address. Please change it after logging in!");
-                    window.location.replace("index.blade.php");
+                    window.location.replace("login.blade.php");
                 </script>';
             } else {
                 echo '<script>
