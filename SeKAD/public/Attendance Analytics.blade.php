@@ -240,7 +240,72 @@ include('db_connection.php'); // Include database connection
     <!-- // Fetch attendance data from the server -->
    
 
+<!-- google chart start-->
+<?php
+ 
 
+$link=mysqli_connect("localhost","root","");
+mysqli_select_db($link,"admin");
+
+$test=array();
+$count = 0;
+
+
+$res = mysqli_query($link, "SELECT 
+    SUM(CASE WHEN present = 1 THEN 1 ELSE 0 END) AS count_1,
+    SUM(CASE WHEN present = 2 THEN 1 ELSE 0 END) AS count_2,
+    SUM(CASE WHEN present = 3 THEN 1 ELSE 0 END) AS count_3,
+    SUM(CASE WHEN present = 4 THEN 1 ELSE 0 END) AS count_4
+FROM attendance_table;");
+
+// Fetch the results
+while ($row = mysqli_fetch_assoc($res)) {
+    $test[$count] = ["label" => "Present 1", "Y" => $row["count_1"]];
+    $count++;
+    $test[$count] = ["label" => "Present 2", "Y" => $row["count_2"]];
+    $count++;
+    $test[$count] = ["label" => "Present 3", "Y" => $row["count_3"]];
+    $count++;
+    $test[$count] = ["label" => "Present 4", "Y" => $row["count_4"]];
+    $count++;
+}
+    
+?>
+<!DOCTYPE HTML>
+<html>
+<head>  
+<script>
+window.onload = function () {
+ 
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	exportEnabled: true,
+	theme: "light1", // "light1", "light2", "dark1", "dark2"
+	title:{
+		text: "Simple Column Chart with Index Labels"
+	},
+	axisY:{
+		includeZero: true
+	},
+	data: [{
+		type: "column", //change type to bar, line, area, pie, etc
+		//indexLabel: "{y}", //Shows y value on all Data Points
+		indexLabelFontColor: "#5A5757",
+		indexLabelPlacement: "outside",   
+		dataPoints: <?php echo json_encode($test, JSON_NUMERIC_CHECK); ?>
+	}]
+});
+chart.render();
+ 
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+</body>
+</html>  
+<!-- google chart end -->
     <!-- Analytics Chart End -->
 
 
@@ -250,6 +315,7 @@ include('db_connection.php'); // Include database connection
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compact Attendance Chart</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
         .chart-container {
             width: 40%;
@@ -347,6 +413,7 @@ include('db_connection.php'); // Include database connection
         /**
          * Render charts based on selected filters
          */
+        
         function renderCharts(filteredData) {
             const chartsContainer = document.getElementById('chartsContainer');
             chartsContainer.innerHTML = ''; // Clear existing charts
@@ -466,6 +533,7 @@ include('db_connection.php'); // Include database connection
 
 
     <!-- analytics chart ada filter end -->
+
 
 
 
