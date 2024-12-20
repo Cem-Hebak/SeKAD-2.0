@@ -45,7 +45,7 @@ if (isset($_POST['forgot'])) {
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = 'sekadinfo@gmail.com';
-            $mail->Password = 'kzik yuvr gklw tukr';
+            $mail->Password = 'odvd bied vomf bwcy';
             $mail->SMTPSecure = 'ssl';
             $mail->Port = 465;
             $mail->setFrom('sekadinfo@gmail.com', 'SeKAD Support');
