@@ -131,418 +131,198 @@ include('db_connection.php'); // Include database connection
     <!-- Header End -->
      
     
-
-                                  
-    <!-- Team End -->
-     <!-- Analytics Chart Start yang berjaya-->
-
-
-     <!-- <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compact Attendance Chart</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .chart-container {
-            width: 80%;
-            margin: 30px auto;
-            text-align: center;
-        }
-        .chart-item {
-            margin-bottom: 40px;
-        }
-        .chart-summary {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 1em;
-        }
-    </style>
-</head>
-<body>
-    <div id="chartsContainer" class="chart-container"></div>
-
-    <script>
-        fetch('getAttendanceData.php')
-            .then(response => response.json())
-            .then(data => {
-                // Access the main container
-                const chartsContainer = document.getElementById('chartsContainer');
-
-                // Process data for each class and date
-                Object.keys(data).forEach(className => {
-                    const classData = data[className];
-
-                    Object.keys(classData).forEach(date => {
-                        const attendance = classData[date];
-                        const total = Object.values(attendance).reduce((sum, value) => sum + value, 0);
-
-                        // Create a container for each chart
-                        const chartItem = document.createElement('div');
-                        chartItem.className = 'chart-item';
-                        chartItem.innerHTML = `
-                            <h3>${className} - ${date}</h3>
-                            <canvas id="chart_${className}_${date.replace(/-/g, '_')}"></canvas>
-                            <div class="chart-summary">Attendance: ${attendance.attend} / ${total}</div>
-                        `;
-                        chartsContainer.appendChild(chartItem);
-
-                        // Render the chart
-                        const ctx = document.getElementById(`chart_${className}_${date.replace(/-/g, '_')}`).getContext('2d');
-                        new Chart(ctx, {
-                            type: 'doughnut',
-                            data: {
-                                labels: ['Attendance', 'Absence', 'Pending', 'Medical Leave'],
-                                datasets: [{
-                                    data: [
-                                        attendance.attend,
-                                        attendance.absence,
-                                        attendance.pending,
-                                        attendance.medical
-                                    ],
-                                    backgroundColor: ['#4CAF50', '#FF5252', '#FFC107', '#2196F3'],
-                                    borderColor: ['#4CAF50', '#FF5252', '#FFC107', '#2196F3'],
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    legend: {
-                                        position: 'top',
-                                        labels: {
-                                            font: {
-                                                size: 12
-                                            }
-                                        }
-                                    },
-                                    tooltip: {
-                                        callbacks: {
-                                            label: function(tooltipItem) {
-                                                const totalValue = total;
-                                                const value = tooltipItem.raw;
-                                                const percentage = ((value / totalValue) * 100).toFixed(2);
-                                                return `${tooltipItem.label}: ${value} (${percentage}%)`;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                    });
-                });
-            })
-            .catch(error => console.error('Error fetching attendance data:', error));
-    </script>
-</body> -->
-
-
-
-    <!-- // Fetch attendance data from the server -->
-   
-
 <!-- google chart start-->
 <?php
- 
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-$link=mysqli_connect("localhost","root","");
-mysqli_select_db($link,"admin");
+// Initialize database connection
+$link = mysqli_connect("localhost", "root", "", "admin");
 
-$test=array();
-$count = 0;
-
-
-$res = mysqli_query($link, "SELECT 
-    SUM(CASE WHEN present = 1 THEN 1 ELSE 0 END) AS count_1,
-    SUM(CASE WHEN present = 2 THEN 1 ELSE 0 END) AS count_2,
-    SUM(CASE WHEN present = 3 THEN 1 ELSE 0 END) AS count_3,
-    SUM(CASE WHEN present = 4 THEN 1 ELSE 0 END) AS count_4
-FROM attendance_table;");
-
-// Fetch the results
-while ($row = mysqli_fetch_assoc($res)) {
-    $test[$count] = ["label" => "Present 1", "Y" => $row["count_1"]];
-    $count++;
-    $test[$count] = ["label" => "Present 2", "Y" => $row["count_2"]];
-    $count++;
-    $test[$count] = ["label" => "Present 3", "Y" => $row["count_3"]];
-    $count++;
-    $test[$count] = ["label" => "Present 4", "Y" => $row["count_4"]];
-    $count++;
+// Check connection
+if (!$link) {
+    die("Database connection failed: " . mysqli_connect_error());
 }
-    
+
+// Initialize variables
+$test = array();
+$startDate = isset($_POST['start_date']) ? $_POST['start_date'] : null;
+$endDate = isset($_POST['end_date']) ? $_POST['end_date'] : null;
+$chartType = isset($_POST['chart_type']) ? $_POST['chart_type'] : 'column'; // Default to column chart
+$selectedYear = isset($_POST['year']) ? $_POST['year'] : null;
+$selectedClass = isset($_POST['class_type']) ? $_POST['class_type'] : null;
+$viewType = isset($_POST['view_type']) ? $_POST['view_type'] : 'both'; // Default to show both
+
+// Check if filtering parameters are provided
+if ($startDate && $endDate) {
+    // Validate the dates
+    if (strtotime($startDate) > strtotime($endDate)) {
+        die("Start date must be earlier than or equal to end date.");
+    }
+
+    // Prepare the query to filter data by date range, year, and class
+    $query = "SELECT 
+                DATE(date) AS date, 
+                SUM(CASE WHEN present = 1 OR present = 4 THEN 1 ELSE 0 END) AS count_1, -- Present
+                SUM(CASE WHEN present = 2 OR present = 3 THEN 1 ELSE 0 END) AS count_2  -- Absent
+              FROM attendance 
+              WHERE DATE(date) BETWEEN '$startDate' AND '$endDate'";
+
+    // Add filtering conditions for year and class
+    if ($selectedYear) {
+        $query .= " AND class LIKE '$selectedYear%'";
+    }
+    if ($selectedClass) {
+        $query .= " AND class LIKE '%$selectedClass'";
+    }
+
+    $query .= " GROUP BY DATE(date)
+                ORDER BY DATE(date);";
+
+    $res = mysqli_query($link, $query);
+
+    // Check if the query execution is successful
+    if ($res) {
+        // Fetch the results and format them for the chart
+        while ($row = mysqli_fetch_assoc($res)) {
+            $test[] = [
+                "label" => $row["date"],
+                "y" => (int)$row["count_1"], // Present
+                "absent" => (int)$row["count_2"] // Absent
+            ];
+        }
+    } else {
+        die("Query failed: " . mysqli_error($link));
+    }
+}
+
+// Close the database connection
+mysqli_close($link);
 ?>
 <!DOCTYPE HTML>
 <html>
-<head>  
+<head>
 <script>
 window.onload = function () {
- 
-var chart = new CanvasJS.Chart("chartContainer", {
-	animationEnabled: true,
-	exportEnabled: true,
-	theme: "light1", // "light1", "light2", "dark1", "dark2"
-	title:{
-		text: "Simple Column Chart with Index Labels"
-	},
-	axisY:{
-		includeZero: true
-	},
-	data: [{
-		type: "column", //change type to bar, line, area, pie, etc
-		//indexLabel: "{y}", //Shows y value on all Data Points
-		indexLabelFontColor: "#5A5757",
-		indexLabelPlacement: "outside",   
-		dataPoints: <?php echo json_encode($test, JSON_NUMERIC_CHECK); ?>
-	}]
-});
-chart.render();
- 
+    var dataPoints = <?php echo json_encode($test, JSON_NUMERIC_CHECK); ?>;
+
+    var chartData = [];
+    var viewType = "<?php echo $viewType; ?>";
+
+    // Build chart data based on viewType
+    if (viewType === "present" || viewType === "both") {
+        chartData.push({
+            type: "<?php echo $chartType; ?>", // Use the selected chart type
+            indexLabelFontColor: "#5A5757",
+            indexLabelPlacement: "outside",
+            name: "Present",
+            showInLegend: true,
+            color: "#4f81bc",
+            dataPoints: dataPoints.map(dp => ({ label: dp.label, y: dp.y }))
+        });
+    }
+    if (viewType === "absent" || viewType === "both") {
+        chartData.push({
+            type: "<?php echo $chartType; ?>", // Use the selected chart type
+            indexLabelFontColor: "#5A5757",
+            indexLabelPlacement: "outside",
+            name: "Absent",
+            showInLegend: true,
+            color: "#c0504e",
+            dataPoints: dataPoints.map(dp => ({ label: dp.label, y: dp.absent }))
+        });
+    }
+
+    var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        exportEnabled: true,
+        theme: "light1",
+        title: {
+            text: "Attendance Chart"
+        },
+        axisY: {
+            includeZero: true
+        },
+        data: chartData
+    });
+    chart.render();
 }
 </script>
 </head>
-<body>
-<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<body style="margin: 0; padding: 0; box-sizing: border-box;">
+<table align="center" style="width: 100%; max-width: 1000px; margin: auto; border-collapse: collapse;">
+    <tr>
+        <td>
+            <h2 style="text-align: center; margin: 20px 0;">Filter Attendance by Date, Year, Class, and View Type</h2>
+            <form method="POST" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center;">
+                <div style="flex: 1; min-width: 200px; text-align: left;">
+                    <label for="start_date" style="display: block; font-weight: bold; margin-bottom: 5px;">Start Date:</label>
+                    <input type="date" id="start_date" name="start_date" value="<?php echo $startDate; ?>" required 
+                           style="width: 100%; padding: 8px; box-sizing: border-box;">
+                </div>
+                <div style="flex: 1; min-width: 200px; text-align: left;">
+                    <label for="end_date" style="display: block; font-weight: bold; margin-bottom: 5px;">End Date:</label>
+                    <input type="date" id="end_date" name="end_date" value="<?php echo $endDate; ?>" required 
+                           style="width: 100%; padding: 8px; box-sizing: border-box;">
+                </div>
+                <div style="flex: 1; min-width: 200px; text-align: left;">
+                    <label for="year" style="display: block; font-weight: bold; margin-bottom: 5px;">Year:</label>
+                    <select id="year" name="year" style="width: 100%; padding: 8px; box-sizing: border-box;">
+                        <option value="">All</option>
+                        <?php for ($i = 1; $i <= 5; $i++) { ?>
+                            <option value="<?php echo $i; ?>" <?php echo $selectedYear == $i ? 'selected' : ''; ?>><?php echo $i; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div style="flex: 1; min-width: 200px; text-align: left;">
+                    <label for="class_type" style="display: block; font-weight: bold; margin-bottom: 5px;">Class:</label>
+                    <select id="class_type" name="class_type" style="width: 100%; padding: 8px; box-sizing: border-box;">
+                        <option value="">All</option>
+                        <?php foreach (['SARJANA', 'CENDEKIAWAN', 'PENDETA', 'INTELEK'] as $class) { ?>
+                            <option value="<?php echo $class; ?>" <?php echo $selectedClass == $class ? 'selected' : ''; ?>><?php echo $class; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div style="flex: 1; min-width: 200px; text-align: left;">
+                    <label for="view_type" style="display: block; font-weight: bold; margin-bottom: 5px;">View Type:</label>
+                    <select id="view_type" name="view_type" onchange="this.form.submit()" 
+                            style="width: 100%; padding: 8px; box-sizing: border-box;">
+                        <option value="both" <?php echo $viewType === 'both' ? 'selected' : ''; ?>>Both</option>
+                        <option value="present" <?php echo $viewType === 'present' ? 'selected' : ''; ?>>Present Only</option>
+                        <option value="absent" <?php echo $viewType === 'absent' ? 'selected' : ''; ?>>Absent Only</option>
+                    </select>
+                </div>
+                <div style="flex: 1; min-width: 200px; text-align: left;">
+                    <label for="chart_type" style="display: block; font-weight: bold; margin-bottom: 5px;">Chart Type:</label>
+                    <select id="chart_type" name="chart_type" onchange="this.form.submit()" 
+                            style="width: 100%; padding: 8px; box-sizing: border-box;">
+                        <option value="line" <?php echo $chartType === 'line' ? 'selected' : ''; ?>>Line</option>
+                        <option value="column" <?php echo $chartType === 'column' ? 'selected' : ''; ?>>Column</option>
+                        <option value="area" <?php echo $chartType === 'area' ? 'selected' : ''; ?>>Area</option>
+                        <option value="spline" <?php echo $chartType === 'spline' ? 'selected' : ''; ?>>Spline</option>
+                    </select>
+                </div>
+                <!-- <div style="flex: 1; min-width: 200px; text-align: left; display: flex; justify-content: center; align-items: center;"> -->
+                    <button type="submit" style="background-color: #05bacb; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; width: 100%; box-sizing: border-box;">
+                        Filter
+                    </button>
+                <!-- </div> -->
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div id="chartContainer" style="height: 500px; width: 100%;"></div>
+        </td>
+    </tr>
+</table>
 <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 </body>
-</html>  
+</html>
+
+
 <!-- google chart end -->
-    <!-- Analytics Chart End -->
-
-
-    <!-- analytics chart ada filter start -->
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compact Attendance Chart</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <style>
-        .chart-container {
-            width: 40%;
-            margin: 30px auto;
-            text-align: center;
-        }
-        .chart-item {
-            margin-bottom: 40px;
-        }
-        .chart-summary {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 1em;
-        }
-        .filter-container {
-            text-align: center;
-            margin: 20px;
-        }
-        select {
-            margin: 5px;
-            padding: 10px;
-            font-size: 1em;
-        }
-    </style>
-</head>
-<body>
-    <!-- Filters -->
-    <div class="filter-container">
-        <label for="classFilter">Filter by Class:</label>
-        <select id="classFilter" >
-            <option value="all">All Classes</option>
-        </select>
-
-
-       
-
-        <label for="dateFilter">Filter by Date:</label>
-        <select id="dateFilter">
-            <option value="all">All Dates</option>
-        </select>
-    </div>
-
-    <!-- Charts Container -->
-    <div id="chartsContainer" class="chart-container"></div>
-
-    <script>
-        let attendanceData = {}; // To store the fetched data
-
-        // Fetch data and initialize the page
-        fetch('getAttendanceData.php')
-            .then(response => response.json())
-            .then(data => {
-                attendanceData = data; // Save the data globally
-                populateFilters(data); // Populate the dropdown filters
-                renderCharts(data); // Render all charts by default
-            })
-            .catch(error => console.error('Error fetching attendance data:', error));
-
-        /**
-         * Populate the class and date dropdown filters
-         */
-        function populateFilters(data) {
-            const classFilter = document.getElementById('classFilter');
-            const dateFilter = document.getElementById('dateFilter');
-
-            // Extract unique classes and dates
-            const classes = Object.keys(data);
-            const dates = new Set();
-
-            classes.forEach(className => {
-                Object.keys(data[className]).forEach(date => dates.add(date));
-            });
-
-            // Populate the class filter
-            classes.forEach(className => {
-                const option = document.createElement('option');
-                option.value = className;
-                option.textContent = className;
-                classFilter.appendChild(option);
-            });
-
-            // Populate the date filter
-            [...dates].sort().forEach(date => {
-                const option = document.createElement('option');
-                option.value = date;
-                option.textContent = date;
-                dateFilter.appendChild(option);
-            });
-
-            // Add event listeners for filters
-            classFilter.addEventListener('change', () => filterCharts());
-            dateFilter.addEventListener('change', () => filterCharts());
-        }
-
-        /**
-         * Render charts based on selected filters
-         */
-        
-        function renderCharts(filteredData) {
-            const chartsContainer = document.getElementById('chartsContainer');
-            chartsContainer.innerHTML = ''; // Clear existing charts
-
-            Object.keys(filteredData).forEach(className => {
-                Object.keys(filteredData[className]).forEach(date => {
-                    const attendance = filteredData[className][date];
-                    const total = Object.values(attendance).reduce((sum, value) => sum + value, 0);
-
-                    // Create a container for each chart
-                    const chartItem = document.createElement('div');
-                    chartItem.className = 'chart-item';
-                    chartItem.innerHTML = `
-                        <h3>${className} - ${date}</h3>
-                        <canvas id="chart_${className}_${date.replace(/-/g, '_')}"></canvas>
-                        <div class="chart-summary">Attendance: ${attendance.attend} / ${total}</div>
-                         
-                        <div class="chart-summary">Absence: ${attendance.absence} / ${total}</div>
-                        <div class="chart-summary">Pending: ${attendance.pending} / ${total}</div>
-                        <div class="chart-summary">Medical Leave: ${attendance.medical} / ${total}</div>
-                    `;
-                    chartsContainer.appendChild(chartItem);
-
-                    // Render the chart
-                   
-                    const ctx = document.getElementById(`chart_${className}_${date.replace(/-/g, '_')}`).getContext('2d');
-                    new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['Attendance', 'Absence', 'Pending', 'Medical Leave'],
-                            datasets: [{
-                                data: [
-                                    attendance.attend,
-                                    attendance.absence,
-                                    attendance.pending,
-                                    attendance.medical
-                                ],
-                                backgroundColor: ['#4CAF50', '#FF5252', '#FFC107', '#2196F3'],
-                                borderColor: ['#4CAF50', '#FF5252', '#FFC107', '#2196F3'],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    position: 'top',
-                                    labels: {
-                                        font: {
-                                            size: 12
-                                        }
-                                    }
-                                },
-                                tooltip: {
-                                    callbacks: {
-                                        label: function(tooltipItem) {
-                                            const totalValue = total;
-                                            const value = tooltipItem.raw;
-                                            const percentage = ((value / totalValue) * 100).toFixed(2);
-                                            return `${tooltipItem.label}: ${value} (${percentage}%)`;
-                                        }
-                                    }
-                                }
-                            }
-                            
-                        }
-                        
-                    });
-                    
-                });
-
-                
-            });
-        }
-
-        /**
-         * Filter the charts based on selected filters
-         */
-        function filterCharts() {
-            const classFilterValue = document.getElementById('classFilter').value;
-            const dateFilterValue = document.getElementById('dateFilter').value;
-
-            const filteredData = {};
-
-            Object.keys(attendanceData).forEach(className => {
-                if (classFilterValue === 'all' || className === classFilterValue) {
-                    Object.keys(attendanceData[className]).forEach(date => {
-                        if (dateFilterValue === 'all' || date === dateFilterValue) {
-                            if (!filteredData[className]) {
-                                filteredData[className] = {};
-                            }
-                            filteredData[className][date] = attendanceData[className][date];
-                        }
-                    });
-                }
-            });
-
-            renderCharts(filteredData);
-        }
-        function displayStudentDetails(names, containerId) {
-        const detailsContainer = document.getElementById(containerId);
-        detailsContainer.innerHTML = `<h4>Students (${names.length}):</h4>`;
-        if (names.length === 0) {
-            detailsContainer.innerHTML += '<p>No students in this category.</p>';
-        } else {
-            const list = document.createElement('ul');
-            names.forEach(name => {
-                const listItem = document.createElement('li');
-                listItem.textContent = name;
-                list.appendChild(listItem);
-            });
-            detailsContainer.appendChild(list);
-        }
-}
-    </script>
-</body>
-
-
-    <!-- analytics chart ada filter end -->
-
-
-
-
-
-
-
-
-
-
 
     
     <!-- Footer Start -->
