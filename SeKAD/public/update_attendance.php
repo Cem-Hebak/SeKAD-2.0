@@ -13,11 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Fetch the student's details from `biodata_stud` and `users`
             $stmt = $pdo->prepare("
-                SELECT b.id, b.name, b.class, u.ic_number, a.present
+                SELECT b.id, b.name, b.class, u.ic_number
                 FROM biodata_stud b
                 JOIN users u ON b.name = u.name
-                LEFT JOIN attendance a ON a.user_id = u.id AND a.date = ?
-                WHERE b.class = ? AND u.role = 'Student'
+                WHERE b.id = ? AND u.role = 'Student'
             ");
             $stmt->execute([$user_id]);
             $student = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -29,8 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())
                     ON DUPLICATE KEY UPDATE
                         present = VALUES(present),
-                        updated_at = NOW(),
-                        class = VALUES(class)
+                        updated_at = NOW()
                 ");
                 $insertStmt->execute([
                     $user_id,

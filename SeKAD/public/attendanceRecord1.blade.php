@@ -144,6 +144,13 @@ include('db_connection.php'); // Include database connection
     <div class="container mt-5">
     <h2 class="mb-4">Attendance Record</h2>
 
+    <?php
+    // Handle GET parameters and set defaults
+    $form = isset($_GET['form']) ? $_GET['form'] : '1'; // Default to Form 1
+    $class = isset($_GET['class']) ? $_GET['class'] : 'CENDEKIAWAN'; // Default to CENDEKIAWAN
+    $date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d'); // Default to today's date
+    ?>
+
     <!-- Filter Form -->
     <form method="GET" action="">
         <div class="row mb-3">
@@ -173,7 +180,8 @@ include('db_connection.php'); // Include database connection
             <!-- Date Picker -->
             <div class="col-md-4">
                 <label for="dateSelect">Select Date:</label>
-                <input type="date" name="date" id="dateSelect" class="form-control" value="<?php echo htmlspecialchars($date ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                <input type="date" name="date" id="dateSelect" class="form-control" 
+                       value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
             </div>
         </div>
 
@@ -194,11 +202,6 @@ include('db_connection.php'); // Include database connection
             <tbody>
                 <?php
                 try {
-                    // Retrieve GET parameters
-                    $form = isset($_GET['form']) ? $_GET['form'] : '1';
-                    $class = isset($_GET['class']) ? $_GET['class'] : 'CENDEKIAWAN';
-                    $date = isset($_GET['date']) ? $_GET['date'] : '';
-
                     if (isset($_GET['form']) && isset($_GET['class'])) {
                         $targetName = $form . " " . $class;
                     
@@ -228,22 +231,24 @@ include('db_connection.php'); // Include database connection
                             echo "</td>";
                             echo "</tr>";
                         }
-                        } 
-                        else {
+                    } else {
                         echo "<tr><td colspan='3' style='text-align: center;'>No records found for Form $form - $class on $date.</td></tr>";
-                        }
-                    } 
-                        catch (PDOException $e) {
-                        die("Error: " . $e->getMessage());
                     }
+                } catch (PDOException $e) {
+                    die("Error: " . $e->getMessage());
+                }
                 ?>
             </tbody>
         </table>
+
+        <!-- Pass Date for Submission -->
+        <input type="hidden" name="date" value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
 
         <!-- Submit Attendance Button -->
         <button type="submit" class="btn btn-success">Update Attendance</button>
     </form>
 </div>
+
 
 
     <!-- Footer Start -->
