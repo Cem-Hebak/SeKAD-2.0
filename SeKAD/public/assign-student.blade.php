@@ -2,6 +2,47 @@
 session_start(); // Start the session
 include('db_connection.php'); // Include database connection
 
+    // Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "admin";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Get the current year
+$currentYear = date("Y");
+
+// Determine the selected year
+$selectedYear = isset($_GET['year']) ? intval($_GET['year']) : 0;
+
+// Calculate the year of birth for the selected year
+$yearOfBirth = $currentYear - (12 + $selectedYear);
+
+// Fetch students with the calculated year of birth
+$sql = "
+    SELECT id, name, date_of_birth, class 
+    FROM users 
+    WHERE role = 'student' AND YEAR(date_of_birth) = $yearOfBirth
+    ORDER BY name ASC
+";
+$result = $conn->query($sql);
+
+// Fetch results
+$students = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $students[] = $row;
+    }
+}
+
+$conn->close();
+
     
 
     // Retrieve user data from the session
@@ -136,118 +177,69 @@ include('db_connection.php'); // Include database connection
     </div>
     <!-- Header End -->
      
-    <div style="width: 90%; margin: 0 auto;">
-    <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Student's Name</h4> 
-    <form method="GET" action="assign-student.blade.php">
+    <!-- Features Start -->
+
+    <form method="GET" action="">
         <label for="year_filter">Filter by Year:</label>
         <select id="year_filter" name="year" class="form-select" onchange="this.form.submit()">
             <option value="">Select Year</option>
-            <option value="1" <?php echo isset($_GET['year']) && $_GET['year'] == 1 ? 'selected' : ''; ?>>Year 1</option>
-            <option value="2" <?php echo isset($_GET['year']) && $_GET['year'] == 2 ? 'selected' : ''; ?>>Year 2</option>
-            <option value="3" <?php echo isset($_GET['year']) && $_GET['year'] == 3 ? 'selected' : ''; ?>>Year 3</option>
-            <option value="4" <?php echo isset($_GET['year']) && $_GET['year'] == 4 ? 'selected' : ''; ?>>Year 4</option>
-            <option value="5" <?php echo isset($_GET['year']) && $_GET['year'] == 5 ? 'selected' : ''; ?>>Year 5</option>
+            <option value="1" <?php echo $selectedYear == 1 ? 'selected' : ''; ?>>Year 1</option>
+            <option value="2" <?php echo $selectedYear == 2 ? 'selected' : ''; ?>>Year 2</option>
+            <option value="3" <?php echo $selectedYear == 3 ? 'selected' : ''; ?>>Year 3</option>
+            <option value="4" <?php echo $selectedYear == 4 ? 'selected' : ''; ?>>Year 4</option>
+            <option value="5" <?php echo $selectedYear == 5 ? 'selected' : ''; ?>>Year 5</option>
         </select>
     </form>
-    <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
+
+    <h2>Students List</h2>
+    <table class = "table table-striped table-bordered">
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Date of Birth</th>
                 <th>Class</th>
+                <th>Assign Class</th>
             </tr>
         </thead>
         <tbody>
-            <?php
-            try {
-                // Get current year
-                $currentYear = date("Y");
-
-                // Prepare the SQL query based on year filter
-                $year = isset($_GET['year']) ? $_GET['year'] : null;
-                $yearCondition = '';
-
-                // If a year is selected, calculate the starting birth year for that year level
-                if ($year) {
-                    $birthYearStart = $currentYear - ($year + 12); // Adjusted formula
-                    $birthYearEnd = $birthYearStart + 1; // Only include the specific year group
-
-                    $yearCondition = " AND YEAR(date_of_birth) BETWEEN :birthYearStart AND :birthYearEnd";
-                }
-
-                // Fetch students based on role 'student' and year filter if available
-                $stmt = $pdo->prepare("
-                    SELECT id, name, class, date_of_birth 
-                    FROM users 
-                    WHERE role = 'student' $yearCondition
-                    ORDER BY name ASC
-                ");
-                
-                if ($year) {
-                    $stmt->execute(['birthYearStart' => $birthYearStart, 'birthYearEnd' => $birthYearEnd]);
-                } else {
-                    $stmt->execute();
-                }
-
-                $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                if (!empty($students)) {
-                    foreach ($students as $student) {
-                        $currentClass = $student['class'] ?? '';
-
-                        echo "<tr>";
-                        echo "<td>" . htmlspecialchars($student['name'], ENT_QUOTES, 'UTF-8') . "</td>";
-                        echo "<td>
-                            <form method='POST' action='update_class.blade.php'>
-                                <input type='hidden' name='user_id' value='" . htmlspecialchars($student['id'], ENT_QUOTES, 'UTF-8') . "'>
-                                <select name='class' class='form-select' onchange='this.form.submit()'>
-                                    <option value='' " . (empty($currentClass) ? "selected" : "") . ">Select Class</option>
-
-                                    <option value='1 Pendeta' " . ($currentClass === '1 Pendeta' ? "selected" : "") . ">1 Pendeta</option>
-                                    <option value='1 Cendekiawan' " . ($currentClass === '1 Cendekiawan' ? "selected" : "") . ">1 Cendekiawan</option>
-                                    <option value='1 Intelek' " . ($currentClass === '1 Intelek' ? "selected" : "") . ">1 Intelek</option>
-                                    <option value='1 Sarjana' " . ($currentClass === '1 Sarjana' ? "selected" : "") . ">1 Sarjana</option>
-
-                                    <option value='2 Pendeta' " . ($currentClass === '2 Pendeta' ? "selected" : "") . ">2 Pendeta</option>
-                                    <option value='2 Cendekiawan' " . ($currentClass === '2 Cendekiawan' ? "selected" : "") . ">2 Cendekiawan</option>
-                                    <option value='2 Intelek' " . ($currentClass === '2 Intelek' ? "selected" : "") . ">2 Intelek</option>
-                                    <option value='2 Sarjana' " . ($currentClass === '2 Sarjana' ? "selected" : "") . ">2 Sarjana</option>
-
-                                    <option value='3 Pendeta' " . ($currentClass === '3 Pendeta' ? "selected" : "") . ">3 Pendeta</option>
-                                    <option value='3 Cendekiawan' " . ($currentClass === '3 Cendekiawan' ? "selected" : "") . ">3 Cendekiawan</option>
-                                    <option value='3 Intelek' " . ($currentClass === '3 Intelek' ? "selected" : "") . ">3 Intelek</option>
-                                    <option value='3 Sarjana' " . ($currentClass === '3 Sarjana' ? "selected" : "") . ">3 Sarjana</option>
-
-                                    <option value='4 Pendeta' " . ($currentClass === '4 Pendeta' ? "selected" : "") . ">4 Pendeta</option>
-                                    <option value='4 Cendekiawan' " . ($currentClass === '4 Cendekiawan' ? "selected" : "") . ">4 Cendekiawan</option>
-                                    <option value='4 Intelek' " . ($currentClass === '4 Intelek' ? "selected" : "") . ">4 Intelek</option>
-                                    <option value='4 Sarjana' " . ($currentClass === '4 Sarjana' ? "selected" : "") . ">4 Sarjana</option>
-
-                                    <option value='5 Pendeta' " . ($currentClass === '5 Pendeta' ? "selected" : "") . ">5 Pendeta</option>
-                                    <option value='5 Cendekiawan' " . ($currentClass === '5 Cendekiawan' ? "selected" : "") . ">5 Cendekiawan</option>
-                                    <option value='5 Intelek' " . ($currentClass === '5 Intelek' ? "selected" : "") . ">5 Intelek</option>
-                                    <option value='5 Sarjana' " . ($currentClass === '5 Sarjana' ? "selected" : "") . ">5 Sarjana</option>
+            <?php if (!empty($students)): ?>
+                <?php foreach ($students as $student): ?>
+                    <?php
+                    // Extract the current class of the student
+                    $currentClass = $student['class'] ?? '';
+                    
+                    // Generate class options dynamically based on the selected year
+                    $classOptions = [
+                        "$selectedYear Pendeta",
+                        "$selectedYear Cendekiawan",
+                        "$selectedYear Intelek",
+                        "$selectedYear Sarjana"
+                    ];
+                    ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($student['name']); ?></td>
+                        <td><?php echo htmlspecialchars($student['date_of_birth']); ?></td>
+                        <td><?php echo htmlspecialchars($student['class']); ?></td>
+                        <td>
+                            <form method="POST" action="update_class_student.blade.php">
+                                <input type="hidden" name="user_id" value="<?php echo $student['id']; ?>">
+                                <select name="class" class="form-select" onchange="this.form.submit()">
+                                    <option value="" <?php echo empty($currentClass) ? 'selected' : ''; ?>>Select Class</option>
+                                    <?php foreach ($classOptions as $class): ?>
+                                        <option value="<?php echo $class; ?>" <?php echo $currentClass === $class ? 'selected' : ''; ?>>
+                                            <?php echo $class; ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </form>
-                        </td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='2'>No students found.</td></tr>";
-                }
-            } catch (PDOException $e) {
-                echo "<tr><td colspan='2'>Error: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . "</td></tr>";
-            }
-            ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr><td colspan="4">No students found for the selected year.</td></tr>
+            <?php endif; ?>
         </tbody>
-    </table>
-</div>
-
-
-                                
-
-                        
-
-                                  
+    </table>                 
     <!-- Team End -->
 
     <!-- Footer Start -->
