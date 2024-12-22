@@ -29,6 +29,10 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/font-size.css" rel="stylesheet">
+
+    <link id="light-mode" rel="stylesheet" href="{{ asset('css/light.css') }}">
+    <link id="dark-mode" rel="stylesheet" href="{{ asset('css/dark.css') }}" disabled>
 </head>
 
 <body>
@@ -40,9 +44,8 @@
     </div>
     <!-- Spinner End -->
 
-
-    <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+<!-- Navbar Start -->
+<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
             <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>eLEARNING</h2>
         </a>
@@ -51,15 +54,24 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="index.html" class="nav-item nav-link active">Home</a>
-                <a href="setting.html" class="nav-item nav-link">Settings</a>
+                <a href="index.blade.php" class="nav-item nav-link active">Home</a>
+                <a href="about.html" class="nav-item nav-link">About</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
+                <a href="attendanceRecord1.blade.php" class="nav-item nav-link">Attendance Record</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
                         <a href="team.html" class="dropdown-item">Our Team</a>
                         <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="404.html" class="dropdown-item">404 Page</a>
+                        <a href="profile.blade.php" class="dropdown-item">Profile</a>
+                        <a href="setting.blade.php" class="dropdown-item">Setting</a>
+                        <a href="announce.blade.php" class="dropdown-item">Announcement</a>
+                        <a href="login.blade.php" class="dropdown-item">Log In</a>
+                        <a href="logout.blade.php" class="dropdown-item">Log Out</a>
+                        <a href="register.blade.php" class="dropdown-item">Register</a>
+                        
                     </div>
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
@@ -69,88 +81,23 @@
     </nav>
     <!-- Navbar End -->
 
-
-    <!-- Carousel Start -->
-    <!-- <div class="container-fluid p-0 mb-5">
-        <div class="owl-carousel header-carousel position-relative">
-            <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="img/carousel-1.jpg" alt="">
-                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
-                    <div class="container">
-                        <div class="row justify-content-start">
-                            <div class="col-sm-10 col-lg-8">
-                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Best Online Courses</h5>
-                                <h1 class="display-3 text-white animated slideInDown">The Best FAIZ Learning Platform</h1>
-                                <p class="fs-5 text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea sanctus eirmod elitr.</p>
-                                <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
-                                <a href="" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Join Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" src="img/carousel-2.jpg" alt="">
-                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
-                    <div class="container">
-                        <div class="row justify-content-start">
-                            <div class="col-sm-10 col-lg-8">
-                                <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Best Online Courses</h5>
-                                <h1 class="display-3 text-white animated slideInDown">Get Educated Online From Your Home</h1>
-                                <p class="fs-5 text-white mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea sanctus eirmod elitr.</p>
-                                <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
-                                <a href="" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Join Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Carousel End -->
-
-
     <!-- Service Start -->
     <div class="container-xxl py-5">
         <div class="container">
             <div class="row g-4">
-                <div onclick="window.location.href='profileManagement.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div onclick="window.location.href='announce.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
-                            <h5 class="mb-3">Profile</h5>
+                            <h5 class="mb-3">Maintainence Report</h5>
                         </div>
                     </div>
                 </div>
-                <div onclick="window.location.href='notification.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                <div onclick="window.location.href='event.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-globe text-primary mb-4"></i>
-                            <h5  class="mb-3">Notifications</h5>
-                        </div>
-                    </div>
-                </div>
-                <div onclick="window.location.href='accessability.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item text-center pt-1">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-home text-primary mb-4"></i>
-                            <h5  class="mb-3">Accessability</h5>
-                        </div>
-                    </div>
-                </div>
-                <div onclick="window.location.href='language.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="service-item text-center pt-1">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
-                            <h5  class="mb-3">Language</h5>
-                        </div>
-                    </div>
-                </div>
-                <div onclick="window.location.href='payment.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.9s">
-                    <div class="service-item text-center pt-1">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
-                            <h5  class="mb-3">Payment</h5>
+                            <h5  class="mb-3">Programme Submission</h5>
                         </div>
                     </div>
                 </div>
@@ -159,32 +106,70 @@
     </div>
     <!-- Service End -->
 
-    <div class="container3">
-        <h11>Payment Information</h11>
-        <div class="subheading">
-            <span>Business location and currency</span><br>
-            Malaysia, Malaysian Ringgit MYR
-        </div>
-        <div class="divider1"></div>
-        <div>
-            <h2>Add payment method</h2>
-            <div class="payment-option">
-                <input type="radio" id="credit-card" name="payment-method" value="credit-card">
-                <label for="credit-card">Debit or credit card</label>
-            </div>
-            <div class="payment-option">
-                <input type="radio" id="grabpay" name="payment-method" value="grabpay">
-                <label for="grabpay">Grabpay</label>
-            </div>
-            <div class="payment-option">
-                <input type="radio" id="fpx" name="payment-method" value="fpx">
-                <label for="fpx">FPX</label>
-            </div>
-        </div>
-        <div class="button-container">
-            <button class="btn-next">Next</button>
-        </div>
+    
+  
+
+    <div class="container2">
+        <h4 style="margin-bottom: 20px; color: #333;">Event Submission Form</h4>
+            <form method="POST" action="update_event.php" enctype="multipart/form-data">
+                <div style="margin-bottom: 15px;">
+                    <label for="pic_name" style="font-weight: bold; display: block; margin-bottom: 5px;">Person in Charge / Company</label>
+                    <input type="text" id="pic_name" name="pic_name" placeholder="Enter name of person or company" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="phone_number" style="font-weight: bold; display: block; margin-bottom: 5px;">Phone Number</label>
+                    <input type="text" id="phone_number" name="phone_number" placeholder="Enter phone number of person in charge / company" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="event_name" style="font-weight: bold; display: block; margin-bottom: 5px;">Event Name</label>
+                    <input type="text" id="event_name" name="event_name" placeholder="Enter name of the event" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                </div>
+                <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label for="start_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Start Date</label>
+                        <input type="date" id="start_date" name="start_date" 
+                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="start_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Start Time</label>
+                        <input type="time" id="start_time" name="start_time" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label for="finish_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Finish Date</label>
+                        <input type="date" id="finish_date" name="finish_date" 
+                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="finish_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Finish Time</label>
+                        <input type="time" id="finish_time" name="finish_time" 
+                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                    </div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="description" style="font-weight: bold; display: block; margin-bottom: 5px;">Event Description</label>
+                    <textarea id="description" name="description" rows="4" placeholder="Provide a brief description of the event" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required></textarea>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="poster" style="font-weight: bold; display: block; margin-bottom: 5px;">Event Poster (Optional)</label>
+                    <input type="file" id="poster" name="poster" accept="image/*" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+                <div style="text-align: right; margin-top: 20px;">
+                    <button type="submit" style="background-color: #007BFF; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                        Submit Event
+                    </button>
+                </div>
+            </form>
     </div>
+
+   
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
@@ -278,6 +263,7 @@
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="assets/global.js"></script>
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>

@@ -1,46 +1,9 @@
-<?php
-session_start(); // Start the session
-include('db_connection.php'); // Include database connection
-
-    
-
-    // Retrieve user data from the session
-    $id = htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8');
-    $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
-    $email = htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8');
-    $mobilenumber = htmlspecialchars($_SESSION['mobilenumber'], ENT_QUOTES, 'UTF-8');
-    $emergencymobilenumber = htmlspecialchars($_SESSION['emergencymobilenumber'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
-    $class = htmlspecialchars($_SESSION['class'] ?? 'Not Assigned', ENT_QUOTES, 'UTF-8');
-    $date_of_birth = htmlspecialchars($_SESSION['date_of_birth'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $gender = htmlspecialchars($_SESSION['gender'] ?? 'Not Specified', ENT_QUOTES, 'UTF-8');
-    $ic_number = htmlspecialchars($_SESSION['ic_number'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
-    $nationality = htmlspecialchars($_SESSION['nationality'], ENT_QUOTES, 'UTF-8');
-    $address = htmlspecialchars($_SESSION['address'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
-    $fname = htmlspecialchars($_SESSION['fname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $fcontact = htmlspecialchars($_SESSION['fcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $foccupation = htmlspecialchars($_SESSION['foccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $mname = htmlspecialchars($_SESSION['mname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $mcontact = htmlspecialchars($_SESSION['mcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $moccupation = htmlspecialchars($_SESSION['moccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $gname = htmlspecialchars($_SESSION['gname'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $gcontact = htmlspecialchars($_SESSION['gcontact'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
-    $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+<!-- "include('db_connection.php')" ni untuk import database -->
 <head>
     <meta charset="utf-8">
-    <title>Teacher Assign</title>
+    <title>eLEARNING - eLearning HTML Template</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -117,96 +80,191 @@ include('db_connection.php'); // Include database connection
     <!-- Navbar End -->
 
 
-    <!-- Header Start -->
-    <div class="container-fluid bg-primary py-5 mb-5 page-header">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-10 text-center">
-                    <h1 class="display-3 text-white animated slideInDown">
-                        SeKAD
-                        
-                    </h1>
-                    
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb justify-content-center">
-                            <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
-                            <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
-                            <li class="breadcrumb-item text-white active" aria-current="page">Profile</li>
-                        </ol>
-                    </nav>
+     <!-- Service Start -->
+     <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div onclick="window.location.href='profile.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
+                            <h5 class="mb-3">Profile</h5>
+                        </div>
+                    </div>
+                </div>
+                <div onclick="window.location.href='notification.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-globe text-primary mb-4"></i>
+                            <h5  class="mb-3">Notifications</h5>
+                        </div>
+                    </div>
+                </div>
+                <div onclick="window.location.href='accessability.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-home text-primary mb-4"></i>
+                            <h5  class="mb-3">Accessability</h5>
+                        </div>
+                    </div>
+                </div>
+                <div onclick="window.location.href='language.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
+                            <h5  class="mb-3">Language</h5>
+                        </div>
+                    </div>
+                </div>
+                <div onclick="window.location.href='payment.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.9s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
+                            <h5  class="mb-3">Payment</h5>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Header End -->
-     
-    <div style="width: 90%; margin: 0 auto;">
-    <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Biodata</h4>
-    <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
-                                    <thead>
-                                        
-                                    </thead>
-                                    <tbody>
-                                        
-                                        <td style="width: 1100px;">Name</td>
-                                        <td>Class</td>
+    <!-- Service End -->
 
-                                        <?php
-                                        try {
-                                            // Query to fetch all names from the 'users' table
-                                            $stmt = $pdo->prepare("SELECT name FROM users ORDER BY name ASC");
-                                            $stmt->execute();
-                                        
-                                            // Fetch all rows
-                                            $stmt = $pdo->query("SELECT id, name FROM users");
-                                            $names = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                        
-                                            if (!empty($names)) {
-                                                echo "<tr>"; // Start an unordered list
-                                                foreach ($names as $row) {
-                                                    echo "<tr>";
-                                                    echo "<td>" . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . "</td>"; // Name column
+    <div class="container2">
+        <h1>Notification Settings</h1>
+        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
+        <div class="divider"></div>
+        <div>
+            <h2>Reminders</h2>
+            <p>Push, Email, SMS</p>
+            <div class="notification-option">
+                <label><i class="fas fa-desktop"></i> Push</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-comment-alt"></i> SMS</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="footer">
+            Thank you very much for doing business with us.
+        </div>
+    </div>
 
-                                                    // Check if 'id' exists before using it
-                                                    $user_id = $row['id'] ?? 'Unknown ID';
-                                                    echo '<td>';
-                                                    echo '<form method="POST" action="update_class.blade.php">';
-                                                    echo '<div class="dropdown">';
-                                                    echo '<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">Select Class</button>';
-                                                    echo '<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
-                                                    echo '<li><button class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" class="dropdown-item" type="submit" name="class" value="Class A">Class A</button></li>';
-                                                    echo '<li><button class="dropdown-item" type="submit" name="class" value="Class B">Class B</button></li>';
-                                                    echo '<li><button class="dropdown-item" type="submit" name="class" value="Class C">Class C</button></li>';
-                                                    echo '</ul>';
-                                                    echo '</div>';
-                                                    echo '<input type="hidden" name="user_id" value="' . htmlspecialchars($user_id, ENT_QUOTES, 'UTF-8') . '">'; // Include user_id
-                                                    echo '</form>';
-                                                    echo '</td>';
-                                                    echo "</tr>";
-                                                    // <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
-                                                }
-                                                echo "</tr>"; // End the unordered list
-                                            } else {
-                                                echo "No names found in the database.";
-                                            }
-                                        } catch (PDOException $e) {
-                                            die("Error: " . $e->getMessage());
-                                        }
-                                        ?>
-                                       
-                                        
+    <div class="container2">
+        <h1>Notification Settings</h1>
+        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
+        <div class="divider"></div>
+        <div>
+            <h2>Events</h2>
+            <p>Push, Email, SMS</p>
+            <div class="notification-option">
+                <label><i class="fas fa-desktop"></i> Push</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-comment-alt"></i> SMS</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="footer">
+            Thank you very much for doing business with us.
+        </div>
+    </div>
 
+    <div class="container2">
+        <h1>Notification Settings</h1>
+        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
+        <div class="divider"></div>
+        <div>
+            <h2>Chat</h2>
+            <p>Push, Email, SMS</p>
+            <div class="notification-option">
+                <label><i class="fas fa-desktop"></i> Push</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-comment-alt"></i> SMS</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="footer">
+            Thank you very much for doing business with us.
+        </div>
+    </div>
 
-                                        </tbody>
-                                    </table>
-                                    </div>
-                                
-
-                        
-
-                                  
-    <!-- Team End -->
-
+    <div class="container2">
+        <h1>Notification Settings</h1>
+        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
+        <div class="divider"></div>
+        <div>
+            <h2>Other Notifications</h2>
+            <p>Push, Email, SMS</p>
+            <div class="notification-option">
+                <label><i class="fas fa-desktop"></i> Push</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-comment-alt"></i> SMS</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="footer">
+            Thank you very much for doing business with us.
+        </div>
+    </div>
+   
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
@@ -302,15 +360,6 @@ include('db_connection.php'); // Include database connection
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-    <!-- <script>
-        // Example: Simulated authenticated user data
-        const authenticatedUser = {
-            name: "John Doe"
-        };
-
-        // Insert user name into the HTML
-        document.getElementById("user-name").textContent = `Welcome, ${authenticatedUser.name}`;
-    </script> -->
 </body>
 
 </html>

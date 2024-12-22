@@ -72,10 +72,11 @@ include('db_connection.php'); // Include database connection
     <!-- Spinner End -->
 
 
+    
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>SeKAD</h2>
+            <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>eLEARNING</h2>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
@@ -85,6 +86,7 @@ include('db_connection.php'); // Include database connection
                 <a href="index.blade.php" class="nav-item nav-link active">Home</a>
                 <a href="about.html" class="nav-item nav-link">About</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
+                <a href="attendanceRecord1.blade.php" class="nav-item nav-link">Attendance Record</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
@@ -93,6 +95,8 @@ include('db_connection.php'); // Include database connection
                         <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="404.html" class="dropdown-item">404 Page</a>
                         <a href="profile.blade.php" class="dropdown-item">Profile</a>
+                        <a href="setting.blade.php" class="dropdown-item">Setting</a>
+                        <a href="announce.blade.php" class="dropdown-item">Announcement</a>
                         <a href="login.blade.php" class="dropdown-item">Log In</a>
                         <a href="logout.blade.php" class="dropdown-item">Log Out</a>
                         <a href="register.blade.php" class="dropdown-item">Register</a>
@@ -105,7 +109,6 @@ include('db_connection.php'); // Include database connection
         </div>
     </nav>
     <!-- Navbar End -->
-
 
     <!-- Header Start -->
     <div class="container-fluid bg-primary py-5 mb-5 page-header">

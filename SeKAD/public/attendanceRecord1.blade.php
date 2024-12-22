@@ -2,7 +2,7 @@
 session_start(); // Start the session
 include('db_connection.php'); // Include database connection
 
-
+    
 
     // Retrieve user data from the session
     $id = htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8');
@@ -28,6 +28,11 @@ include('db_connection.php'); // Include database connection
     $goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
     $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
     $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
+
+    $form = isset($_GET['form']) ? $_GET['form'] : '1';
+    $class = isset($_GET['class']) ? $_GET['class'] : 'CENDEKIAWAN';
+    $present = isset($row['present']) ? $row['present'] : 0;  // Default to 0 if not set
+    $checked = ($present == 1) ? "checked" : "";  // Apply 'checked' if present == 1
 
 ?>
 
@@ -76,7 +81,7 @@ include('db_connection.php'); // Include database connection
     </div>
     <!-- Spinner End -->
 
-
+    
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
@@ -104,7 +109,7 @@ include('db_connection.php'); // Include database connection
                         <a href="login.blade.php" class="dropdown-item">Log In</a>
                         <a href="logout.blade.php" class="dropdown-item">Log Out</a>
                         <a href="register.blade.php" class="dropdown-item">Register</a>
-
+                        
                     </div>
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
@@ -120,9 +125,9 @@ include('db_connection.php'); // Include database connection
                 <div class="col-lg-10 text-center">
                     <h1 class="display-3 text-white animated slideInDown">
                         SeKAD
-
+                        
                     </h1>
-
+                    
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb justify-content-center">
                             <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
@@ -140,6 +145,58 @@ include('db_connection.php'); // Include database connection
     <!-- Form starts here -->
     <form method="POST" action="update_attendance.php">
         <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
+
+    <div class="container mt-5">
+    <h2 class="mb-4">Attendance Record</h2>
+
+    <?php
+    // Handle GET parameters and set defaults
+    $form = isset($_GET['form']) ? $_GET['form'] : '1'; // Default to Form 1
+    $class = isset($_GET['class']) ? $_GET['class'] : 'CENDEKIAWAN'; // Default to CENDEKIAWAN
+    $date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d'); // Default to today's date
+    ?>
+
+    <!-- Filter Form -->
+    <form method="GET" action="">
+        <div class="row mb-3">
+            <!-- Form Dropdown -->
+            <div class="col-md-4">
+                <label for="formSelect">Select Form:</label>
+                <select name="form" id="formSelect" class="form-control">
+                    <option value="1" <?php echo ($form === '1') ? 'selected' : ''; ?>>Form 1</option>
+                    <option value="2" <?php echo ($form === '2') ? 'selected' : ''; ?>>Form 2</option>
+                    <option value="3" <?php echo ($form === '3') ? 'selected' : ''; ?>>Form 3</option>
+                    <option value="4" <?php echo ($form === '4') ? 'selected' : ''; ?>>Form 4</option>
+                    <option value="5" <?php echo ($form === '5') ? 'selected' : ''; ?>>Form 5</option>
+                </select>
+            </div>
+
+            <!-- Class Dropdown -->
+            <div class="col-md-4">
+                <label for="classSelect">Select Class:</label>
+                <select name="class" id="classSelect" class="form-control">
+                    <option value="CENDEKIAWAN" <?php echo ($class === 'CENDEKIAWAN') ? 'selected' : ''; ?>>CENDEKIAWAN</option>
+                    <option value="PENDETA" <?php echo ($class === 'PENDETA') ? 'selected' : ''; ?>>PENDETA</option>
+                    <option value="SARJANA" <?php echo ($class === 'SARJANA') ? 'selected' : ''; ?>>SARJANA</option>
+                    <option value="INTELEK" <?php echo ($class === 'INTELEK') ? 'selected' : ''; ?>>INTELEK</option>
+                </select>
+            </div>
+
+            <!-- Date Picker -->
+            <div class="col-md-4">
+                <label for="dateSelect">Select Date:</label>
+                <input type="date" name="date" id="dateSelect" class="form-control" 
+                       value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+
+    <!-- Attendance Table -->
+    <form method="POST" action="update_attendance.php">
+        <table class="table table-striped table-bordered mt-3">
             <thead>
                 <tr>
                     <th style="width: 40%;">Name</th>
@@ -175,6 +232,42 @@ include('db_connection.php'); // Include database connection
                     } catch (PDOException $e) {
                         die("Error: " . $e->getMessage());
                     }
+                try {
+                    if (isset($_GET['form']) && isset($_GET['class'])) {
+                        $targetName = $form . " " . $class;
+                    
+                        $sql = "SELECT b.id, b.name, b.class, u.ic_number, a.present
+                                FROM biodata_stud b
+                                JOIN users u ON b.name = u.name
+                                LEFT JOIN attendance a ON b.id = a.user_id AND a.date = ?
+                                WHERE b.class = ? AND u.role = 'Student'";
+                        $params = [$date, $targetName];
+                    
+                        // Execute query
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->execute($params);
+                        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    }
+
+                    if (!empty($students)) {
+                        foreach ($students as $row) {
+                            $present = $row['present'] ?? 0; // Default to 0 if 'present' key is missing
+                            $checked = $present == 1 ? "checked" : "";
+                            echo "<tr>";
+                            echo "<td>" . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . "</td>";
+                            echo "<td>" . htmlspecialchars($row['ic_number'], ENT_QUOTES, 'UTF-8') . "</td>";
+                            echo "<td style='text-align: center;'>";
+                            echo "<input type='checkbox' name='attendance[" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "]' value='1' $checked>";
+                            echo "<input type='hidden' name='user_ids[]' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>";
+                            echo "</td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='3' style='text-align: center;'>No records found for Form $form - $class on $date.</td></tr>";
+                    }
+                } catch (PDOException $e) {
+                    die("Error: " . $e->getMessage());
+                }
                 ?>
             </tbody>
         </table>
@@ -184,10 +277,13 @@ include('db_connection.php'); // Include database connection
             <button type="submit" class="btn btn-primary">Submit Attendance</button>
         </div>
     </form> <!-- Form ends here -->
+        <!-- Pass Date for Submission -->
+        <input type="hidden" name="date" value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
+
+        <!-- Submit Attendance Button -->
+        <button type="submit" class="btn btn-success">Update Attendance</button>
+    </form>
 </div>
-
-
-
 
 
 
