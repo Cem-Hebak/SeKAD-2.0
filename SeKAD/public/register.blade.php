@@ -31,9 +31,6 @@
                 <label for="ic_number">IC Number:</label>
                 <input type="text" id="ic_number" name="ic_number" required>
 
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-
                 <label for="mobilenumber">Mobile Number:</label>
                 <input type="text" id="mobilenumber" name="mobilenumber" required>
 
