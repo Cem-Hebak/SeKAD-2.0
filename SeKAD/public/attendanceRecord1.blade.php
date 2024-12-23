@@ -147,7 +147,7 @@ include('db_connection.php'); // Include database connection
     <?php
     // Handle GET parameters and set defaults
     $form = isset($_GET['form']) ? $_GET['form'] : '1'; // Default to Form 1
-    $class = isset($_GET['class']) ? $_GET['class'] : 'CENDEKIAWAN'; // Default to CENDEKIAWAN
+    $class = isset($_GET['class']) ? $_GET['class'] : 'Cendekiawan'; // Default to CENDEKIAWAN
     $date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d'); // Default to today's date
     ?>
 
@@ -170,10 +170,10 @@ include('db_connection.php'); // Include database connection
             <div class="col-md-4">
                 <label for="classSelect">Select Class:</label>
                 <select name="class" id="classSelect" class="form-control">
-                    <option value="CENDEKIAWAN" <?php echo ($class === 'CENDEKIAWAN') ? 'selected' : ''; ?>>CENDEKIAWAN</option>
-                    <option value="PENDETA" <?php echo ($class === 'PENDETA') ? 'selected' : ''; ?>>PENDETA</option>
-                    <option value="SARJANA" <?php echo ($class === 'SARJANA') ? 'selected' : ''; ?>>SARJANA</option>
-                    <option value="INTELEK" <?php echo ($class === 'INTELEK') ? 'selected' : ''; ?>>INTELEK</option>
+                    <option value="Cendekiawan" <?php echo ($class === 'Cendekiawan') ? 'selected' : ''; ?>>Cendekiawan</option>
+                    <option value="Pendeta" <?php echo ($class === 'Pendeta') ? 'selected' : ''; ?>>Pendeta</option>
+                    <option value="Sarjana" <?php echo ($class === 'Sarjana') ? 'selected' : ''; ?>>Sarjana</option>
+                    <option value="Intelek" <?php echo ($class === 'Intelek') ? 'selected' : ''; ?>>Intelek</option>
                 </select>
             </div>
 
@@ -207,7 +207,7 @@ include('db_connection.php'); // Include database connection
                     
                         $sql = "SELECT b.id, b.name, b.class, u.ic_number, a.present
                                 FROM biodata_stud b
-                                JOIN users u ON b.name = u.name
+                                JOIN users u ON b.id = u.id
                                 LEFT JOIN attendance a ON b.id = a.user_id AND a.date = ?
                                 WHERE b.class = ? AND u.role = 'Student'";
                         $params = [$date, $targetName];
