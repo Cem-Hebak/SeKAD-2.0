@@ -8,6 +8,40 @@
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+/* Font size classes for the body and elements */
+body.font-small, 
+body.font-medium, 
+body.font-large {
+    font-size: inherit; /* Inherit from the class-based font sizes */
+}
+
+/* Inherit font size for specific elements */
+body.font-small h1, body.font-small h2, body.font-small h3, body.font-small p,
+body.font-medium h1, body.font-medium h2, body.font-medium h3, body.font-medium p,
+body.font-large h1, body.font-large h2, body.font-large h3, body.font-large p {
+    font-size: inherit;
+}
+
+/* Ensure buttons and links also inherit font size */
+body.font-small a, body.font-medium a, body.font-large a,
+body.font-small .btn, body.font-medium .btn, body.font-large .btn {
+    font-size: inherit;
+}
+
+/* Define font sizes with rem units */
+.font-small {
+    font-size: 0.5rem;
+}
+
+.font-medium {
+    font-size: 1rem;
+}
+
+.font-large {
+    font-size: 2rem;
+}
+
+
 .header {
     text-align: left;
     margin-bottom: 20px;

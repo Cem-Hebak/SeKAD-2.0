@@ -1,42 +1,4 @@
-<?php
-session_start(); // Start the session
-include('db_connection.php'); // Include database connection
-
-    
-
-    // Retrieve user data from the session
-    $id = htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8');
-    $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
-    $email = htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8');
-    $mobilenumber = htmlspecialchars($_SESSION['mobilenumber'], ENT_QUOTES, 'UTF-8');
-    $emergencymobilenumber = htmlspecialchars($_SESSION['emergencymobilenumber'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
-    $class = htmlspecialchars($_SESSION['class'] ?? 'Not Assigned', ENT_QUOTES, 'UTF-8');
-    $date_of_birth = htmlspecialchars($_SESSION['date_of_birth'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $gender = htmlspecialchars($_SESSION['gender'] ?? 'Not Specified', ENT_QUOTES, 'UTF-8');
-    $ic_number = htmlspecialchars($_SESSION['ic_number'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
-    $nationality = htmlspecialchars($_SESSION['nationality'], ENT_QUOTES, 'UTF-8');
-    $address = htmlspecialchars($_SESSION['address'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
-    $fname = htmlspecialchars($_SESSION['fname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $fcontact = htmlspecialchars($_SESSION['fcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $foccupation = htmlspecialchars($_SESSION['foccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $mname = htmlspecialchars($_SESSION['mname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $mcontact = htmlspecialchars($_SESSION['mcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $moccupation = htmlspecialchars($_SESSION['moccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $gname = htmlspecialchars($_SESSION['gname'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $gcontact = htmlspecialchars($_SESSION['gcontact'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
-    $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
-
-    $form = isset($_GET['form']) ? $_GET['form'] : '1';
-    $class = isset($_GET['class']) ? $_GET['class'] : 'CENDEKIAWAN';
-    $present = isset($row['present']) ? $row['present'] : 0;  // Default to 0 if not set
-    $checked = ($present == 1) ? "checked" : "";  // Apply 'checked' if present == 1
-
-?>
-
-<!DOCTYPE html>;
+<!DOCTYPE html>
 <html lang="en">
 <!-- "include('db_connection.php')" ni untuk import database -->
 <head>
@@ -46,7 +8,8 @@ include('db_connection.php'); // Include database connection
     <meta content="" name="keywords">
     <meta content="" name="description">
 
-  
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,10 +29,6 @@ include('db_connection.php'); // Include database connection
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-    <link href="css/font-size.css" rel="stylesheet">
-
-    <link id="light-mode" rel="stylesheet" href="{{ asset('css/light.css') }}">
-    <link id="dark-mode" rel="stylesheet" href="{{ asset('css/dark.css') }}" disabled>
 </head>
 
 <body>
@@ -80,6 +39,7 @@ include('db_connection.php'); // Include database connection
         </div>
     </div>
     <!-- Spinner End -->
+
 
     
     <!-- Navbar Start -->
@@ -119,138 +79,192 @@ include('db_connection.php'); // Include database connection
     </nav>
     <!-- Navbar End -->
 
-    <div class="container-fluid bg-primary py-5 mb-5 page-header">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-10 text-center">
-                    <h1 class="display-3 text-white animated slideInDown">
-                        SeKAD
-                        
-                    </h1>
-                    
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb justify-content-center">
-                            <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
-                            <li class="breadcrumb-item"><a class="text-white" href="#">Attendance Record</a></li>
-                        </ol>
-                    </nav>
+
+     <!-- Service Start -->
+     <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div onclick="window.location.href='profile.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
+                            <h5 class="mb-3">Profile</h5>
+                        </div>
+                    </div>
+                </div>
+                <div onclick="window.location.href='notification.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-globe text-primary mb-4"></i>
+                            <h5  class="mb-3">Notifications</h5>
+                        </div>
+                    </div>
+                </div>
+                <div onclick="window.location.href='accessability.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-home text-primary mb-4"></i>
+                            <h5  class="mb-3">Accessability</h5>
+                        </div>
+                    </div>
+                </div>
+                <div onclick="window.location.href='language.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
+                            <h5  class="mb-3">Language</h5>
+                        </div>
+                    </div>
+                </div>
+                <div onclick="window.location.href='payment.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.9s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
+                            <h5  class="mb-3">Payment</h5>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Service End -->
 
-    <div style="width: 90%; margin: 0 auto;">
-
-    <div class="container mt-5">
-    <h2 class="mb-4">Attendance Record</h2>
-
-    <?php
-    // Handle GET parameters and set defaults
-    $form = isset($_GET['form']) ? $_GET['form'] : '1'; // Default to Form 1
-    $class = isset($_GET['class']) ? $_GET['class'] : 'Cendekiawan'; // Default to CENDEKIAWAN
-    $date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d'); // Default to today's date
-    ?>
-
-    <!-- Filter Form -->
-    <form method="GET" action="">
-        <div class="row mb-3">
-            <!-- Form Dropdown -->
-            <div class="col-md-4">
-                <label for="formSelect">Select Form:</label>
-                <select name="form" id="formSelect" class="form-control">
-                    <option value="1" <?php echo ($form === '1') ? 'selected' : ''; ?>>Form 1</option>
-                    <option value="2" <?php echo ($form === '2') ? 'selected' : ''; ?>>Form 2</option>
-                    <option value="3" <?php echo ($form === '3') ? 'selected' : ''; ?>>Form 3</option>
-                    <option value="4" <?php echo ($form === '4') ? 'selected' : ''; ?>>Form 4</option>
-                    <option value="5" <?php echo ($form === '5') ? 'selected' : ''; ?>>Form 5</option>
-                </select>
+    <div class="container2">
+        <h1>Notification Settings</h1>
+        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
+        <div class="divider"></div>
+        <div>
+            <h2>Reminders</h2>
+            <p>Push, Email, SMS</p>
+            <div class="notification-option">
+                <label><i class="fas fa-desktop"></i> Push</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
-
-            <!-- Class Dropdown -->
-            <div class="col-md-4">
-                <label for="classSelect">Select Class:</label>
-                <select name="class" id="classSelect" class="form-control">
-                    <option value="Cendekiawan" <?php echo ($class === 'Cendekiawan') ? 'selected' : ''; ?>>Cendekiawan</option>
-                    <option value="Pendeta" <?php echo ($class === 'Pendeta') ? 'selected' : ''; ?>>Pendeta</option>
-                    <option value="Sarjana" <?php echo ($class === 'Sarjana') ? 'selected' : ''; ?>>Sarjana</option>
-                    <option value="Intelek" <?php echo ($class === 'Intelek') ? 'selected' : ''; ?>>Intelek</option>
-                </select>
+            <div class="notification-option">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
-
-            <!-- Date Picker -->
-            <div class="col-md-4">
-                <label for="dateSelect">Select Date:</label>
-                <input type="date" name="date" id="dateSelect" class="form-control" 
-                       value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
+            <div class="notification-option">
+                <label><i class="fas fa-comment-alt"></i> SMS</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
+        <div class="footer">
+            Thank you very much for doing business with us.
+        </div>
+    </div>
 
-        <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary">Filter</button>
-    </form>
+    <div class="container2">
+        <h1>Notification Settings</h1>
+        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
+        <div class="divider"></div>
+        <div>
+            <h2>Events</h2>
+            <p>Push, Email, SMS</p>
+            <div class="notification-option">
+                <label><i class="fas fa-desktop"></i> Push</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-comment-alt"></i> SMS</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="footer">
+            Thank you very much for doing business with us.
+        </div>
+    </div>
 
-    <!-- Attendance Table -->
-    <form method="POST" action="update_attendance.php">
-        <table class="table table-striped table-bordered mt-3">
-            <thead>
-                <tr>
-                    <th style="width: 40%;">Name</th>
-                    <th style="width: 40%;">IC Number</th>
-                    <th style="width: 20%; text-align: center;">Attendance</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                try {
-                    if (isset($_GET['form']) && isset($_GET['class'])) {
-                        $targetName = $form . " " . $class;
-                    
-                        $sql = "SELECT b.id, b.name, b.class, u.ic_number, a.present
-                                FROM biodata_stud b
-                                JOIN users u ON b.id = u.id
-                                LEFT JOIN attendance a ON b.id = a.user_id AND a.date = ?
-                                WHERE b.class = ? AND u.role = 'Student'";
-                        $params = [$date, $targetName];
-                    
-                        // Execute query
-                        $stmt = $pdo->prepare($sql);
-                        $stmt->execute($params);
-                        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    }
+    <div class="container2">
+        <h1>Notification Settings</h1>
+        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
+        <div class="divider"></div>
+        <div>
+            <h2>Chat</h2>
+            <p>Push, Email, SMS</p>
+            <div class="notification-option">
+                <label><i class="fas fa-desktop"></i> Push</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-comment-alt"></i> SMS</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="footer">
+            Thank you very much for doing business with us.
+        </div>
+    </div>
 
-                    if (!empty($students)) {
-                        foreach ($students as $row) {
-                            $present = $row['present'] ?? 0; // Default to 0 if 'present' key is missing
-                            $checked = $present == 1 ? "checked" : "";
-                            echo "<tr>";
-                            echo "<td>" . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . "</td>";
-                            echo "<td>" . htmlspecialchars($row['ic_number'], ENT_QUOTES, 'UTF-8') . "</td>";
-                            echo "<td style='text-align: center;'>";
-                            echo "<input type='checkbox' name='attendance[" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "]' value='1' $checked>";
-                            echo "<input type='hidden' name='user_ids[]' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>";
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='3' style='text-align: center;'>No records found for Form $form - $class on $date.</td></tr>";
-                    }
-                } catch (PDOException $e) {
-                    die("Error: " . $e->getMessage());
-                }
-                ?>
-            </tbody>
-        </table>
-
-        <!-- Pass Date for Submission -->
-        <input type="hidden" name="date" value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
-
-        <!-- Submit Attendance Button -->
-        <button type="submit" class="btn btn-success">Update Attendance</button>
-    </form>
-</div>
-
-
-
+    <div class="container2">
+        <h1>Notification Settings</h1>
+        <p>SeKAD may still send you important notifications about your account and content outside of your preferred notification settings.</p>
+        <div class="divider"></div>
+        <div>
+            <h2>Other Notifications</h2>
+            <p>Push, Email, SMS</p>
+            <div class="notification-option">
+                <label><i class="fas fa-desktop"></i> Push</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="notification-option">
+                <label><i class="fas fa-comment-alt"></i> SMS</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="footer">
+            Thank you very much for doing business with us.
+        </div>
+    </div>
+   
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
@@ -343,7 +357,6 @@ include('db_connection.php'); // Include database connection
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="assets/global.js"></script>
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>

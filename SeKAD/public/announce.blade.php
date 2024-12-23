@@ -29,8 +29,10 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/font-size.css" rel="stylesheet">
 
-
+    <link id="light-mode" rel="stylesheet" href="{{ asset('css/light.css') }}">
+    <link id="dark-mode" rel="stylesheet" href="{{ asset('css/dark.css') }}" disabled>
 </head>
 
 <body>
@@ -42,9 +44,8 @@
     </div>
     <!-- Spinner End -->
 
-
-    <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+<!-- Navbar Start -->
+<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
             <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>eLEARNING</h2>
         </a>
@@ -53,15 +54,24 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="index.html" class="nav-item nav-link active">Home</a>
-                <a href="setting.html" class="nav-item nav-link">Settings</a>
+                <a href="index.blade.php" class="nav-item nav-link active">Home</a>
+                <a href="about.html" class="nav-item nav-link">About</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
+                <a href="attendanceRecord1.blade.php" class="nav-item nav-link">Attendance Record</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
                         <a href="team.html" class="dropdown-item">Our Team</a>
                         <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="404.html" class="dropdown-item">404 Page</a>
+                        <a href="profile.blade.php" class="dropdown-item">Profile</a>
+                        <a href="setting.blade.php" class="dropdown-item">Setting</a>
+                        <a href="announce.blade.php" class="dropdown-item">Announcement</a>
+                        <a href="login.blade.php" class="dropdown-item">Log In</a>
+                        <a href="logout.blade.php" class="dropdown-item">Log Out</a>
+                        <a href="register.blade.php" class="dropdown-item">Register</a>
+                        
                     </div>
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
@@ -75,43 +85,19 @@
     <div class="container-xxl py-5">
         <div class="container">
             <div class="row g-4">
-                <div onclick="window.location.href='profileManagement.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div onclick="window.location.href='announce.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
-                            <h5 class="mb-3">Profile</h5>
+                            <h5 class="mb-3">Maintainence Report</h5>
                         </div>
                     </div>
                 </div>
-                <div onclick="window.location.href='notification.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                <div onclick="window.location.href='event.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="service-item text-center pt-1">
                         <div class="p-4">
                             <i class="fa fa-3x fa-globe text-primary mb-4"></i>
-                            <h5  class="mb-3">Notifications</h5>
-                        </div>
-                    </div>
-                </div>
-                <div onclick="window.location.href='accessability.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item text-center pt-1">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-home text-primary mb-4"></i>
-                            <h5  class="mb-3">Accessability</h5>
-                        </div>
-                    </div>
-                </div>
-                <div onclick="window.location.href='language.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="service-item text-center pt-1">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
-                            <h5  class="mb-3">Language</h5>
-                        </div>
-                    </div>
-                </div>
-                <div onclick="window.location.href='payment.html';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.9s">
-                    <div class="service-item text-center pt-1">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
-                            <h5  class="mb-3">Payment</h5>
+                            <h5  class="mb-3">Programme Submission</h5>
                         </div>
                     </div>
                 </div>
@@ -119,24 +105,58 @@
         </div>
     </div>
     <!-- Service End -->
-    <div class="container1">
-        <div class="header" class="col-lg-1 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
-            <h1>Accessibility</h1>
-            <p>These options enhance accessibility on the SeKAD website.</p>
-        </div>
-        <div class="divider"></div>
-        <div class="item">
-            <span>Display</span>
-            <a href="display.html" class="btn">view</a>
-        </div>
-        <div class="item">
-            <span>Size</span>
-            <a href="size.html" class="btn">view</a>
-        </div>
-        <div class="footer">
-            Thank you very much for doing business with us.
-        </div>
+
+    <div class="container2">
+        <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Maintainence Report Form</h4>
+            <form method="POST" action="update_maintainence.php" enctype="multipart/form-data">
+                <div style="margin-bottom: 15px;">
+                    <label for="reporter_name" style="font-weight: bold; display: block; margin-bottom: 5px;">Name</label>
+                    <input type="text" id="reporter_name" name="reporter_name" placeholder="Enter your name" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                </div>
+                <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label for="report_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Date of Reporting</label>
+                        <input type="date" id="report_date" name="report_date" 
+                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="report_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Time of Reporting</label>
+                        <input type="time" id="report_time" name="report_time" 
+                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label for="repair_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Date of Repair Completion</label>
+                        <input type="date" id="repair_date" name="repair_date" 
+                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="repair_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Time of Repair Completion</label>
+                        <input type="time" id="repair_time" name="repair_time" 
+                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                    </div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="report_image" style="font-weight: bold; display: block; margin-bottom: 5px;">Upload Picture</label>
+                    <input type="file" id="report_image" name="report_image" accept="image/*" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="report_description" style="font-weight: bold; display: block; margin-bottom: 5px;">Description</label>
+                    <textarea id="report_description" name="report_description" rows="4" placeholder="Provide details about the damage" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required></textarea>
+                </div>
+                <div style="text-align: right; margin-top: 20px;">
+                    <button type="submit" style="background-color: #007BFF; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                        Submit Report
+                    </button>
+                </div>
+            </form>
     </div>
+
+
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
@@ -230,6 +250,7 @@
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="assets/global.js"></script>
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>

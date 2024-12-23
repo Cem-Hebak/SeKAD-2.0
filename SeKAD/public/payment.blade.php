@@ -8,7 +8,8 @@
     <meta content="" name="keywords">
     <meta content="" name="description">
 
-  
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,15 +33,15 @@
 
 <body>
     <!-- Spinner Start -->
-    <!-- <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
             <span class="sr-only">Loading...</span>
         </div>
-    </div> -->
+    </div>
     <!-- Spinner End -->
 
 
-
+    
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
@@ -51,16 +52,24 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="index.html" class="nav-item nav-link active">hhhhhhhh Home</a>
-                <a href="setting.html" class="nav-item nav-link">Settings</a>
-                <a href="setting.html" class="nav-item nav-link">Attendance Record</a>
+                <a href="index.blade.php" class="nav-item nav-link active">Home</a>
+                <a href="about.html" class="nav-item nav-link">About</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
+                <a href="attendanceRecord1.blade.php" class="nav-item nav-link">Attendance Record</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
                         <a href="team.html" class="dropdown-item">Our Team</a>
                         <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="404.html" class="dropdown-item">404 Page</a>
+                        <a href="profile.blade.php" class="dropdown-item">Profile</a>
+                        <a href="setting.blade.php" class="dropdown-item">Setting</a>
+                        <a href="announce.blade.php" class="dropdown-item">Announcement</a>
+                        <a href="login.blade.php" class="dropdown-item">Log In</a>
+                        <a href="logout.blade.php" class="dropdown-item">Log Out</a>
+                        <a href="register.blade.php" class="dropdown-item">Register</a>
+                        
                     </div>
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
@@ -70,22 +79,83 @@
     </nav>
     <!-- Navbar End -->
 
-    <div class="container4">
-        <h1>Attendance Record</h1>
-        <table id="studentTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>IC Number</th>
-                </tr>
-            </thead>
-            <tbody></tbody> <!-- Ensure tbody exists -->
-        </table>
-        <button id="submit-attendance">Submit Attendance</button>        
+
+     <!-- Service Start -->
+     <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div onclick="window.location.href='profile.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
+                            <h5 class="mb-3">Profile</h5>
+                        </div>
+                    </div>
+                </div>
+                <div onclick="window.location.href='notification.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-globe text-primary mb-4"></i>
+                            <h5  class="mb-3">Notifications</h5>
+                        </div>
+                    </div>
+                </div>
+                <div onclick="window.location.href='accessability.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-home text-primary mb-4"></i>
+                            <h5  class="mb-3">Accessability</h5>
+                        </div>
+                    </div>
+                </div>
+                <div onclick="window.location.href='language.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
+                            <h5  class="mb-3">Language</h5>
+                        </div>
+                    </div>
+                </div>
+                <div onclick="window.location.href='payment.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.9s">
+                    <div class="service-item text-center pt-1">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
+                            <h5  class="mb-3">Payment</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script src="js/attendanceRecord.js"></script>
-    
-    
+    <!-- Service End -->
+
+    <div class="container3">
+        <h11>Payment Information</h11>
+        <div class="subheading">
+            <span>Business location and currency</span><br>
+            Malaysia, Malaysian Ringgit MYR
+        </div>
+        <div class="divider1"></div>
+        <div>
+            <h2>Add payment method</h2>
+            <div class="payment-option">
+                <input type="radio" id="credit-card" name="payment-method" value="credit-card">
+                <label for="credit-card">Debit or credit card</label>
+            </div>
+            <div class="payment-option">
+                <input type="radio" id="grabpay" name="payment-method" value="grabpay">
+                <label for="grabpay">Grabpay</label>
+            </div>
+            <div class="payment-option">
+                <input type="radio" id="fpx" name="payment-method" value="fpx">
+                <label for="fpx">FPX</label>
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="btn-next">Next</button>
+        </div>
+    </div>
+
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">

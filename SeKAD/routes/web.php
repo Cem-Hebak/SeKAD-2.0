@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\indexController;
+use App\Http\Controllers\LanguageController;
 
 // In routes/web.php
 Route::get('/assign-student', function () {
@@ -14,3 +15,6 @@ Route::get('/', function () {
 });
 
 Route::get('/',[indexController::class],'index');
+
+// Language switch route
+Route::get('/switch-language/{lang}', [LanguageController::class, 'switchLanguage'])->name('switch.language');
