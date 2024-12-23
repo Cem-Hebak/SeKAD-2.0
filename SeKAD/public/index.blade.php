@@ -299,6 +299,17 @@ include('db_connection.php'); // Include database connection
                     </div>
                 </div>
                 <?php endif; ?>
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3">
+                        <a href="attendance_rewards.blade.php" target="_blank">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-medal text-primary mb-4"></i>
+                            <h5 class="mb-3">Attendance Leaderboard</h5>
+                            <p>Check School Student attendance rankings here!</p>
+                        </div>
+                        </a>
+                    </div>
+                </div>
             </div>
             </div>
         </div>
