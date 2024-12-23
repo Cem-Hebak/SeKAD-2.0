@@ -234,7 +234,8 @@
                             <a href="testimonial.html" class="dropdown-item">Testimonial</a>
                             <a href="404.html" class="dropdown-item">404 Page</a>
                             <a href="login.php" class="dropdown-item">Log In</a>
-                            <a href="register.php" class="dropdown-item">Register</a>
+                            <a href="register.blade.php" class="dropdown-item">Register</a>
+                            <a href="logout.blade.php" class="dropdown-item">Log Out</a>
                         </div>
                     </div>
                     <a href="contact.html" class="nav-item nav-link">Contact</a>
