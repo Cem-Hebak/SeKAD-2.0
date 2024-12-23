@@ -19,7 +19,18 @@ include('db_connection.php'); // Include database connection
 </head>
 <body>
     <div class="register-box">
-        <h2>Register</h2>
+        <h2>SeKAD Register</h2>
+        <div class="excel-upload-container">
+            <h3>Bulk Registration via Excel</h3>
+            <p>Please upload an Excel file (.xlsx or .csv) containing the registration details. Ensure the file follows the required format.</p>
+            <form action="registration_handling.blade.php" method="POST" enctype="multipart/form-data">
+                <label for="excel-file">Upload Excel File:</label>
+                <input type="file" id="excel-file" name="excel" accept=".xlsx, .csv" required>
+                <button type="submit" name="import" class="btn-upload">Upload and Process</button>
+            </form>
+        </div>
+
+        <h3>Registration for an account</h3>
         <p>Please fill in the form to create an account.</p>
         <form class="form-container" action="registration_handling.blade.php" method="POST" enctype="multipart/form-data">
             <!-- User Details -->
@@ -33,9 +44,6 @@ include('db_connection.php'); // Include database connection
 
                 <label for="ic_number">IC Number:</label>
                 <input type="text" id="ic_number" name="ic_number" required>
-
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
 
                 <label for="mobilenumber">Mobile Number:</label>
                 <input type="text" id="mobilenumber" name="mobilenumber" required>
