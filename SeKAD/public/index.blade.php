@@ -34,7 +34,6 @@
 //
 // for announcement ambik dari database
 ?> -->
-
 <?php
 session_start(); // Start the session
 include('db_connection.php'); // Include database connection
@@ -120,8 +119,8 @@ include('db_connection.php'); // Include database connection
             <div class="navbar-nav ms-auto p-4 p-lg-0">
                 <a href="index.html" class="nav-item nav-link active">Home</a>
                 <a href="about.html" class="nav-item nav-link">About</a>
-                <a href="login.php" class="nav-item nav-link">Log In</a>
-                <a href="register.php" class="nav-item nav-link">Register</a>
+                <a href="login.blade.php" class="nav-item nav-link">Log In</a>
+                <a href="register.blade.php" class="nav-item nav-link">Register</a>
                 <a href="profile.blade.php" class="nav-item nav-link">Profile</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
                 <div class="nav-item dropdown">
@@ -242,7 +241,6 @@ include('db_connection.php'); // Include database connection
                         </a>
                     </div>
                 </div>
-                <?php    if ($role === 'Teacher'): ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
                         <a href="https://www.google.com" target="_blank">
@@ -254,7 +252,6 @@ include('db_connection.php'); // Include database connection
                         </a>
                     </div>
                 </div>
-                <?php endif; ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
                         <a href="https://www.google.com" target="_blank">
@@ -277,6 +274,33 @@ include('db_connection.php'); // Include database connection
                         </a>
                     </div>
                 </div>
+                <?php    if ($role === 'Staff'): ?>
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3">
+                        <a href="assign-student.blade.php" target="_blank">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
+                            <h5 class="mb-3">Student Class Management</h5>
+                            <p>Assign a student class here!</p>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+                <?php endif; ?>
+                <?php    if ($role === 'Staff'): ?>
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3">
+                        <a href="Teacher Assign.blade.php" target="_blank">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
+                            <h5 class="mb-3">Teacher Class Management</h5>
+                            <p>Assign a teachers class here</p>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
             </div>
         </div>
     </div>
@@ -310,7 +334,7 @@ include('db_connection.php'); // Include database connection
         <script>
             // Dummy attendance data
             const data = {
-                attend: 25,
+                attend: 85,
                 total_days: 100
             };
     
