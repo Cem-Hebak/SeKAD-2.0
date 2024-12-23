@@ -2,7 +2,7 @@
 session_start(); // Start the session
 include('db_connection.php'); // Include database connection
 
-    
+
 
     // Retrieve user data from the session
     $id = htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8');
@@ -81,7 +81,7 @@ include('db_connection.php'); // Include database connection
     </div>
     <!-- Spinner End -->
 
-    
+
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
@@ -109,7 +109,7 @@ include('db_connection.php'); // Include database connection
                         <a href="login.blade.php" class="dropdown-item">Log In</a>
                         <a href="logout.blade.php" class="dropdown-item">Log Out</a>
                         <a href="register.blade.php" class="dropdown-item">Register</a>
-                        
+
                     </div>
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
@@ -125,9 +125,9 @@ include('db_connection.php'); // Include database connection
                 <div class="col-lg-10 text-center">
                     <h1 class="display-3 text-white animated slideInDown">
                         SeKAD
-                        
+
                     </h1>
-                    
+
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb justify-content-center">
                             <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
@@ -185,7 +185,7 @@ include('db_connection.php'); // Include database connection
             <!-- Date Picker -->
             <div class="col-md-4">
                 <label for="dateSelect">Select Date:</label>
-                <input type="date" name="date" id="dateSelect" class="form-control" 
+                <input type="date" name="date" id="dateSelect" class="form-control"
                        value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
             </div>
         </div>
@@ -235,14 +235,14 @@ include('db_connection.php'); // Include database connection
                 try {
                     if (isset($_GET['form']) && isset($_GET['class'])) {
                         $targetName = $form . " " . $class;
-                    
+
                         $sql = "SELECT b.id, b.name, b.class, u.ic_number, a.present
                                 FROM biodata_stud b
                                 JOIN users u ON b.name = u.name
                                 LEFT JOIN attendance a ON b.id = a.user_id AND a.date = ?
                                 WHERE b.class = ? AND u.role = 'Student'";
                         $params = [$date, $targetName];
-                    
+
                         // Execute query
                         $stmt = $pdo->prepare($sql);
                         $stmt->execute($params);

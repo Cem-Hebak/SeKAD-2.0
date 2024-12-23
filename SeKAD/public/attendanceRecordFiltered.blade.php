@@ -157,10 +157,10 @@ $status_labels = [
                               WHERE a.date = :attendance_date";
 
                     if (!empty($form)) {
-                        $query .= " AND u.form = :form";
+                        $query .= " AND u.class LIKE :form_filter";
                     }
                     if (!empty($class)) {
-                        $query .= " AND u.class = :class";
+                        $query .= " AND u.class LIKE :class_filter";
                     }
 
                     $query .= " ORDER BY u.name ASC";
@@ -168,10 +168,12 @@ $status_labels = [
                     $stmt = $pdo->prepare($query);
                     $stmt->bindParam(':attendance_date', $date, PDO::PARAM_STR);
                     if (!empty($form)) {
-                        $stmt->bindParam(':form', $form, PDO::PARAM_STR);
+                        $form_filter = $form . '%';
+                        $stmt->bindParam(':form_filter', $form_filter, PDO::PARAM_STR);
                     }
                     if (!empty($class)) {
-                        $stmt->bindParam(':class', $class, PDO::PARAM_STR);
+                        $class_filter = '%' . $class;
+                        $stmt->bindParam(':class_filter', $class_filter, PDO::PARAM_STR);
                     }
                     $stmt->execute();
                     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
