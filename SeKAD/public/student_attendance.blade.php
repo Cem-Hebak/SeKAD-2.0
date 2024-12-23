@@ -15,7 +15,7 @@ $date = isset($_POST['attendance_date']) ? htmlspecialchars($_POST['attendance_d
 
 // Handle file upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['proof_file'])) {
-    $target_dir = "uploads/";
+    $target_dir = "uploads/proofs/";
     $target_file = $target_dir . basename($_FILES["proof_file"]["name"]);
     $upload_ok = 1;
     $file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
