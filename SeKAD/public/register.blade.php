@@ -1,3 +1,12 @@
+<?php
+session_start(); // Start the session
+include('db_connection.php'); // Include database connection
+
+    
+ $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
+
+
+?>
 <!-- include("db_connection.php"); -->
 
 <!DOCTYPE html>
@@ -53,8 +62,13 @@
                 <label for="role">Role:</label>
                 <select id="role" name="role" required>
                     <option value="">Select Role</option>
+                    <?php    if ($role === 'Staff'): ?>
                     <option value="Student">Student</option>
                     <option value="Teacher">Teacher</option>
+                    <?php    elseif ($role === 'Admin'): ?>
+                    <option value="Teacher">Staff</option>
+                    <option value="Teacher">Admin</option>
+                    <?php endif; ?>
                 </select>
             </div>
 
