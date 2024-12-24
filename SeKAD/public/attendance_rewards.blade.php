@@ -1,7 +1,21 @@
 <?php
 include('connection.php');
 
-// Query to fetch student data and calculate attendance percentage
+// Get filter inputs from query parameters
+$filterYear = isset($_GET['year']) ? intval($_GET['year']) : null;
+$filterClass = isset($_GET['class']) ? $_GET['class'] : null;
+
+// Map date_of_birth to year (Form)
+$currentYear = date('Y');
+$yearMap = [
+    ($currentYear - 13) => 1, // Form 1
+    ($currentYear - 14) => 2, // Form 2
+    ($currentYear - 15) => 3, // Form 3
+    ($currentYear - 16) => 4, // Form 4
+    ($currentYear - 17) => 5, // Form 5
+];
+
+// Base SQL query
 $sql = "
     SELECT 
         users.id,
@@ -15,6 +29,19 @@ $sql = "
         attendance ON users.id = attendance.user_id
     WHERE 
         users.role = 'Student'
+";
+
+// Apply filters
+if ($filterYear && isset($yearMap[$currentYear - $filterYear - 12])) {
+    $filterYearPrefix = $filterYear;
+    $sql .= " AND users.class LIKE '{$filterYearPrefix} %'";
+}
+
+if ($filterClass && strtolower($filterClass) !== 'all') {
+    $sql .= " AND users.class LIKE '%{$filterClass}%'";
+}
+
+$sql .= "
     GROUP BY 
         users.id, users.name, users.ic_number, users.class
     ORDER BY 
@@ -32,6 +59,7 @@ if ($result->num_rows > 0) {
 
 $conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <!-- Bootstrap CSS -->
@@ -41,7 +69,7 @@ $conn->close();
 
 <head>
     <meta charset="utf-8">
-    <title>Student Assign</title>
+    <title>Attendance Leaderboard</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -68,10 +96,8 @@ $conn->close();
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
 </head>
+
 <body>
-    
-
-
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
@@ -129,6 +155,38 @@ $conn->close();
     <!-- Header End -->
     <div class="container">
         <h2 class="text-center mt-4">Attendance Rewards Leaderboard</h2>
+
+        <!-- Filter Form -->
+        <form method="GET" class="mb-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="year" class="form-label">Year</label>
+                    <select class="form-select" id="year" name="year">
+                        <option value="">All Years</option>
+                        <?php foreach ($yearMap as $year => $form): ?>
+                        <option value="<?php echo $form; ?>" <?php echo ($filterYear == $form) ? 'selected' : ''; ?>>
+                            Form <?php echo $form; ?>
+                        </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="class" class="form-label">Class</label>
+                    <select class="form-select" id="class" name="class">
+                        <option value="All">All Classes</option>
+                        <option value="Pendeta" <?php echo ($filterClass == 'Pendeta') ? 'selected' : ''; ?>>Pendeta</option>
+                        <option value="Cendekiawan" <?php echo ($filterClass == 'Cendekiawan') ? 'selected' : ''; ?>>Cendekiawan</option>
+                        <option value="Intelek" <?php echo ($filterClass == 'Intelek') ? 'selected' : ''; ?>>Intelek</option>
+                        <option value="Sarjana" <?php echo ($filterClass == 'Sarjana') ? 'selected' : ''; ?>>Sarjana</option>
+                    </select>
+                </div>
+                <div class="col-md-4 align-self-end">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Leaderboard Table -->
         <div class="card">
             <div class="card-header text-center bg-primary text-white">
                 <h4>Top Attendees</h4>
@@ -163,7 +221,6 @@ $conn->close();
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
