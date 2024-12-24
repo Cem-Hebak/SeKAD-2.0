@@ -97,37 +97,37 @@ $status_labels = [
         <!-- Filter Form -->
         <form method="POST" action="attendanceRecordFiltered.blade.php" class="mb-4">
             <div class="row justify-content-center">
-                <div class="col-md-4">
-                    <label for="formSelect">Select Form:</label>
-                    <select name="form" id="formSelect" class="form-control">
-                        <option value="1" <?php echo ($form === '1') ? 'selected' : ''; ?>>Form 1</option>
-                        <option value="2" <?php echo ($form === '2') ? 'selected' : ''; ?>>Form 2</option>
-                        <option value="3" <?php echo ($form === '3') ? 'selected' : ''; ?>>Form 3</option>
-                        <option value="4" <?php echo ($form === '4') ? 'selected' : ''; ?>>Form 4</option>
-                        <option value="5" <?php echo ($form === '5') ? 'selected' : ''; ?>>Form 5</option>
-                    </select>
-                </div>
-
-                <div class="col-md-4">
-                    <label for="classSelect">Select Class:</label>
-                    <select name="class" id="classSelect" class="form-control">
-                        <option value="CENDEKIAWAN" <?php echo ($class === 'CENDEKIAWAN') ? 'selected' : ''; ?>>CENDEKIAWAN</option>
-                        <option value="PENDETA" <?php echo ($class === 'PENDETA') ? 'selected' : ''; ?>>PENDETA</option>
-                        <option value="SARJANA" <?php echo ($class === 'SARJANA') ? 'selected' : ''; ?>>SARJANA</option>
-                        <option value="INTELEK" <?php echo ($class === 'INTELEK') ? 'selected' : ''; ?>>INTELEK</option>
-                    </select>
-                </div>
-
+                <!-- Date Selection -->
                 <div class="col-md-4">
                     <label for="date">Select Date:</label>
                     <input type="date" name="attendance_date" id="date" class="form-control" value="<?php echo $date; ?>" required>
+                </div>
+                <!-- Form Selection -->
+                <div class="col-md-3">
+                    <label for="form">Select Form:</label>
+                    <select name="form" id="form" class="form-select">
+                        <option value="">All Forms</option>
+                        <?php
+                        for ($i = 1; $i <= 5; $i++) {
+                            $selected = ($form == "Form {$i}") ? 'selected' : '';
+                            echo "<option value='{$i}' {$selected}>Form {$i}</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+                <!-- Class Selection -->
+                <div class="col-md-3">
+                    <label for="class">Select Class:</label>
+                    <select name="class" id="class" class="form-select">
+                        <option value="">All Classes</option>
+                        <!-- Class options will be populated dynamically -->
+                    </select>
                 </div>
                 <div class="col-md-2 mt-4">
                     <button type="submit" class="btn btn-primary w-100">Filter</button>
                 </div>
             </div>
         </form>
-
         <!-- Display Success/Error Messages -->
         <?php if (!empty($success_message)) { ?>
             <div class="alert alert-success"><?php echo $success_message; ?></div>
@@ -229,5 +229,39 @@ $status_labels = [
 
     <!-- Include Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formDropdown = document.getElementById('form');
+            const classDropdown = document.getElementById('class');
+
+            // Define classes for each form
+            const classOptions = {
+                '1': ['1 Cendekiawan', '1 Pendeta', '1 Sarjana', '1 Intelek'],
+                '2': ['2 Cendekiawan', '2 Pendeta', '2 Sarjana', '2 Intelek'],
+                '3': ['3 Cendekiawan', '3 Pendeta', '3 Sarjana', '3 Intelek'],
+                '4': ['4 Cendekiawan', '4 Pendeta', '4 Sarjana', '4 Intelek'],
+                '5': ['5 Cendekiawan', '5 Pendeta', '5 Sarjana', '5 Intelek'],
+            };
+
+            // Update class dropdown when form is selected
+            formDropdown.addEventListener('change', function() {
+                const selectedForm = formDropdown.value;
+                classDropdown.innerHTML = '<option value="">All Classes</option>'; // Reset class dropdown
+
+                if (selectedForm && classOptions[selectedForm]) {
+                    classOptions[selectedForm].forEach(function(cls) {
+                        const option = document.createElement('option');
+                        option.value = cls;
+                        option.textContent = cls;
+                        classDropdown.appendChild(option);
+                    });
+                }
+            });
+
+            // Trigger change event to initialize dropdowns (if a form is already selected)
+            formDropdown.dispatchEvent(new Event('change'));
+        });
+    </script>
+
 </body>
 </html>
