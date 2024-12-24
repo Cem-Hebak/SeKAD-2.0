@@ -30,7 +30,10 @@
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
 
+    <link href="css/font-size.css" rel="stylesheet">
 
+    <link id="light-mode" rel="stylesheet" href="{{ asset('css/light.css') }}">
+    <link id="dark-mode" rel="stylesheet" href="{{ asset('css/dark.css') }}" disabled>
 </head>
 
 <body>
@@ -327,6 +330,7 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="assets/global.js"></script>
 </body>
 
 </html>

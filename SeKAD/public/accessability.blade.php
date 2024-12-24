@@ -143,18 +143,7 @@
                 </div><!--end card-body-->
                 
                 <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6">
-                            <h4 class="text-start">Display</h4>
-                        </div>
-                        <div class="col-lg-6 text-end">
-                            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter1">
-                            view
-                            </button>
-                            
-                        </div>
-                    </div>
-
+                    
                     <div class="row align-items-center mt-3">
                         <div class="col-lg-6">
                             <h4 class="text-start">Size</h4>
