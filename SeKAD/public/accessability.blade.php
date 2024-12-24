@@ -143,18 +143,6 @@
                 </div><!--end card-body-->
                 
                 <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6">
-                            <h4 class="text-start">Display</h4>
-                        </div>
-                        <div class="col-lg-6 text-end">
-                            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter1">
-                            view
-                            </button>
-                            
-                        </div>
-                    </div>
-
                     <div class="row align-items-center mt-3">
                         <div class="col-lg-6">
                             <h4 class="text-start">Size</h4>
@@ -166,33 +154,7 @@
                         </div>
                     </div>
 
-                    <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h6 class="modal-title m-0" id="exampleModalCenterTitle">App Display Mode</h6>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-lg-9">
-                                            <h5>Choose Display Mode</h5>
-                                            <p>Toggle between light and dark modes for the website.</p>
-                                            <select id="displayModeSelector" class="form-select mt-3">
-                                                <option value="light">Light Mode</option>
-                                                <option value="dark">Dark Mode</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-soft-primary btn-sm" onclick="saveDisplayMode()" data-bs-dismiss="modal">Save changes</button>
-                                    <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                    
                     <!-- Font Size Modal  -->
                     <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
