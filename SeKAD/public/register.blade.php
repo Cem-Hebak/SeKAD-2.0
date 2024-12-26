@@ -20,6 +20,7 @@ include('db_connection.php'); // Include database connection
 <body>
     <div class="register-box">
         <h2>SeKAD Register</h2>
+        <?php    if ($role === 'Staff'): ?>
         <div class="excel-upload-container">
             <h3>Bulk Registration via Excel</h3>
             <p>Please upload an Excel file (.xlsx or .csv) containing the registration details. Ensure the file follows the required format.</p>
@@ -29,6 +30,7 @@ include('db_connection.php'); // Include database connection
                 <button type="submit" name="import" class="btn-upload">Upload and Process</button>
             </form>
         </div>
+        <?php endif; ?>
 
         <h3>Registration for an account</h3>
         <p>Please fill in the form to create an account.</p>
@@ -120,8 +122,6 @@ include('db_connection.php'); // Include database connection
                 <label for="allergies">Allergies:</label>
                 <input type="text" id="allergies" name="allergies" value="None">
 
-                <label for="avatar">Profile Picture:</label>
-                <input type="file" id="avatar" name="avatar" accept="image/*">
             </div>
 
             <!-- Submit Button -->
