@@ -190,7 +190,7 @@ $status_labels = [
 
                             // Display proof
                             if (!empty($row['proof'])) {
-                                echo "<td><a href='uploads/" . htmlspecialchars($row['proof'], ENT_QUOTES, 'UTF-8') . "' target='_blank'>View Proof</a></td>";
+                                echo "<td><a href='" . htmlspecialchars($row['proof'], ENT_QUOTES, 'UTF-8') . "' target='_blank'>View Proof</a></td>";
                             } else {
                                 echo "<td>No Proof</td>";
                             }
