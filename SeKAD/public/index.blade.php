@@ -253,6 +253,9 @@ include('db_connection.php'); // Include database connection
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
                         <a href="team.html" class="dropdown-item">Our Team</a>
+                        <a href="Attendance Analytics.blade.php" class="dropdown-item">Attendance Analytics</a>
+                        <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
+                        <a href="Facility_And_Equipment_Booking_Teacher.blade.php" class="dropdown-item">Venue Booking</a>
                         <a href="testimonial.html" class="dropdown-item">Testimonial</a>
                         <a href="404.html" class="dropdown-item">404 Page</a>
                         <a href="login.php" class="dropdown-item">Log In</a>
@@ -338,7 +341,7 @@ include('db_connection.php'); // Include database connection
                         <a href="https://www.google.com" target="_blank">
                         <div class="p-4">
                             <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
-                            <h5 class="mb-3">Profie</h5>
+                            <h5 class="mb-3">Profile</h5>
                             <p>View or Edit your credentials here !</p>
                         </div>
                         </a>
