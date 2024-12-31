@@ -5,13 +5,13 @@
     try {
         // Query to get booking dates and details
         $stmt = $pdo->query("SELECT start_time, end_time, Subject FROM booking");
-        $bookings = $stmt->fetchAll();
+        $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Format data for FullCalendar
         $events = [];
         foreach ($bookings as $booking) {
             $events[] = [
-                'title' => $booking['Subject'],
+                'title' => htmlspecialchars($booking['Subject']),
                 'start' => $booking['start_time'],
                 'end'   => $booking['end_time'],
             ];

@@ -12,6 +12,10 @@
             margin: 40px auto;
             min-height: 500px;
         }
+
+        .fc-daygrid-event {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -23,11 +27,20 @@
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth', // Month view
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
                 events: function (fetchInfo, successCallback, failureCallback) {
-                // Fetch events from the backend
+                    // Fetch events from the backend
                     fetch('get_bookings.php')
-                        .then(response => response.json())
+                        .then(response => {
+                            if (!response.ok) throw new Error('Failed to fetch');
+                            return response.json();
+                        })
                         .then(data => {
+                            if (data.error) throw new Error(data.error);
                             successCallback(data); // Pass data to FullCalendar
                         })
                         .catch(error => {
@@ -36,7 +49,15 @@
                         });
                 },
                 eventColor: '#FF5733', // Customize booked date color
-                eventTextColor: '#ffffff' // Text color for events
+                eventTextColor: '#ffffff', // Text color for events
+                eventClick: function (info) {
+                    alert(`Event: ${info.event.title}\nStart: ${info.event.start}\nEnd: ${info.event.end}`);
+                },
+                loading: function (isLoading) {
+                    if (isLoading) {
+                        console.log('Loading events...');
+                    }
+                }
             });
 
             calendar.render();
