@@ -5,16 +5,39 @@ include('db_connection.php'); // Include database connection
     
     // Retrieve user data from the session
     $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
-
+    $email = htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8');
+    $mobilenumber = htmlspecialchars($_SESSION['mobilenumber'], ENT_QUOTES, 'UTF-8');
+    $emergencymobilenumber = htmlspecialchars($_SESSION['emergencymobilenumber'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
     $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
+    $class = htmlspecialchars($_SESSION['class'] ?? 'Not Assigned', ENT_QUOTES, 'UTF-8');
+    $date_of_birth = htmlspecialchars($_SESSION['date_of_birth'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $gender = htmlspecialchars($_SESSION['gender'] ?? 'Not Specified', ENT_QUOTES, 'UTF-8');
+    $ic_number = htmlspecialchars($_SESSION['ic_number'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
+    $nationality = htmlspecialchars($_SESSION['nationality'], ENT_QUOTES, 'UTF-8');
+    $address = htmlspecialchars($_SESSION['address'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
+    $fname = htmlspecialchars($_SESSION['fname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $fcontact = htmlspecialchars($_SESSION['fcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $foccupation = htmlspecialchars($_SESSION['foccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $mname = htmlspecialchars($_SESSION['mname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $mcontact = htmlspecialchars($_SESSION['mcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $moccupation = htmlspecialchars($_SESSION['moccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $gname = htmlspecialchars($_SESSION['gname'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    $gcontact = htmlspecialchars($_SESSION['gcontact'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    $goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
+    $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
 
-   
-   
-    $stmt = $pdo->prepare("SELECT * FROM venue");
-    $stmt->execute();
-    $venues = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    
+    try {
+        // Fetch venues from the database
+        $stmt = $pdo->prepare("SELECT * FROM venue");
+        $stmt->execute();
+        $venues = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all venues as an associative array
+    } catch (Exception $e) {
+        // Handle any errors that occur during the database query
+        echo "Error: " . $e->getMessage();
+        $venues = []; // Fallback to an empty array if an error occurs
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +45,7 @@ include('db_connection.php'); // Include database connection
 
 <head>
     <meta charset="utf-8">
-    <title>Venue Booking Teacher</title>
+    <title>Delete Venue</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -60,10 +83,11 @@ include('db_connection.php'); // Include database connection
     <!-- Spinner End -->
 
 
+    
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>SeKAD</h2>
+            <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>eLEARNING</h2>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
@@ -73,6 +97,7 @@ include('db_connection.php'); // Include database connection
                 <a href="index.blade.php" class="nav-item nav-link active">Home</a>
                 <a href="about.html" class="nav-item nav-link">About</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
+                <a href="attendanceRecord1.blade.php" class="nav-item nav-link">Attendance Record</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
@@ -81,6 +106,8 @@ include('db_connection.php'); // Include database connection
                         <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="404.html" class="dropdown-item">404 Page</a>
                         <a href="profile.blade.php" class="dropdown-item">Profile</a>
+                        <a href="setting.blade.php" class="dropdown-item">Setting</a>
+                        <a href="announce.blade.php" class="dropdown-item">Announcement</a>
                         <a href="login.blade.php" class="dropdown-item">Log In</a>
                         <a href="logout.blade.php" class="dropdown-item">Log Out</a>
                         <a href="register.blade.php" class="dropdown-item">Register</a>
@@ -93,7 +120,6 @@ include('db_connection.php'); // Include database connection
         </div>
     </nav>
     <!-- Navbar End -->
-
 
     <!-- Header Start -->
     <div class="container-fluid bg-primary py-5 mb-5 page-header">
@@ -117,51 +143,53 @@ include('db_connection.php'); // Include database connection
         </div>
     </div>
     <!-- Header End -->
-<!--  -->
-    <!-- Venue Booking Start -->
-    <?php    if ($role === 'Staff'): ?>
-        <?php endif; ?>
-        <!-- color: "#c0504e" -->
-        <div class="d-flex justify-content-center my-4">
-    <a href="registerVenue.blade.php" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" style="color: white; text-align: left;">Register Venue</a>
-    <a href="DeleteVenue.blade.php" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" style="background-color: #c0504e; color: white; text-align: left;">Remove Venue</a>
-    </div> 
-    <div class="container-xxl py-5">
-     <div class="container">
-    <div class="row g-4">
-        <?php foreach ($venues as $venue): ?>
-            <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                <div class="service-item text-center shadow rounded overflow-hidden position-relative" style="width: 400px; height: 300px;">
-                    <a href="https://www.google.com" target="_blank" style="text-decoration: none; color: inherit;">
-                        <div class="p-4" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-                            <div class="img-container position-relative" style="height: 60%; overflow: hidden;">
-                                <img class="img-fluid w-100 h-100" src="<?php echo htmlspecialchars($venue['venue_picture'], ENT_QUOTES, 'UTF-8'); ?>" alt="" style="object-fit: cover; border-radius: 10px;">
-                            </div>
-                            <div class="content mt-3">
-                                <h5 class="mb-3" style="color: #2c3e50;"><?php echo htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8'); ?></h5>
-                                <p style="color: #7f8c8d;">View or edit your credentials here!</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</div>
-
-    </div>
-</div>
-
-               
      
+    <div style="width: 90%; margin: 0 auto;">
+    <!-- <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Venue Information</h4> -->
+    <div class="container">
+        <h2>Manage Venues</h2>
+        <table class="table table-hover table-bordered text-center" style="width: 100%; border-collapse: collapse; background-color: #f9f9f9;">
+    <thead class="thead-dark" >
+        <tr>
+            <th style="width: 90%;">Venue Name</th>
+            
+            <th style="width: 10%;">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($venues as $venue): ?>
+            <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 10px; font-weight: bold; text-align: left; ">
+                    <?php echo htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8'); ?>
+                </td>
+                
+                <td style="padding: 10px;">
+                    <form action="DeleteVenueHandling.blade.php" method="POST" onsubmit="return confirm('Are you sure you want to remove this venue?');">
+                        <input type="hidden" name="venue_id" value="<?php echo htmlspecialchars($venue['id'], ENT_QUOTES, 'UTF-8'); ?>">
+                        <button type="submit" class="btn btn-danger btn-sm" 
+                                style=" padding: 5px 15px; font-size: 14px; background-color: #e74c3c; border: none;">
+                            Remove
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        <?php if (empty($venues)): ?>
+            <tr>
+                <td colspan="3" style="padding: 15px; color: #7f8c8d;">No venues available.</td>
+            </tr>
+        <?php endif; ?>
+    </tbody>
+</table>
 
+    </div>
+                                    </div>
+                                
 
+                                    
 
-
-
-
-<!-- Venue Booking End -->
-
+                                  
+    <!-- Team End -->
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
