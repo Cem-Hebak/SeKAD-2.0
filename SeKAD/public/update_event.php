@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert into the database
     try {
         $stmt = $pdo->prepare("
-            INSERT INTO events (event_name, pic_name, phone_number, start_date, start_time, finish_date, finish_time, description, poster, created_at, updated_at)
+            INSERT INTO events (event_name, pic_name, phone_number, start_date, start_time, finish_date, finish_time, description, poster_path, created_at, updated_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
         
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $finish_date,
             $finish_time,
             $description,
-            $posterPath,
+            $poster_path,
             date('Y-m-d H:i:s'),
             date('Y-m-d H:i:s')
         ]);
