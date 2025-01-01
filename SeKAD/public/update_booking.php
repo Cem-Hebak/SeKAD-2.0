@@ -7,12 +7,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $student_name = $_POST['student_name'];
     $student_form = $_POST['student_form'];
     $student_class = $_POST['student_class'];
+    $session_date = $_POST['session_date'];
     $time_slot = $_POST['time_slot'];
     $session_reason = $_POST['session_reason'];
 
     // Prepare the SQL statement to insert the booking into the database
-    $sql = "INSERT INTO counselling_sessions (student_name, student_form, student_class, time_slot, session_reason, status) 
-            VALUES (:student_name, :student_form, :student_class, :time_slot, :session_reason, 'Pending')";
+    $sql = "INSERT INTO counselling_sessions (student_name, student_form, student_class, time_slot, session_reason, session_date, status) 
+            VALUES (:student_name, :student_form, :student_class, :time_slot, :session_reason, :session_date, 'Pending')";
 
     try {
         // Prepare and execute the statement using PDO
@@ -20,8 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':student_name', $student_name);
         $stmt->bindParam(':student_form', $student_form);
         $stmt->bindParam(':student_class', $student_class);
+        $stmt->bindParam(':session_date', $session_date);
         $stmt->bindParam(':time_slot', $time_slot);
         $stmt->bindParam(':session_reason', $session_reason);
+        
         
         // Execute the statement
         $stmt->execute();

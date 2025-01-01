@@ -1,3 +1,13 @@
+<?php
+    session_start(); // Start the session
+    include('db_connection.php'); 
+    $id = isset($_SESSION['id']) ? htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8') : ''; 
+    $name = isset($_SESSION['student_name']) ? htmlspecialchars($_SESSION['student_name'], ENT_QUOTES, 'UTF-8') : ''; 
+    $date = isset($_SESSION['session_date']) ? htmlspecialchars($_SESSION['session_date'], ENT_QUOTES, 'UTF-8') : ''; 
+    $time = isset($_SESSION['time_slot']) ? htmlspecialchars($_SESSION['time_slot'], ENT_QUOTES, 'UTF-8') : ''; 
+    $status = isset($_SESSION['status']) ? htmlspecialchars($_SESSION['status'], ENT_QUOTES, 'UTF-8') : ''; 
+    ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <!-- "include('db_connection.php')" ni untuk import database -->
@@ -37,11 +47,11 @@
 
 <body>
     <!-- Spinner Start -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+    <!-- <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
             <span class="sr-only">Loading...</span>
         </div>
-    </div>
+    </div> -->
     <!-- Spinner End -->
 
 <!-- Navbar Start -->
@@ -84,6 +94,7 @@
 
     <div class="container2">
     <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Counselling Session Booking</h4>
+    
     <form method="POST" action="update_booking.php" enctype="multipart/form-data">
         <!-- Name input -->
         <div style="margin-bottom: 15px;">
@@ -120,6 +131,12 @@
         </div>
 
         <div style="margin-bottom: 15px;">
+            <label for="session_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Date</label>
+            <input type="date" id="session_date" name="session_date" 
+                style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
             <label for="time_slot" style="font-weight: bold; display: block; margin-bottom: 5px;">Time Availability</label>
                 <select id="time_slot" name="time_slot" 
                     style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
@@ -142,8 +159,50 @@
             <button type="submit" style="background-color: #007BFF; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
                 Book Session
             </button>
-        </div>
+        </div> 
     </form>
+
+    <!-- Displaying the counselling session status after form submission -->
+<table class="table table-striped table-bordered mt-3">
+    <thead>
+        <tr>
+            <th style="width: 30%;">Name</th>
+            <th style="width: 20%;">Date</th>
+            <th style="width: 20%;">Time</th>
+            <th style="width: 20%;">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+            try {
+                // Query to fetch the status of the counselling session from the 'counselling_sessions' table
+                $sql = "SELECT student_name, session_date, time_slot, status FROM counselling_sessions WHERE id = ?";
+                $params = [$id]; // Assuming the session holds the user ID
+
+                // Execute the query
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute($params);
+                $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                if (!empty($sessions)) {
+                    foreach ($sessions as $session) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($session['student_name'], ENT_QUOTES, 'UTF-8') . "</td>";
+                        echo "<td>" . htmlspecialchars($session['session_date'], ENT_QUOTES, 'UTF-8') . "</td>";
+                        echo "<td>" . htmlspecialchars($session['time_slot'], ENT_QUOTES, 'UTF-8') . "</td>";
+                        echo "<td>" . htmlspecialchars($session['status'], ENT_QUOTES, 'UTF-8') . "</td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='4' style='text-align: center;'>No counselling sessions found for you.</td></tr>";
+                }
+            } catch (PDOException $e) {
+                die("Error: " . $e->getMessage());
+            }
+        ?>
+    </tbody>
+</table>
+    
 </div>
 
     <!-- Footer Start -->

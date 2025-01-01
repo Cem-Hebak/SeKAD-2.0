@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCounsellingSessionsTableNew extends Migration
+class AddSessionDateToCounsellingSessionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -20,6 +20,7 @@ class CreateCounsellingSessionsTableNew extends Migration
             $table->string('student_class'); // Class of the student
             $table->string('time_slot'); // Time slot for the session
             $table->text('session_reason'); // Reason for the session
+            $table->date('session_date')->nullable(); // Make session_date nullable
             $table->enum('status', ['Pending', 'Accepted', 'Rejected'])->default('Pending'); // Status of the session
             $table->timestamps(); // Created_at and updated_at columns
         });
