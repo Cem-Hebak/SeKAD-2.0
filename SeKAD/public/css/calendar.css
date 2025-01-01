@@ -1,0 +1,102 @@
+/* General styles for the page */
+body {
+    font-family: 'Arial', sans-serif; /* Choose a modern, clean font */
+    background-color: #f8f9fa; /* Light background */
+    color: #212529; /* Text color */
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #007bff; /* Primary color for the title */
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+#calendar {
+    max-width: 90%;
+    margin: 40px auto;
+    min-height: 500px;
+    background: #ffffff; /* White background for the calendar */
+    border: 1px solid #dee2e6; /* Light gray border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    overflow: hidden; /* Ensure content stays inside the border */
+}
+
+.fc-daygrid-event {
+    cursor: pointer;
+    font-size: 0.85rem; /* Smaller font size for events */
+    padding: 4px 8px; /* Padding around events */
+    border-radius: 4px; /* Rounded corners for events */
+}
+
+#loading {
+    text-align: center;
+    color: #666;
+    font-size: 1rem;
+    margin-top: 20px;
+}
+
+/* Header toolbar styles */
+.fc-toolbar {
+    background-color: #007bff; /* Primary color for toolbar */
+    color: #ffffff; /* White text for toolbar */
+    padding: 10px;
+}
+
+.fc-toolbar-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.fc-button {
+    background-color: #007bff; /* Primary button color */
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease;
+}
+
+.fc-button:hover {
+    background-color: #0056b3; /* Darker shade for hover */
+}
+
+.fc-button:focus {
+    outline: none;
+}
+
+/* Event styling */
+.fc-event {
+    background-color: #28a745; /* Green background for events */
+    color: #ffffff; /* White text */
+    font-weight: bold;
+    border: none;
+}
+
+.fc-daygrid-block-event .fc-event-time {
+    font-size: 0.75rem; /* Smaller time text */
+}
+
+.fc-daygrid-block-event .fc-event-title {
+    font-size: 0.9rem; /* Slightly larger event title text */
+}
+
+/* .fc-daygrid-body tr:last-child {
+    display: none;
+} */
+
+/* Ensure blank day boxes have a white background */
+.fc-day.fc-daygrid-day {
+    background-color: #ffffff; /* Set the background color to white */
+    border: 1px solid #dee2e6; /* Add a light gray border for consistency */
+}
+
+/* Optional: Adjust hover effect to highlight selected cells */
+.fc-daygrid-day:hover {
+    background-color: #f1f3f5; /* Slightly lighter background on hover */
+}
+
