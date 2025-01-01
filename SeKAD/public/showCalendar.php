@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Venue Booking Calendar</title>
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+    <!-- FullCalendar CSS -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet"> -->
+    <!-- FullCalendar JS -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <style>
         #calendar {
             max-width: 900px;
@@ -16,48 +18,54 @@
         .fc-daygrid-event {
             cursor: pointer;
         }
+
+        #loading {
+            text-align: center;
+            color: #666;
+            font-size: 16px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <h1 style="text-align: center;">Venue Booking Calendar</h1>
+    <div id="loading">Loading calendar...</div>
     <div id="calendar"></div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
+            var loadingEl = document.getElementById('loading');
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth', // Month view
+                initialView: 'dayGridMonth',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
                 events: function (fetchInfo, successCallback, failureCallback) {
-                    // Fetch events from the backend
+                    // Fetch events from get_bookings.php
                     fetch('get_bookings.php')
                         .then(response => {
-                            if (!response.ok) throw new Error('Failed to fetch');
+                            if (!response.ok) {
+                                throw new Error('Failed to fetch events. Status: ' + response.status);
+                            }
                             return response.json();
                         })
                         .then(data => {
-                            if (data.error) throw new Error(data.error);
-                            successCallback(data); // Pass data to FullCalendar
+                            loadingEl.style.display = 'none'; // Hide loading indicator
+                            successCallback(data); // Pass events to the calendar
                         })
                         .catch(error => {
                             console.error('Error fetching events:', error);
+                            loadingEl.textContent = 'Failed to load calendar. Please try again later.';
                             failureCallback(error);
                         });
                 },
-                eventColor: '#FF5733', // Customize booked date color
-                eventTextColor: '#ffffff', // Text color for events
-                eventClick: function (info) {
-                    alert(`Event: ${info.event.title}\nStart: ${info.event.start}\nEnd: ${info.event.end}`);
-                },
-                loading: function (isLoading) {
-                    if (isLoading) {
-                        console.log('Loading events...');
-                    }
-                }
+                eventColor: '#FF5733', // Styling for event background
+                eventTextColor: '#ffffff', // Styling for event text
+                editable: false, // Disable drag-and-drop
+                navLinks: true, // Enable clickable day/week views
             });
 
             calendar.render();
