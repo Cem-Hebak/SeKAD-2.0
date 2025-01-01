@@ -1,11 +1,13 @@
 <?php
     session_start(); // Start the session
     include('db_connection.php'); 
-    $id = isset($_SESSION['id']) ? htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8') : ''; 
-    $name = isset($_SESSION['student_name']) ? htmlspecialchars($_SESSION['student_name'], ENT_QUOTES, 'UTF-8') : ''; 
+    // $id = isset($_SESSION['id']) ? htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8') : ''; 
+    // $name = isset($_SESSION['student_name']) ? htmlspecialchars($_SESSION['student_name'], ENT_QUOTES, 'UTF-8') : ''; 
     $date = isset($_SESSION['session_date']) ? htmlspecialchars($_SESSION['session_date'], ENT_QUOTES, 'UTF-8') : ''; 
     $time = isset($_SESSION['time_slot']) ? htmlspecialchars($_SESSION['time_slot'], ENT_QUOTES, 'UTF-8') : ''; 
     $status = isset($_SESSION['status']) ? htmlspecialchars($_SESSION['status'], ENT_QUOTES, 'UTF-8') : ''; 
+    $id = isset($_SESSION['id']) ? htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8') : ''; 
+    $name = isset($_SESSION['student_name']) ? htmlspecialchars($_SESSION['student_name'], ENT_QUOTES, 'UTF-8') : ''; 
     ?>
 
 <!DOCTYPE html>
@@ -92,6 +94,11 @@
     </nav>
     <!-- Navbar End -->
 
+    <?php
+     $id = isset($_SESSION['id']) ? htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8') : ''; 
+     $name = isset($_SESSION['student_name']) ? htmlspecialchars($_SESSION['student_name'], ENT_QUOTES, 'UTF-8') : ''; 
+     ?>
+
     <div class="container2">
     <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Counselling Session Booking</h4>
     
@@ -163,27 +170,28 @@
     </form>
 
     <!-- Displaying the counselling session status after form submission -->
-<table class="table table-striped table-bordered mt-3">
-    <thead>
-        <tr>
-            <th style="width: 30%;">Name</th>
-            <th style="width: 20%;">Date</th>
-            <th style="width: 20%;">Time</th>
-            <th style="width: 20%;">Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
+    <table class="table table-striped table-bordered mt-3">
+        <thead>
+            <tr>
+                <th style="width: 30%;">Name</th>
+                <th style="width: 20%;">Date</th>
+                <th style="width: 20%;">Time</th>
+                <th style="width: 20%;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
             try {
-                // Query to fetch the status of the counselling session from the 'counselling_sessions' table
-                $sql = "SELECT student_name, session_date, time_slot, status FROM counselling_sessions WHERE id = ?";
-                $params = [$id]; // Assuming the session holds the user ID
-
+                // SQL query to fetch all data from counselling_sessions
+                $sql = "SELECT student_name, session_date, time_slot, `status` FROM counselling_sessions";
+                
                 // Execute the query
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute($params);
+                $stmt = $pdo->query($sql); // No need for prepare() since no parameters are used
+            
+                // Fetch the data
                 $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+            
+                // Check if data is available
                 if (!empty($sessions)) {
                     foreach ($sessions as $session) {
                         echo "<tr>";
@@ -194,15 +202,14 @@
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='4' style='text-align: center;'>No counselling sessions found for you.</td></tr>";
+                    echo "<tr><td colspan='4' style='text-align: center;'>No counselling sessions found.</td></tr>";
                 }
             } catch (PDOException $e) {
-                die("Error: " . $e->getMessage());
+                die("Error fetching counselling sessions: " . $e->getMessage());
             }
-        ?>
-    </tbody>
-</table>
-    
+            ?>
+        </tbody>
+    </table>
 </div>
 
     <!-- Footer Start -->
