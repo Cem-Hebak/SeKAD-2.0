@@ -4,9 +4,9 @@ session_start();
 include('db_connection.php'); // Include database connection
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve data from the form
+    // Retrieve form data
     $venue_name = htmlspecialchars($_POST['venue_name'], ENT_QUOTES, 'UTF-8');
-    $capacity = (int) $_POST['capacity']; // Convert capacity to integer
+    $capacity = (int) $_POST['capacity'];
     $venue_picture = $_FILES['venue_picture']['name'];
     $venue_picture_tmp = $_FILES['venue_picture']['tmp_name'];
 
@@ -39,38 +39,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Handling the facilities (array of selected facilities)
-    $facilities = isset($_POST['facilities']) ? $_POST['facilities'] : [];
+    // Insert venue details
+    try {
+        // Insert venue into the database
+        $stmt = $pdo->prepare("INSERT INTO venue (venue_name, venue_picture, capacity) VALUES (:venue_name, :venue_picture, :capacity)");
+        $stmt->bindParam(':venue_name', $venue_name);
+        $stmt->bindParam(':venue_picture', $target_file);
+        $stmt->bindParam(':capacity', $capacity);
+        $stmt->execute();
 
-    // If "Others" is selected, handle the input for the other facility
-    $other_facility = isset($_POST['other_facility']) ? htmlspecialchars($_POST['other_facility'], ENT_QUOTES, 'UTF-8') : '';
-
-    if ($other_facility) {
-        $facilities[] = $other_facility; // Add other facility to the list
+        // Get the ID of the newly inserted venue
+        $venue_id = $pdo->lastInsertId();
+    } catch (PDOException $e) {
+        echo "Error inserting venue: " . $e->getMessage();
+        exit();
     }
 
-    // Insert the venue details into the database
-    $stmt = $pdo->prepare("INSERT INTO venue (venue_name, venue_picture, capacity) VALUES (:venue_name, :venue_picture, :capacity)");
-    $stmt->bindParam(':venue_name', $venue_name);
-    $stmt->bindParam(':venue_picture', $target_file); // Use the path to the uploaded picture
-    $stmt->bindParam(':capacity', $capacity);
-    $stmt->execute();
+    // Handling the facilities (array of selected facilities)
+    $facility_names = $_POST['facility_name'];
+    $facility_quantities = $_POST['facility_quantity'];
+    $other_facilities = isset($_POST['other_facility_name']) ? $_POST['other_facility_name'] : [];
 
-    // Get the ID of the newly inserted venue
-    $venue_id = $pdo->lastInsertId();
+    // Insert facilities into venue_facilities table
+    try {
+        for ($i = 0; $i < count($facility_names); $i++) {
+            $facility_name = htmlspecialchars($facility_names[$i], ENT_QUOTES, 'UTF-8');
+            $quantity = (int) $facility_quantities[$i];
 
-    // Insert the selected facilities into a separate table (assuming a 'facility' table exists)
-    if (!empty($facilities)) {
-        foreach ($facilities as $facility) {
-            $stmt_facility = $pdo->prepare("INSERT INTO venue_facilities (venue_id, facility_name) VALUES (:venue_id, :facility_name)");
+            // Use the other facility name if selected
+            if ($facility_name === 'Others' && isset($other_facilities[$i]) && !empty($other_facilities[$i])) {
+                $facility_name = htmlspecialchars($other_facilities[$i], ENT_QUOTES, 'UTF-8');
+            }
+
+            // Insert facility
+            $stmt_facility = $pdo->prepare("INSERT INTO venue_facilities (venue_id, facility_name, quantity) VALUES (:venue_id, :facility_name, :quantity)");
             $stmt_facility->bindParam(':venue_id', $venue_id);
-            $stmt_facility->bindParam(':facility_name', $facility);
+            $stmt_facility->bindParam(':facility_name', $facility_name);
+            $stmt_facility->bindParam(':quantity', $quantity);
             $stmt_facility->execute();
         }
+    } catch (PDOException $e) {
+        echo "Error inserting facilities: " . $e->getMessage();
+        exit();
     }
 
-    // Redirect to a confirmation or venue list page after successful registration
-    header("Location: Facility_And_Equipment_Booking_Teacher.blade.php"); // Or another page you prefer
+    // Redirect after successful insert
+    header("Location: Facility_And_Equipment_Booking_Teacher.blade.php");
     exit();
 }
 ?>
