@@ -173,7 +173,6 @@
     <table class="table table-striped table-bordered mt-3">
         <thead>
             <tr>
-                <th style="width: 30%;">Name</th>
                 <th style="width: 20%;">Date</th>
                 <th style="width: 20%;">Time</th>
                 <th style="width: 20%;">Status</th>
@@ -195,7 +194,6 @@
                 if (!empty($sessions)) {
                     foreach ($sessions as $session) {
                         echo "<tr>";
-                        echo "<td>" . htmlspecialchars($session['student_name'], ENT_QUOTES, 'UTF-8') . "</td>";
                         echo "<td>" . htmlspecialchars($session['session_date'], ENT_QUOTES, 'UTF-8') . "</td>";
                         echo "<td>" . htmlspecialchars($session['time_slot'], ENT_QUOTES, 'UTF-8') . "</td>";
                         echo "<td>" . htmlspecialchars($session['status'], ENT_QUOTES, 'UTF-8') . "</td>";
