@@ -97,16 +97,16 @@ foreach ($attendance_data as $row) {
 
 </head>
 <body>
- <!-- Navbar Start -->
- <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
-    <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-        <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>SeKAD</h2>
-    </a>
-    <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <div class="navbar-nav ms-auto p-4 p-lg-0">
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>SeKAD</h2>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="index.blade.php" class="nav-item nav-link active">Home</a>
             <a href="about.html" class="nav-item nav-link">About</a>
             <a href="courses.html" class="nav-item nav-link">Courses</a>
@@ -128,11 +128,11 @@ foreach ($attendance_data as $row) {
         </div>
         <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
     </div>
-</nav>
-<!-- Navbar End -->
+    </nav>
+    <!-- Navbar End -->
 
-<!-- Header Start -->
-<div class="container-fluid bg-primary py-5 mb-5 page-header">
+    <!-- Header Start -->
+    <div class="container-fluid bg-primary py-5 mb-5 page-header">
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-10 text-center">
@@ -151,26 +151,35 @@ foreach ($attendance_data as $row) {
             </div>
         </div>
     </div>
-</div>
-<!-- Header End -->
-
-
-<div class="container py-5">
-    <h1 class="text-center mb-4">Personal Analytics By Month</h1>
-
-    <form method="GET" class="mb-4">
-        <label for="month" class="form-label">Filter by Month:</label>
-        <input type="month" id="month" name="filter_month" class="form-control"
-               value="<?php echo isset($_GET['filter_month']) ? htmlspecialchars($_GET['filter_month'], ENT_QUOTES, 'UTF-8') : ''; ?>">
-        <button type="submit" class="btn btn-primary mt-2">Filter</button>
-    </form>
-
-    <div class="chart-container" style="position: center; height:75vh; width:100%;">
-        <canvas id="attendanceChart"></canvas>
     </div>
-</div>
-<!-- Footer Start -->
-<div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+    <!-- Header End -->
+
+    <table align="center" style="width: 100%; max-width: 1000px; margin: auto; border-collapse: collapse;">
+    <tr>
+        <td>
+            <div class="container py-5">
+            <h1 class="text-center mb-4">Personal Analytics By Month</h1>
+
+            <form method="GET" class="mb-4">
+                <label for="month" class="form-label">Filter by Month:</label>
+                <input type="month" id="month" name="filter_month" class="form-control"
+                    value="<?php echo isset($_GET['filter_month']) ? htmlspecialchars($_GET['filter_month'], ENT_QUOTES, 'UTF-8') : ''; ?>">
+                <button type="submit" class="btn btn-primary mt-2">Filter</button>
+                </div>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td>
+        <div class="chart-container" style="position: relative; height:75vh; width:100%;">
+            <canvas id="attendanceChart"></canvas>
+        </div>
+
+        </td>
+    </tr>
+    </table>
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
     <div class="container py-5">
         <div class="row g-5">
             <div class="col-lg-3 col-md-6">
@@ -246,12 +255,12 @@ foreach ($attendance_data as $row) {
             </div>
         </div>
     </div>
-</div>
-<!-- Footer End -->
+    </div>
+    <!-- Footer End -->
 
-<script>
-    const ctx = document.getElementById('attendanceChart').getContext('2d');
-    const attendanceChart = new Chart(ctx, {
+    <script>
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        const attendanceChart = new Chart(ctx, {
         type: 'pie',
         data: {
             labels: <?php echo json_encode($labels); ?>,
@@ -280,10 +289,10 @@ foreach ($attendance_data as $row) {
                 }
             }
         }
-    });
+        });
 
-</script>
+    </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
