@@ -34,7 +34,36 @@ foreach ($rows as $row) {
         ];
     }
 }
+
+// Fetch bookings data
+$bookingQuery = "
+    SELECT
+    b.venue_id,
+    b.start_time AS booking_date,
+    b.booked_by AS user_name,
+    b.subject,
+    b.status,
+    v.venue_name
+FROM booking b
+JOIN venue v ON b.venue_id = v.id
+";
+$bookingStmt = $pdo->prepare($bookingQuery);
+$bookingStmt->execute();
+$bookings = $bookingStmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Update booking status if a POST request is received
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST['status'])) {
+    $bookingId = intval($_POST['booking_id']);
+    $status = intval($_POST['status']);
+    $updateQuery = "UPDATE bookings SET status = :status WHERE id = :id";
+    $updateStmt = $pdo->prepare($updateQuery);
+    $updateStmt->execute([':status' => $status, ':id' => $bookingId]);
+    echo json_encode(['success' => true]);
+    exit;
+}
 ?>
+
+
 
 
 <!DOCTYPE html>
@@ -42,7 +71,7 @@ foreach ($rows as $row) {
 
 <head>
     <meta charset="utf-8">
-    <title>Venue Booking Teacher</title>
+    <title>Venue Booking Approval</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -138,58 +167,35 @@ foreach ($rows as $row) {
     </div>
     <!-- Header End -->
 <!--  -->
-    <!-- Venue Booking Start -->
-    <?php    if ($role === 'Staff'): ?>
-        <?php endif; ?>
-        <!-- color: "#c0504e" -->
-        <div class="d-flex justify-content-center my-4">
-    <a href="registerVenue.blade.php" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" style="color: white; text-align: left;">Register Venue</a>
-    <a href="DeleteVenue.blade.php" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" style="background-color: #c0504e; color: white; text-align: left;">Remove Venue</a>
-    </div>
-    <div class="container-xxl py-5">
-     <div class="container">
-     <div class="row g-4">
-     <?php foreach ($venues as $venue): ?>
-    <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="service-item text-center shadow rounded overflow-hidden position-relative" style="width: 400px; height: 300px;">
-            <a href="VenueBooking.blade.php" target="_blank" style="text-decoration: none; color: inherit;">
-                <div class="p-4" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-                    <div class="img-container position-relative" style="height: 60%; overflow: hidden;">
-                        <img class="img-fluid w-100 h-100" src="<?php echo htmlspecialchars($venue['venue_picture'], ENT_QUOTES, 'UTF-8'); ?>" alt="" style="object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="content mt-3">
-                        <h5 class="mb-3" style="color: #2c3e50;"><?php echo htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8'); ?></h5>
-                        <ul style="list-style: none; padding: 0; text-align: left;">
-                            <?php foreach ($venue['facilities'] as $facility): ?>
-                                <li>
-                                    <strong><?php echo htmlspecialchars($facility['facility_name'], ENT_QUOTES, 'UTF-8'); ?>:</strong>
-                                    <?php echo htmlspecialchars($facility['quantity'], ENT_QUOTES, 'UTF-8'); ?>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>
-<?php endforeach; ?>
-
+<div class="container mt-5">
+    <h2>Booking Table</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>User Name</th>
+                <th>Venue</th>
+                <th>Booking Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($bookings as $booking): ?>
+                <tr>
+                    <td><?= htmlspecialchars($booking['user_name']) ?></td>
+                    <td><?= htmlspecialchars($booking['venue_name']) ?></td>
+                    <td><?= htmlspecialchars($booking['booking_date']) ?></td>
+                    <td><?= $booking['status'] == 2 ? 'Pending' : ($booking['status'] == 1 ? 'Approved' : 'Rejected') ?></td>
+                    <td>
+                        <button class="btn btn-success update-status" data-id="<?= $booking['booking_id'] ?>" data-status="1">Approve</button>
+                        <button class="btn btn-danger update-status" data-id="<?= $booking['booking_id'] ?>" data-status="3">Reject</button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>
 
-</div>
-
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
-<!-- Venue Booking End -->
 
 
     <!-- Footer Start -->
@@ -287,15 +293,32 @@ foreach ($rows as $row) {
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-    <!-- <script>
-        // Example: Simulated authenticated user data
-        const authenticatedUser = {
-            name: "John Doe"
-        };
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.update-status').forEach(button => {
+        button.addEventListener('click', function () {
+            const bookingId = this.getAttribute('data-id');
+            const status = this.getAttribute('data-status');
 
-        // Insert user name into the HTML
-        document.getElementById("user-name").textContent = `Welcome, ${authenticatedUser.name}`;
-    </script> -->
+            fetch('your_php_file.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `booking_id=${bookingId}&status=${status}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Status updated successfully!');
+                    location.reload(); // Reload to show updated status
+                } else {
+                    alert('Failed to update status.');
+                }
+            })
+            .catch(err => console.error(err));
+        });
+    });
+});
+    </script>
 </body>
 
 </html>
