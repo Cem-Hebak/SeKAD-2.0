@@ -1,8 +1,8 @@
 /* General styles for the page */
 body {
-    font-family: 'Arial', sans-serif; /* Choose a modern, clean font */
+    font-family: 'Arial', sans-serif; /* Modern, clean font */
     background-color: #f8f9fa; /* Light background */
-    color: #212529; /* Text color */
+    color: #212529; /* Neutral text color */
     margin: 0;
     padding: 0;
 }
@@ -15,24 +15,19 @@ h1 {
     font-weight: bold;
 }
 
+/* Calendar container styles */
 #calendar {
     max-width: 90%;
     margin: 40px auto;
     min-height: 500px;
-    background: #ffffff; /* White background for the calendar */
+    background: #ffffff; /* White background */
     border: 1px solid #dee2e6; /* Light gray border */
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     overflow: hidden; /* Ensure content stays inside the border */
 }
 
-.fc-daygrid-event {
-    cursor: pointer;
-    font-size: 0.85rem; /* Smaller font size for events */
-    padding: 4px 8px; /* Padding around events */
-    border-radius: 4px; /* Rounded corners for events */
-}
-
+/* Loading message styles */
 #loading {
     text-align: center;
     color: #666;
@@ -43,8 +38,10 @@ h1 {
 /* Header toolbar styles */
 .fc-toolbar {
     background-color: #007bff; /* Primary color for toolbar */
-    color: #ffffff; /* White text for toolbar */
+    color: #ffffff; /* White text */
     padding: 10px;
+    border-radius: 8px; /* Rounded corners for the toolbar */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for the toolbar */
 }
 
 .fc-toolbar-title {
@@ -59,72 +56,77 @@ h1 {
     border-radius: 4px;
     padding: 5px 10px;
     transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Button shadow */
 }
 
 .fc-button:hover {
-    background-color: #0056b3; /* Darker shade for hover */
+    background-color: #0056b3; /* Darker blue for hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* More pronounced shadow on hover */
 }
 
 .fc-button:focus {
     outline: none;
 }
 
+/* Day cell styles */
+.fc-daygrid-day {
+    background-color: #ffffff; /* White background for blank cells */
+    border: 1px solid #dee2e6; /* Light gray border for consistency */
+}
+
+.fc-daygrid-day:hover {
+    background-color: #f1f3f5; /* Slightly lighter on hover */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05); /* Inner shadow for hover effect */
+}
+
 /* Event styling */
-.fc-event {
-    background-color: #28a745; /* Green background for events */
+.fc-daygrid-event {
+    cursor: pointer;
+    font-size: 0.85rem; /* Smaller font for events */
+    padding: 4px 8px; /* Padding around events */
+    border-radius: 4px; /* Rounded corners */
+    background-color: #28a745; /* Green background */
     color: #ffffff; /* White text */
     font-weight: bold;
     border: none;
+    transition: background-color 0.2s ease-in-out; /* Smooth transition */
 }
 
-.fc-daygrid-block-event .fc-event-time {
-    font-size: 0.75rem; /* Smaller time text */
-}
-
-.fc-daygrid-block-event .fc-event-title {
-    font-size: 0.9rem; /* Slightly larger event title text */
-}
-
-
-/* Ensure blank day boxes have a white background */
-.fc-day.fc-daygrid-day {
-    background-color: #ffffff; /* Set the background color to white */
-    border: 1px solid #dee2e6; /* Add a light gray border for consistency */
-}
-
-/* Optional: Adjust hover effect to highlight selected cells */
-.fc-daygrid-day:hover {
-    background-color: #f1f3f5; /* Slightly lighter background on hover */
+.fc-daygrid-event:hover {
+    background-color: #0069d9; /* Darker blue on hover */
+    color: #ffffff; /* Maintain contrast */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
 /* Tooltip styles */
 .tooltip {
     position: absolute;
-    background-color: #80baf4; /* Dark gray background */
-    color: #ffffff; /* White text for contrast */
-    border: 1px solid #ffffff; /* Subtle gray border */
-    border-radius: 8px; /* Rounded corners for the tooltip */
+    background-color: #80baf4; /* Tooltip background */
+    color: #ffffff; /* Text color */
+    border: 1px solid #ffffff; /* White border */
+    border-radius: 8px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-    padding: 12px 16px; /* Inner spacing for the tooltip content */
-    font-size: 0.9rem; /* Font size matching the theme */
-    line-height: 1.6; /* Comfortable line spacing */
+    padding: 12px 16px; /* Inner spacing */
+    font-size: 0.9rem; /* Font size */
+    line-height: 1.6; /* Line spacing */
     max-width: 300px; /* Limit tooltip width */
     z-index: 1000; /* Ensure it stays on top */
-    animation: fadeIn 0.2s ease-in-out; /* Smooth fade-in animation */
+    animation: fadeIn 0.2s ease-in-out; /* Fade-in animation */
 }
 
-/* Tooltip header styling */
+/* Tooltip header */
 .tooltip .tooltip-header {
-    font-weight: bold; /* Emphasize header text */
-    font-size: 1rem; /* Slightly larger font size */
-    margin-bottom: 0; /* Space below the header */
-    color: #17a2b8; /* Match primary theme with a bright color */
+    font-weight: bold; /* Bold header */
+    font-size: 1rem; /* Slightly larger font */
+    margin-bottom: 4px; /* Space below the header */
+    color: #17a2b8; /* Bright color */
 }
 
-/* Tooltip content styling */
+/* Tooltip content */
 .tooltip .tooltip-content {
-    font-size: 0.85rem; /* Slightly smaller font size for details */
-    color: #ced4da; /* Light gray for text contrast */
+    font-size: 0.85rem; /* Smaller font */
+    color: #ced4da; /* Light gray text */
 }
 
 /* Tooltip fade-in animation */
@@ -139,13 +141,10 @@ h1 {
     }
 }
 
-/* Optional: Highlight the hovered event */
+/* Additional hover effect for event highlight */
 .fc-daygrid-event:hover {
-    background-color: #0069d9; /* Darker blue on hover */
-    color: #ffffff; /* Keep text white for contrast */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
-    transition: background-color 0.2s ease-in-out; /* Smooth color transition */
+    background-color: #0056b3; /* Darker blue */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+    color: #f8f9fa; /* Slightly lighter text for contrast */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
-
-
-
