@@ -2,7 +2,7 @@
 session_start(); // Start the session
 include('db_connection.php'); // Include database connection
 
-
+    
 
     // Retrieve user data from the session
     $id = htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8');
@@ -46,7 +46,7 @@ include('db_connection.php'); // Include database connection
     <meta content="" name="keywords">
     <meta content="" name="description">
 
-
+  
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -81,7 +81,7 @@ include('db_connection.php'); // Include database connection
     </div>
     <!-- Spinner End -->
 
-
+    
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
@@ -109,7 +109,7 @@ include('db_connection.php'); // Include database connection
                         <a href="login.blade.php" class="dropdown-item">Log In</a>
                         <a href="logout.blade.php" class="dropdown-item">Log Out</a>
                         <a href="register.blade.php" class="dropdown-item">Register</a>
-
+                        
                     </div>
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
@@ -125,9 +125,9 @@ include('db_connection.php'); // Include database connection
                 <div class="col-lg-10 text-center">
                     <h1 class="display-3 text-white animated slideInDown">
                         SeKAD
-
+                        
                     </h1>
-
+                    
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb justify-content-center">
                             <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
@@ -140,11 +140,6 @@ include('db_connection.php'); // Include database connection
     </div>
 
     <div style="width: 90%; margin: 0 auto;">
-    <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Biodata</h4>
-
-    <!-- Form starts here -->
-    <form method="POST" action="update_attendance.php">
-        <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
 
     <div class="container mt-5">
     <h2 class="mb-4">Attendance Record</h2>
@@ -185,7 +180,7 @@ include('db_connection.php'); // Include database connection
             <!-- Date Picker -->
             <div class="col-md-4">
                 <label for="dateSelect">Select Date:</label>
-                <input type="date" name="date" id="dateSelect" class="form-control"
+                <input type="date" name="date" id="dateSelect" class="form-control" 
                        value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
             </div>
         </div>
@@ -206,43 +201,17 @@ include('db_connection.php'); // Include database connection
             </thead>
             <tbody>
                 <?php
-                    try {
-                        // Query to fetch 'name' and 'ic_number' for users with role = 'Student'
-                        $stmt = $pdo->prepare("SELECT id, name, ic_number FROM users WHERE role = 'Student' ORDER BY name ASC");
-                        $stmt->execute();
-                        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                        // Check if any students are returned
-                        if (!empty($students)) {
-                            foreach ($students as $row) {
-                                echo "<tr>";
-                                echo "<td>" . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . "</td>"; // Name column
-                                echo "<td>" . htmlspecialchars($row['ic_number'], ENT_QUOTES, 'UTF-8') . "</td>"; // IC Number column
-
-                                // Checkbox for attendance
-                                echo "<td style='text-align: center;'>";
-                                echo "<input type='checkbox' name='attendance[" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "]' value='1'>";
-                                echo "<input type='hidden' name='user_ids[]' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>";
-                                echo "</td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='3' style='text-align: center;'>No students found in the database.</td></tr>";
-                        }
-                    } catch (PDOException $e) {
-                        die("Error: " . $e->getMessage());
-                    }
                 try {
                     if (isset($_GET['form']) && isset($_GET['class'])) {
                         $targetName = $form . " " . $class;
-
+                    
                         $sql = "SELECT b.id, b.name, b.class, u.ic_number, a.present
                                 FROM biodata_stud b
                                 JOIN users u ON b.id = u.id
                                 LEFT JOIN attendance a ON b.id = a.user_id AND a.date = ?
                                 WHERE b.class = ? AND u.role = 'Student'";
                         $params = [$date, $targetName];
-
+                    
                         // Execute query
                         $stmt = $pdo->prepare($sql);
                         $stmt->execute($params);
@@ -272,11 +241,6 @@ include('db_connection.php'); // Include database connection
             </tbody>
         </table>
 
-        <!-- Submit button for attendance -->
-        <div style="text-align: center; margin-top: 10px;">
-            <button type="submit" class="btn btn-primary">Submit Attendance</button>
-        </div>
-    </form> <!-- Form ends here -->
         <!-- Pass Date for Submission -->
         <input type="hidden" name="date" value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
 
@@ -351,7 +315,7 @@ include('db_connection.php'); // Include database connection
                     <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
                         &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved.
 
-                        <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                        <!--/* This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. */-->
                         Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
                     </div>
                     <div class="col-md-6 text-center text-md-end">
