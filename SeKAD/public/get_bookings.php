@@ -3,8 +3,16 @@
 include 'db_connection.php';
 
 try {
-    // Query to fetch booking data
-    $stmt = $pdo->query("SELECT start_time, end_time, Subject FROM booking");
+    // Query to fetch booking data with venue details
+    $stmt = $pdo->query("
+        SELECT 
+            booking.start_time, 
+            booking.end_time, 
+            booking.Subject, 
+            venue.venue_name 
+        FROM booking
+        JOIN venue ON booking.venue_id = venue.id
+    ");
 
     // Fetch and format events
     $events = [];
@@ -13,6 +21,9 @@ try {
             'title' => htmlspecialchars($row['Subject'], ENT_QUOTES, 'UTF-8'),
             'start' => $row['start_time'],
             'end'   => $row['end_time'],
+            'extendedProps' => [
+                'venue' => htmlspecialchars($row['venue_name'], ENT_QUOTES, 'UTF-8'),
+            ],
         ];
     }
 

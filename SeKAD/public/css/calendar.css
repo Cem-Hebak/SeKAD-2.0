@@ -85,9 +85,6 @@ h1 {
     font-size: 0.9rem; /* Slightly larger event title text */
 }
 
-/* .fc-daygrid-body tr:last-child {
-    display: none;
-} */
 
 /* Ensure blank day boxes have a white background */
 .fc-day.fc-daygrid-day {
@@ -99,4 +96,56 @@ h1 {
 .fc-daygrid-day:hover {
     background-color: #f1f3f5; /* Slightly lighter background on hover */
 }
+
+/* Tooltip styles */
+.tooltip {
+    position: absolute;
+    background-color: #80baf4; /* Dark gray background */
+    color: #ffffff; /* White text for contrast */
+    border: 1px solid #ffffff; /* Subtle gray border */
+    border-radius: 8px; /* Rounded corners for the tooltip */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    padding: 12px 16px; /* Inner spacing for the tooltip content */
+    font-size: 0.9rem; /* Font size matching the theme */
+    line-height: 1.6; /* Comfortable line spacing */
+    max-width: 300px; /* Limit tooltip width */
+    z-index: 1000; /* Ensure it stays on top */
+    animation: fadeIn 0.2s ease-in-out; /* Smooth fade-in animation */
+}
+
+/* Tooltip header styling */
+.tooltip .tooltip-header {
+    font-weight: bold; /* Emphasize header text */
+    font-size: 1rem; /* Slightly larger font size */
+    margin-bottom: 0; /* Space below the header */
+    color: #17a2b8; /* Match primary theme with a bright color */
+}
+
+/* Tooltip content styling */
+.tooltip .tooltip-content {
+    font-size: 0.85rem; /* Slightly smaller font size for details */
+    color: #ced4da; /* Light gray for text contrast */
+}
+
+/* Tooltip fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px); /* Slide in from above */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Optional: Highlight the hovered event */
+.fc-daygrid-event:hover {
+    background-color: #0069d9; /* Darker blue on hover */
+    color: #ffffff; /* Keep text white for contrast */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+    transition: background-color 0.2s ease-in-out; /* Smooth color transition */
+}
+
+
 
