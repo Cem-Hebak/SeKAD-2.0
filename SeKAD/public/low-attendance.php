@@ -5,27 +5,27 @@ include('db_connection.php'); // Include database connection
     
     // Retrieve user data from the session
     $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
-    $email = htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8');
-    $mobilenumber = htmlspecialchars($_SESSION['mobilenumber'], ENT_QUOTES, 'UTF-8');
-    $emergencymobilenumber = htmlspecialchars($_SESSION['emergencymobilenumber'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
-    $class = htmlspecialchars($_SESSION['class'] ?? 'Not Assigned', ENT_QUOTES, 'UTF-8');
-    $date_of_birth = htmlspecialchars($_SESSION['date_of_birth'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $gender = htmlspecialchars($_SESSION['gender'] ?? 'Not Specified', ENT_QUOTES, 'UTF-8');
-    $ic_number = htmlspecialchars($_SESSION['ic_number'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
-    $nationality = htmlspecialchars($_SESSION['nationality'], ENT_QUOTES, 'UTF-8');
-    $address = htmlspecialchars($_SESSION['address'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
-    $fname = htmlspecialchars($_SESSION['fname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $fcontact = htmlspecialchars($_SESSION['fcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $foccupation = htmlspecialchars($_SESSION['foccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $mname = htmlspecialchars($_SESSION['mname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $mcontact = htmlspecialchars($_SESSION['mcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $moccupation = htmlspecialchars($_SESSION['moccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $gname = htmlspecialchars($_SESSION['gname'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $gcontact = htmlspecialchars($_SESSION['gcontact'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
-    $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
+    // $email = htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8');
+    // $mobilenumber = htmlspecialchars($_SESSION['mobilenumber'], ENT_QUOTES, 'UTF-8');
+    // $emergencymobilenumber = htmlspecialchars($_SESSION['emergencymobilenumber'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    // $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
+    // $class = htmlspecialchars($_SESSION['class'] ?? 'Not Assigned', ENT_QUOTES, 'UTF-8');
+    // $date_of_birth = htmlspecialchars($_SESSION['date_of_birth'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    // $gender = htmlspecialchars($_SESSION['gender'] ?? 'Not Specified', ENT_QUOTES, 'UTF-8');
+    // $ic_number = htmlspecialchars($_SESSION['ic_number'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
+    // $nationality = htmlspecialchars($_SESSION['nationality'], ENT_QUOTES, 'UTF-8');
+    // $address = htmlspecialchars($_SESSION['address'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
+    // $fname = htmlspecialchars($_SESSION['fname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    // $fcontact = htmlspecialchars($_SESSION['fcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    // $foccupation = htmlspecialchars($_SESSION['foccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    // $mname = htmlspecialchars($_SESSION['mname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    // $mcontact = htmlspecialchars($_SESSION['mcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    // $moccupation = htmlspecialchars($_SESSION['moccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    // $gname = htmlspecialchars($_SESSION['gname'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    // $gcontact = htmlspecialchars($_SESSION['gcontact'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    // $goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    // $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
+    // $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
 
 ?>
 
@@ -60,19 +60,12 @@ include('db_connection.php'); // Include database connection
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- Low Attendance css -->
+    <link href="css/lowAttend.css" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Spinner Start -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
-    <!-- Spinner End -->
-
-
-    
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
@@ -143,7 +136,7 @@ include('db_connection.php'); // Include database connection
     }
 
     // Assuming you have a database connection here
-    include 'db_connection.php'; // Include your DB connection file
+    // include 'db_connection.php'; // Include your DB connection file
 
     // Escape HTML output function
     function escape($value) {
@@ -214,9 +207,23 @@ include('db_connection.php'); // Include database connection
             // Calculate attendance percentage
             $attendancePercentage = ($totalRecords > 0) ? ($totalAttendances / $totalRecords) * 100 : 0;
 
-            // Determine status
+            // Determine status and additional message
             $status = ($attendancePercentage < $attendanceThreshold) ? 
                     "<span style='color:red;'>Warning</span>" : "Normal";
+
+            $additionalMessage = '';
+                if ($attendancePercentage < 50) {
+                    $additionalMessage = "<p style='color:red; font-weight:bold; text-align:center;'>
+                                            Attendance is critically low. Please meet your class teacher to address this issue.
+                                          </p>";
+                }
+            
+            // Display additional message for low attendance
+            if ($additionalMessage) {
+                echo "<tr>
+                        <td colspan='6'>{$additionalMessage}</td>
+                    </tr>";
+            }
 
             echo "<tr>
                     <td>{$ic_number}</td>
@@ -229,7 +236,7 @@ include('db_connection.php'); // Include database connection
         }
 
         echo "</table>";
-
+        echo "</br>";
         // Output absence details table
         echo "<h3 style='text-align:center;'>Absence Details</h3>";
         echo "<table>";
@@ -260,17 +267,9 @@ include('db_connection.php'); // Include database connection
         }
 
         echo "</table>";
-        echo "<p style='text-align:center;'><a href='?logout=true'>Logout</a></p>";
 
     } catch (PDOException $e) {
         die("Error fetching data: " . $e->getMessage());
-    }
-
-    // Logout logic
-    if (isset($_GET['logout'])) {
-        session_destroy();
-        header("Location: login.php");
-        exit;
     }
 
     $pdo = null; // Close DB connection

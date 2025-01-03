@@ -1,0 +1,39 @@
+/* Attendance Report Table */
+table {
+    width: 80%;
+    margin: 2rem auto;
+    border-collapse: collapse;
+    text-align: center;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 15px;
+    border: 1px solid #dddddd;
+}
+th {
+    background-color: #ffffff;
+    color: #000000;
+    font-weight: 700;
+}
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+tr:hover {
+    background-color: #e9ecef;
+}
+
+/* Custom Animation */
+@keyframes slideInDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
