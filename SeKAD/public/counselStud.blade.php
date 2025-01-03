@@ -100,8 +100,48 @@
      ?>
 
     <div class="container2">
-    <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Counselling Session Booking</h4>
+    <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Please check the availabality before submit the form</h4>
+    <!-- Displaying the counselling session status after form submission -->
+    <table class="table table-striped table-bordered mt-3">
+        <thead>
+            <tr>
+                <th style="width: 20%;">Date</th>
+                <th style="width: 20%;">Time</th>
+                <th style="width: 20%;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            try {
+                // SQL query to fetch all data from counselling_sessions
+                $sql = "SELECT student_name, session_date, time_slot, `status` FROM counselling_sessions";
+                
+                // Execute the query
+                $stmt = $pdo->query($sql); // No need for prepare() since no parameters are used
+            
+                // Fetch the data
+                $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+                // Check if data is available
+                if (!empty($sessions)) {
+                    foreach ($sessions as $session) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($session['session_date'], ENT_QUOTES, 'UTF-8') . "</td>";
+                        echo "<td>" . htmlspecialchars($session['time_slot'], ENT_QUOTES, 'UTF-8') . "</td>";
+                        echo "<td>" . htmlspecialchars($session['status'], ENT_QUOTES, 'UTF-8') . "</td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='4' style='text-align: center;'>No counselling sessions found.</td></tr>";
+                }
+            } catch (PDOException $e) {
+                die("Error fetching counselling sessions: " . $e->getMessage());
+            }
+            ?>
+        </tbody>
+    </table>
     
+    <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Counselling Session Booking Form</h4>
     <form method="POST" action="update_booking.php" enctype="multipart/form-data">
         <!-- Name input -->
         <div style="margin-bottom: 15px;">
@@ -168,47 +208,8 @@
             </button>
         </div> 
     </form>
-
-    <!-- Displaying the counselling session status after form submission -->
-    <table class="table table-striped table-bordered mt-3">
-        <thead>
-            <tr>
-                <th style="width: 20%;">Date</th>
-                <th style="width: 20%;">Time</th>
-                <th style="width: 20%;">Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            try {
-                // SQL query to fetch all data from counselling_sessions
-                $sql = "SELECT student_name, session_date, time_slot, `status` FROM counselling_sessions";
-                
-                // Execute the query
-                $stmt = $pdo->query($sql); // No need for prepare() since no parameters are used
-            
-                // Fetch the data
-                $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-                // Check if data is available
-                if (!empty($sessions)) {
-                    foreach ($sessions as $session) {
-                        echo "<tr>";
-                        echo "<td>" . htmlspecialchars($session['session_date'], ENT_QUOTES, 'UTF-8') . "</td>";
-                        echo "<td>" . htmlspecialchars($session['time_slot'], ENT_QUOTES, 'UTF-8') . "</td>";
-                        echo "<td>" . htmlspecialchars($session['status'], ENT_QUOTES, 'UTF-8') . "</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='4' style='text-align: center;'>No counselling sessions found.</td></tr>";
-                }
-            } catch (PDOException $e) {
-                die("Error fetching counselling sessions: " . $e->getMessage());
-            }
-            ?>
-        </tbody>
-    </table>
 </div>
+    
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
