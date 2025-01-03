@@ -1,48 +1,36 @@
 <?php
-session_start(); // Start the session
-include('db_connection.php'); // Include database connection
+// Database connection
+include('db_connection.php');
 
-// Retrieve user data from the session
-$name = htmlspecialchars($_SESSION['name'] ?? '', ENT_QUOTES, 'UTF-8');
-$role = htmlspecialchars($_SESSION['role'] ?? '', ENT_QUOTES, 'UTF-8');
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $venue_id = $_POST['venue_id'];
+    $start_time = $_POST['start_time'];
+    $end_time = $_POST['end_time'];
+    $booked_by = $_POST['booked_by'];
+    $subject = $_POST['subject'];
 
-// Fetch venues and facilities with a JOIN query
-$query = "
-    SELECT v.id AS venue_id, v.venue_picture, v.venue_name, vf.facility_name, vf.quantity
-    FROM venue v
-    LEFT JOIN venue_facilities vf ON v.id = vf.venue_id
-";
-$stmt = $pdo->prepare($query);
-$stmt->execute();
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Insert data into the booking table
+    $stmt = $pdo->prepare("INSERT INTO booking (venue_id, start_time, end_time, booked_by, Subject) 
+                           VALUES (:venue_id, :start_time, :end_time, :booked_by, :subject)");
+    $stmt->execute([
+        ':venue_id' => $venue_id,
+        ':start_time' => $start_time,
+        ':end_time' => $end_time,
+        ':booked_by' => $booked_by,
+        ':subject' => $subject,
+    ]);
 
-// Group the results by venue
-$venues = [];
-foreach ($rows as $row) {
-    $venue_id = $row['venue_id'];
-    if (!isset($venues[$venue_id])) {
-        $venues[$venue_id] = [
-            'venue_picture' => $row['venue_picture'],
-            'venue_name' => $row['venue_name'],
-            'facilities' => [],
-        ];
-    }
-    if (!empty($row['facility_name'])) {
-        $venues[$venue_id]['facilities'][] = [
-            'facility_name' => $row['facility_name'],
-            'quantity' => $row['quantity'],
-        ];
-    }
+    header("Location: Facility_And_Equipment_Booking_Teacher.blade.php");
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
-
+<!-- "include('db_connection.php')" ni untuk import database -->
 <head>
     <meta charset="utf-8">
-    <title>Venue Booking Teacher</title>
+    <title>Venue Booking</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -68,6 +56,10 @@ foreach ($rows as $row) {
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/font-size.css" rel="stylesheet">
+
+    <link id="light-mode" rel="stylesheet" href="{{ asset('css/light.css') }}">
+    <link id="dark-mode" rel="stylesheet" href="{{ asset('css/dark.css') }}" disabled>
 </head>
 
 <body>
@@ -79,11 +71,10 @@ foreach ($rows as $row) {
     </div>
     <!-- Spinner End -->
 
-
-    <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+<!-- Navbar Start -->
+<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>SeKAD</h2>
+            <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>eLEARNING</h2>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
@@ -93,6 +84,7 @@ foreach ($rows as $row) {
                 <a href="index.blade.php" class="nav-item nav-link active">Home</a>
                 <a href="about.html" class="nav-item nav-link">About</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
+                <a href="attendanceRecord1.blade.php" class="nav-item nav-link">Attendance Record</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
@@ -101,6 +93,8 @@ foreach ($rows as $row) {
                         <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="404.html" class="dropdown-item">404 Page</a>
                         <a href="profile.blade.php" class="dropdown-item">Profile</a>
+                        <a href="setting.blade.php" class="dropdown-item">Setting</a>
+                        <a href="announce.blade.php" class="dropdown-item">Announcement</a>
                         <a href="login.blade.php" class="dropdown-item">Log In</a>
                         <a href="logout.blade.php" class="dropdown-item">Log Out</a>
                         <a href="register.blade.php" class="dropdown-item">Register</a>
@@ -114,82 +108,58 @@ foreach ($rows as $row) {
     </nav>
     <!-- Navbar End -->
 
+    <!-- Calendar Start -->
+    
+    <!-- Calendar End -->
 
-    <!-- Header Start -->
-    <div class="container-fluid bg-primary py-5 mb-5 page-header">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-10 text-center">
-                    <h1 class="display-3 text-white animated slideInDown">
-                        Hi, <?php echo $name; ?>
-                        
-                    </h1>
-                    
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb justify-content-center">
-                            <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
-                            <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
-                            <li class="breadcrumb-item text-white active" aria-current="page">Profile</li>
-                        </ol>
-                    </nav>
+    <div class="container2">
+        <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Venue Booking Form</h4>
+        <form method="POST" enctype="multipart/form-data">
+            <div style="margin-bottom: 15px;">
+                <label for="venue_id" style="font-weight: bold; display: block; margin-bottom: 5px;">Venue</label>
+                <select id="venue_id" name="venue_id" 
+                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                    <option value="">Select a Venue</option>
+                    <!-- Populate dynamically from the database -->
+                    <?php
+                    $stmt = $pdo->prepare("SELECT id, venue_name FROM venue");
+                    $stmt->execute();
+                    while ($venue = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        echo "<option value=\"{$venue['id']}\">" . htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8') . "</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+            <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+                <div style="flex: 1;">
+                    <label for="start_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Start Time</label>
+                    <input type="datetime-local" id="start_time" name="start_time" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                </div>
+                <div style="flex: 1;">
+                    <label for="end_time" style="font-weight: bold; display: block; margin-bottom: 5px;">End Time</label>
+                    <input type="datetime-local" id="end_time" name="end_time" 
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
                 </div>
             </div>
-        </div>
+            <div style="margin-bottom: 15px;">
+                <label for="booked_by" style="font-weight: bold; display: block; margin-bottom: 5px;">Booked By</label>
+                <input type="text" id="booked_by" name="booked_by" placeholder="Enter your name or ID" 
+                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label for="subject" style="font-weight: bold; display: block; margin-bottom: 5px;">Subject</label>
+                <input type="text" id="subject" name="subject" placeholder="State reasons for booking" 
+                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+            </div>
+            <div style="text-align: right; margin-top: 20px;">
+                <button type="submit" style="background-color: #007BFF; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                    Submit Booking
+                </button>
+            </div>
+        </form>
     </div>
-    <!-- Header End -->
-<!--  -->
-    <!-- Venue Booking Start -->
-    <?php    if ($role === 'Staff'): ?>
-        <?php endif; ?>
-        <!-- color: "#c0504e" -->
-        <div class="d-flex justify-content-center my-4">
-    <a href="registerVenue.blade.php" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" style="color: white; text-align: left;">Register Venue</a>
-    <a href="DeleteVenue.blade.php" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" style="background-color: #c0504e; color: white; text-align: left;">Remove Venue</a>
-    </div> 
-    <div class="container-xxl py-5">
-     <div class="container">
-     <div class="row g-4">
-     <?php foreach ($venues as $venue): ?>
-    <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="service-item text-center shadow rounded overflow-hidden position-relative" style="width: 400px; height: 300px;">
-            <a href="VenueBooking.blade.php" target="_blank" style="text-decoration: none; color: inherit;">
-                <div class="p-4" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-                    <div class="img-container position-relative" style="height: 60%; overflow: hidden;">
-                        <img class="img-fluid w-100 h-100" src="<?php echo htmlspecialchars($venue['venue_picture'], ENT_QUOTES, 'UTF-8'); ?>" alt="" style="object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="content mt-3">
-                        <h5 class="mb-3" style="color: #2c3e50;"><?php echo htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8'); ?></h5>
-                        <ul style="list-style: none; padding: 0; text-align: left;">
-                            <?php foreach ($venue['facilities'] as $facility): ?>
-                                <li>
-                                    <strong><?php echo htmlspecialchars($facility['facility_name'], ENT_QUOTES, 'UTF-8'); ?>:</strong>
-                                    <?php echo htmlspecialchars($facility['quantity'], ENT_QUOTES, 'UTF-8'); ?>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>
-<?php endforeach; ?>
 
-</div>
-
-</div>
-
-    </div>
-</div>
-
-               
-     
-
-
-
-
-
-
-<!-- Venue Booking End -->
 
 
     <!-- Footer Start -->
@@ -284,18 +254,10 @@ foreach ($rows as $row) {
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="assets/global.js"></script>
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-    <!-- <script>
-        // Example: Simulated authenticated user data
-        const authenticatedUser = {
-            name: "John Doe"
-        };
-
-        // Insert user name into the HTML
-        document.getElementById("user-name").textContent = `Welcome, ${authenticatedUser.name}`;
-    </script> -->
 </body>
 
 </html>
