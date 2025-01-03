@@ -117,24 +117,24 @@
                 </div>
                 <div style="display: flex; gap: 20px; margin-bottom: 15px;">
                     <div style="flex: 1;">
-                        <label for="report_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Date of Reporting</label>
+                        <label for="report_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Date of Maintainence Start</label>
                         <input type="date" id="report_date" name="report_date" 
                             style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
                     </div>
                     <div style="flex: 1;">
-                        <label for="report_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Time of Reporting</label>
+                        <label for="report_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Time of Maintainence Start</label>
                         <input type="time" id="report_time" name="report_time" 
                             style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
                     </div>
                 </div>
                 <div style="display: flex; gap: 20px; margin-bottom: 15px;">
                     <div style="flex: 1;">
-                        <label for="repair_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Date of Repair Completion</label>
+                        <label for="repair_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Date of Maintainence Complete</label>
                         <input type="date" id="repair_date" name="repair_date" 
                             style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
                     </div>
                     <div style="flex: 1;">
-                        <label for="repair_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Time of Repair Completion</label>
+                        <label for="repair_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Time of Maintainence Complete</label>
                         <input type="time" id="repair_time" name="repair_time" 
                             style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
                     </div>

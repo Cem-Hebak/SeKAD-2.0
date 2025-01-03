@@ -14,10 +14,15 @@ class CreateBiodataStudTable extends Migration
     public function up()
     {
         Schema::create('biodata_stud', function (Blueprint $table) {
-            $table->id(); // Auto-increment primary key
-            $table->string('name'); // Student's name
-            $table->string('class'); // Class name, e.g., "1 CENDEKIAWAN"
+            $table->bigInteger('id')->unsigned(); // Foreign key to users.id
+            $table->string('name');
+            $table->string('class');
             $table->timestamps();
+
+            // Define the foreign key constraint to ensure id matches users.id
+            $table->foreign('id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->primary('id'); // Set id as the primary key
         });
     }
 
@@ -31,3 +36,4 @@ class CreateBiodataStudTable extends Migration
         Schema::dropIfExists('biodata_stud');
     }
 }
+

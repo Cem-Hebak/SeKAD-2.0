@@ -110,7 +110,7 @@
   
 
     <div class="container2">
-        <h4 style="margin-bottom: 20px; color: #333;">Event Submission Form</h4>
+        <h4 style="margin-bottom: 20px; color: #333;">Programme Submission Form</h4>
             <form method="POST" action="update_event.php" enctype="multipart/form-data">
                 <div style="margin-bottom: 15px;">
                     <label for="pic_name" style="font-weight: bold; display: block; margin-bottom: 5px;">Person in Charge / Company</label>

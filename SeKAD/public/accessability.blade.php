@@ -84,7 +84,7 @@
     <!-- Navbar End -->
 
      <!-- Service Start -->
-     <div class="container-xxl py-5">
+   <div class="container-xxl py-5">
         <div class="container">
             <div class="row g-4">
                 <div onclick="window.location.href='profile.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
@@ -92,14 +92,6 @@
                         <div class="p-4">
                             <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
                             <h5 class="mb-3">Profile</h5>
-                        </div>
-                    </div>
-                </div>
-                <div onclick="window.location.href='notification.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="service-item text-center pt-1">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-globe text-primary mb-4"></i>
-                            <h5  class="mb-3">Notifications</h5>
                         </div>
                     </div>
                 </div>
@@ -116,14 +108,6 @@
                         <div class="p-4">
                             <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
                             <h5  class="mb-3">Language</h5>
-                        </div>
-                    </div>
-                </div>
-                <div onclick="window.location.href='payment.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.9s">
-                    <div class="service-item text-center pt-1">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
-                            <h5  class="mb-3">Payment</h5>
                         </div>
                     </div>
                 </div>

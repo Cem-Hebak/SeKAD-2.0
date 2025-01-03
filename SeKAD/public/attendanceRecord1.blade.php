@@ -248,6 +248,7 @@ include('db_connection.php'); // Include database connection
         <button type="submit" class="btn btn-success">Update Attendance</button>
     </form>
 </div>
+</div>
 
 
 
