@@ -1,13 +1,9 @@
 <?php
-session_start(); // Start the session
-include('db_connection.php'); // Include database connection
+    session_start();
+    include("db_connection.php");
 
-    
- $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
-
-
+    $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
 ?>
-<!-- include("db_connection.php"); -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -72,12 +68,14 @@ include('db_connection.php'); // Include database connection
                 <label for="role">Role:</label>
                 <select id="role" name="role" required>
                     <option value="">Select Role</option>
+
                     <?php    if ($role === 'Staff'): ?>
                     <option value="Student">Student</option>
                     <option value="Teacher">Teacher</option>
+
                     <?php    elseif ($role === 'Admin'): ?>
-                    <option value="Teacher">Staff</option>
-                    <option value="Teacher">Admin</option>
+                    <option value="Staff">Staff</option>
+                    <option value="Admin">Admin</option>
                     <?php endif; ?>
                 </select>
             </div>

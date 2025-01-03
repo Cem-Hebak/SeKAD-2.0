@@ -260,6 +260,7 @@ include('db_connection.php'); // Include database connection
                         <a href="404.html" class="dropdown-item">404 Page</a>
                         <a href="login.php" class="dropdown-item">Log In</a>
                         <a href="register.php" class="dropdown-item">Register</a>
+                        <a href="showCalendar.php" class="dropdown-item">Calendar</a>
                     </div>
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
