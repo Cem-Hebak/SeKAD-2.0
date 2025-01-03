@@ -247,11 +247,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!-- Venue Booking Form End -->
     <!-- Venue Booking Start -->
     <?php    if ($role === 'Staff'): ?>
-        <?php endif; ?>
         <!-- color: "#c0504e" -->
         <div class="d-flex justify-content-center my-4">
-    <a href="registerVenue.blade.php" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" style="color: white; text-align: left;">Register Venue</a>
-    <a href="DeleteVenue.blade.php" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" style="background-color: #c0504e; color: white; text-align: left;">Remove Venue</a>
+            <a href="registerVenue.blade.php" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" style="color: white; text-align: left;">Register Venue</a>
+            <a href="DeleteVenue.blade.php" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" style="background-color: #c0504e; color: white; text-align: left;">Remove Venue</a>
+            <?php endif; ?>
     </div> 
     <div class="container-xxl py-5">
      <div class="container">
