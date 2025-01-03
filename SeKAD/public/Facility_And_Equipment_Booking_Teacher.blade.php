@@ -34,6 +34,46 @@ foreach ($rows as $row) {
         ];
     }
 }
+
+$error_message = ''; // Initialize error message variable
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $venue_id = $_POST['venue_id'];
+    $start_time = $_POST['start_time'];
+    $end_time = $_POST['end_time'];
+    $booked_by = $_POST['booked_by'];
+    $subject = $_POST['subject'];
+
+    // Check if the venue is already booked at the selected time
+    $stmt = $pdo->prepare("SELECT * FROM booking 
+                           WHERE venue_id = :venue_id 
+                           AND ((start_time < :end_time AND end_time > :start_time))");
+    $stmt->execute([
+        ':venue_id' => $venue_id,
+        ':start_time' => $start_time,
+        ':end_time' => $end_time,
+    ]);
+    $existing_booking = $stmt->fetch();
+
+    // If an overlapping booking exists, set the error message
+    if ($existing_booking) {
+        $error_message = "The selected time for the venue is already booked.";
+    } else {
+        // If no conflict, proceed with the booking
+        $stmt = $pdo->prepare("INSERT INTO booking (venue_id, start_time, end_time, booked_by, Subject) 
+                               VALUES (:venue_id, :start_time, :end_time, :booked_by, :subject)");
+        $stmt->execute([
+            ':venue_id' => $venue_id,
+            ':start_time' => $start_time,
+            ':end_time' => $end_time,
+            ':booked_by' => $booked_by,
+            ':subject' => $subject,
+        ]);
+
+        // Success message (optional)
+        $success_message = "Booking successful!";
+    }
+}
 ?>
 
 
@@ -68,6 +108,10 @@ foreach ($rows as $row) {
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- Calendar -->
+    <link rel="stylesheet" href="css/calendar.css">
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 </head>
 
 <body>
@@ -137,7 +181,70 @@ foreach ($rows as $row) {
         </div>
     </div>
     <!-- Header End -->
-<!--  -->
+<!-- Venue Booking Form Start -->
+<div class="container2">
+    <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Venue Booking Form</h4>
+
+    <!-- Display error message if booking failed -->
+    <?php if ($error_message): ?>
+        <div style="color: red; margin-bottom: 15px; font-weight: bold;">
+            <?php echo htmlspecialchars($error_message); ?>
+        </div>
+    <?php elseif (isset($success_message)): ?>
+        <!-- Display success message if booking succeeded -->
+        <div style="color: green; margin-bottom: 15px; font-weight: bold;">
+            <?php echo htmlspecialchars($success_message); ?>
+        </div>
+    <?php endif; ?>
+
+    <form method="POST" enctype="multipart/form-data">
+        <div style="margin-bottom: 15px;">
+            <label for="venue_id" style="font-weight: bold; display: block; margin-bottom: 5px;">Venue</label>
+            <select id="venue_id" name="venue_id" 
+                style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                <option value="">Select a Venue</option>
+                <!-- Populate dynamically from the database -->
+                <?php
+                $stmt = $pdo->prepare("SELECT id, venue_name FROM venue");
+                $stmt->execute();
+                while ($venue = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    echo "<option value=\"{$venue['id']}\">" . htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8') . "</option>";
+                }
+                ?>
+            </select>
+        </div>
+        <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+            <div style="flex: 1;">
+                <label for="start_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Start Time</label>
+                <input type="datetime-local" id="start_time" name="start_time" 
+                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+            </div>
+            <div style="flex: 1;">
+                <label for="end_time" style="font-weight: bold; display: block; margin-bottom: 5px;">End Time</label>
+                <input type="datetime-local" id="end_time" name="end_time" 
+                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+            </div>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="booked_by" style="font-weight: bold; display: block; margin-bottom: 5px;">Booked By</label>
+            <input type="text" id="booked_by" name="booked_by" placeholder="Enter your name or ID" 
+                style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="subject" style="font-weight: bold; display: block; margin-bottom: 5px;">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="State reasons for booking" 
+                style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+        </div>
+        <div style="text-align: right; margin-top: 20px;">
+            <button type="submit" style="background-color: #007BFF; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                Submit Booking
+            </button>
+        </div>
+    </form>
+</div>
+
+
+<!-- Venue Booking Form End -->
     <!-- Venue Booking Start -->
     <?php    if ($role === 'Staff'): ?>
         <?php endif; ?>
@@ -152,7 +259,7 @@ foreach ($rows as $row) {
      <?php foreach ($venues as $venue): ?>
     <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
         <div class="service-item text-center shadow rounded overflow-hidden position-relative" style="width: 400px; height: 300px;">
-            <a href="VenueBooking.blade.php" target="_blank" style="text-decoration: none; color: inherit;">
+            <a target="_blank" style="text-decoration: none; color: inherit;">
                 <div class="p-4" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
                     <div class="img-container position-relative" style="height: 60%; overflow: hidden;">
                         <img class="img-fluid w-100 h-100" src="<?php echo htmlspecialchars($venue['venue_picture'], ENT_QUOTES, 'UTF-8'); ?>" alt="" style="object-fit: cover; border-radius: 10px;">
@@ -162,8 +269,8 @@ foreach ($rows as $row) {
                         <ul style="list-style: none; padding: 0; text-align: left;">
                             <?php foreach ($venue['facilities'] as $facility): ?>
                                 <li>
-                                    <strong><?php echo htmlspecialchars($facility['facility_name'], ENT_QUOTES, 'UTF-8'); ?>:</strong>
-                                    <?php echo htmlspecialchars($facility['quantity'], ENT_QUOTES, 'UTF-8'); ?>
+                                    <h6><?php echo htmlspecialchars($facility['facility_name'], ENT_QUOTES, 'UTF-8'); ?>:
+                                    <?php echo htmlspecialchars($facility['quantity'], ENT_QUOTES, 'UTF-8'); ?> </h6>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
@@ -183,7 +290,115 @@ foreach ($rows as $row) {
 
                
      
+<!-- Calendar Start -->
+<body>
+    <h2 style="text-align: center; margin: 20px 0;">Venue Booking Calendar</h2>
+    <div id="loading">Loading calendar...</div>
+    <div id="calendar"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var loadingEl = document.getElementById('loading');
 
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                showNonCurrentDates: false, // Hide dates outside the current month
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    fetch('get_bookings.php')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Failed to fetch events. Status: ' + response.status);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            loadingEl.style.display = 'none'; // Hide loading indicator
+                            successCallback(data); // Pass events to the calendar
+                            handleLastRowVisibility(calendarEl); // Check for empty last row after events are loaded
+                        })
+                        .catch(error => {
+                            console.error('Error fetching events:', error);
+                            loadingEl.textContent = 'Failed to load calendar. Please try again later.';
+                            failureCallback(error);
+                        });
+                },
+                eventMouseEnter: function (info) {
+                    var tooltip = document.createElement('div');
+                    tooltip.className = 'tooltip';
+                    tooltip.style.position = 'absolute';
+                    tooltip.style.backgroundColor = '#333';
+                    tooltip.style.color = '#fff';
+                    tooltip.style.padding = '10px';
+                    tooltip.style.borderRadius = '5px';
+                    tooltip.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+                    tooltip.style.zIndex = '1000';
+                    tooltip.style.whiteSpace = 'pre-line';
+
+                    tooltip.innerHTML = `
+                        <div class="tooltip-header">Booking Details</div>
+                        <div class="tooltip-content">
+                            <strong>Venue:</strong> ${info.event.extendedProps.venue}<br>
+                            <strong>Start:</strong> ${info.event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}<br>
+                            <strong>End:</strong> ${info.event.end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                    `;
+
+                    document.body.appendChild(tooltip);
+
+                    // Position tooltip near mouse cursor
+                    document.addEventListener('mousemove', moveTooltip);
+
+                    function moveTooltip(e) {
+                        tooltip.style.left = `${e.pageX + 15}px`;
+                        tooltip.style.top = `${e.pageY + 15}px`;
+                    }
+
+                    info.el.addEventListener('mouseleave', function () {
+                        document.body.removeChild(tooltip);
+                        document.removeEventListener('mousemove', moveTooltip);
+                    });
+                },
+                eventColor: '#28a745', // Green background for events
+                eventTextColor: '#ffffff', // White text for events
+                editable: false, // Disable drag-and-drop
+                navLinks: true, // Enable clickable day/week views
+                datesSet: function () {
+                    handleLastRowVisibility(calendarEl); // Check after each view change
+                }
+            });
+
+            calendar.render();
+
+            // Function to check and hide the last row dynamically
+            function handleLastRowVisibility(calendarElement) {
+                // Wait for the calendar DOM to fully render
+                setTimeout(() => {
+                    const rows = calendarElement.querySelectorAll('.fc-daygrid-body tr');
+                    if (rows.length > 0) {
+                        const lastRow = rows[rows.length - 1];
+                        const hasContent = Array.from(lastRow.querySelectorAll('.fc-day')).some(
+                            cell => cell.classList.contains('fc-daygrid-day') && cell.textContent.trim() !== ''
+                        );
+
+                        // Hide the last row if it contains no dates or events
+                        if (!hasContent) {
+                            lastRow.style.display = 'none';
+                        } else {
+                            lastRow.style.display = ''; // Ensure the row is visible if needed
+                        }
+                    }
+                }, 10); // Small delay to ensure DOM is updated
+            }
+        });
+    </script>
+
+</body>
+ <!-- Calendar End -->
 
 
 
