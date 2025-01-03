@@ -1,3 +1,15 @@
+<?php
+    session_start(); // Start the session
+    include('db_connection.php'); 
+    // $id = isset($_SESSION['id']) ? htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8') : ''; 
+    // $name = isset($_SESSION['student_name']) ? htmlspecialchars($_SESSION['student_name'], ENT_QUOTES, 'UTF-8') : ''; 
+    $date = isset($_SESSION['session_date']) ? htmlspecialchars($_SESSION['session_date'], ENT_QUOTES, 'UTF-8') : ''; 
+    $time = isset($_SESSION['time_slot']) ? htmlspecialchars($_SESSION['time_slot'], ENT_QUOTES, 'UTF-8') : ''; 
+    $status = isset($_SESSION['status']) ? htmlspecialchars($_SESSION['status'], ENT_QUOTES, 'UTF-8') : ''; 
+    $id = isset($_SESSION['id']) ? htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8') : ''; 
+    $name = isset($_SESSION['student_name']) ? htmlspecialchars($_SESSION['student_name'], ENT_QUOTES, 'UTF-8') : ''; 
+    ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <!-- "include('db_connection.php')" ni untuk import database -->
@@ -37,11 +49,11 @@
 
 <body>
     <!-- Spinner Start -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+    <!-- <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
             <span class="sr-only">Loading...</span>
         </div>
-    </div>
+    </div> -->
     <!-- Spinner End -->
 
 <!-- Navbar Start -->
@@ -82,82 +94,121 @@
     </nav>
     <!-- Navbar End -->
 
-    <!-- Service Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-4">
-                <div onclick="window.location.href='announce.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item text-center pt-1">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
-                            <h5 class="mb-3">Maintainence Report</h5>
-                        </div>
-                    </div>
-                </div>
-                <div onclick="window.location.href='event.blade.php';" class="col-lg-2 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="service-item text-center pt-1">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-globe text-primary mb-4"></i>
-                            <h5  class="mb-3">Programme Submission</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Service End -->
+    <?php
+     $id = isset($_SESSION['id']) ? htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8') : ''; 
+     $name = isset($_SESSION['student_name']) ? htmlspecialchars($_SESSION['student_name'], ENT_QUOTES, 'UTF-8') : ''; 
+     ?>
 
     <div class="container2">
-        <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Maintainence Report Form</h4>
-            <form method="POST" action="update_maintainence.php" enctype="multipart/form-data">
-                <div style="margin-bottom: 15px;">
-                    <label for="reporter_name" style="font-weight: bold; display: block; margin-bottom: 5px;">Name</label>
-                    <input type="text" id="reporter_name" name="reporter_name" placeholder="Enter your name" 
-                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
-                </div>
-                <div style="display: flex; gap: 20px; margin-bottom: 15px;">
-                    <div style="flex: 1;">
-                        <label for="report_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Date of Reporting</label>
-                        <input type="date" id="report_date" name="report_date" 
-                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
-                    </div>
-                    <div style="flex: 1;">
-                        <label for="report_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Time of Reporting</label>
-                        <input type="time" id="report_time" name="report_time" 
-                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 20px; margin-bottom: 15px;">
-                    <div style="flex: 1;">
-                        <label for="repair_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Date of Repair Completion</label>
-                        <input type="date" id="repair_date" name="repair_date" 
-                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
-                    </div>
-                    <div style="flex: 1;">
-                        <label for="repair_time" style="font-weight: bold; display: block; margin-bottom: 5px;">Time of Repair Completion</label>
-                        <input type="time" id="repair_time" name="repair_time" 
-                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
-                    </div>
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <label for="report_image" style="font-weight: bold; display: block; margin-bottom: 5px;">Upload Picture</label>
-                    <input type="file" id="report_image" name="report_image" accept="image/*" 
-                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <label for="report_description" style="font-weight: bold; display: block; margin-bottom: 5px;">Description</label>
-                    <textarea id="report_description" name="report_description" rows="4" placeholder="Provide details about the damage" 
-                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required></textarea>
-                </div>
-                <div style="text-align: right; margin-top: 20px;">
-                    <button type="submit" style="background-color: #007BFF; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
-                        Submit Report
-                    </button>
-                </div>
-            </form>
-    </div>
+    <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Counselling Session Booking</h4>
+    
+    <form method="POST" action="update_booking.php" enctype="multipart/form-data">
+        <!-- Name input -->
+        <div style="margin-bottom: 15px;">
+            <label for="student_name" style="font-weight: bold; display: block; margin-bottom: 5px;">Name</label>
+            <input type="text" id="student_name" name="student_name" placeholder="Enter your full name" 
+                style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+        </div>
 
+        <!-- Form dropdown -->
+        <div style="margin-bottom: 15px;">
+            <label for="student_form" style="font-weight: bold; display: block; margin-bottom: 5px;">Form</label>
+            <select id="student_form" name="student_form" 
+                style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                <option value="" disabled selected>Select your form</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
 
+        <!-- Class dropdown -->
+        <div style="margin-bottom: 15px;">
+            <label for="student_class" style="font-weight: bold; display: block; margin-bottom: 5px;">Class</label>
+            <select id="student_class" name="student_class" 
+                style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                <option value="" disabled selected>Select your class</option>
+                <option value="Pendeta">Pendeta</option>
+                <option value="Sarjana">Sarjana</option>
+                <option value="Intelek">Intelek</option>
+                <option value="Cendekiawan">Cendekiawan</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="session_date" style="font-weight: bold; display: block; margin-bottom: 5px;">Date</label>
+            <input type="date" id="session_date" name="session_date" 
+                style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="time_slot" style="font-weight: bold; display: block; margin-bottom: 5px;">Time Availability</label>
+                <select id="time_slot" name="time_slot" 
+                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+                    <option value="" disabled selected>Select a time slot</option>
+                    <option value="9:00 AM - 10:30 AM">9:00 a.m. - 10:30 a.m.</option>
+                    <option value="11:30 AM - 1:00 PM">11:30 a.m. - 1:00 p.m.</option>
+                    <option value="2:30 PM - 4:00 PM">2:30 p.m. - 4:00 p.m.</option>
+                </select>
+        </div>
+
+        <!-- Reason textarea -->
+        <div style="margin-bottom: 15px;">
+            <label for="session_reason" style="font-weight: bold; display: block; margin-bottom: 5px;">Reason for Session</label>
+                <textarea id="session_reason" name="session_reason" rows="4" placeholder="Provide the reason for the session" 
+                style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required></textarea>
+        </div>
+
+        <!-- Submit button -->
+        <div style="text-align: right; margin-top: 20px;">
+            <button type="submit" style="background-color: #007BFF; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                Book Session
+            </button>
+        </div> 
+    </form>
+
+    <!-- Displaying the counselling session status after form submission -->
+    <table class="table table-striped table-bordered mt-3">
+        <thead>
+            <tr>
+                <th style="width: 20%;">Date</th>
+                <th style="width: 20%;">Time</th>
+                <th style="width: 20%;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            try {
+                // SQL query to fetch all data from counselling_sessions
+                $sql = "SELECT student_name, session_date, time_slot, `status` FROM counselling_sessions";
+                
+                // Execute the query
+                $stmt = $pdo->query($sql); // No need for prepare() since no parameters are used
+            
+                // Fetch the data
+                $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+                // Check if data is available
+                if (!empty($sessions)) {
+                    foreach ($sessions as $session) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($session['session_date'], ENT_QUOTES, 'UTF-8') . "</td>";
+                        echo "<td>" . htmlspecialchars($session['time_slot'], ENT_QUOTES, 'UTF-8') . "</td>";
+                        echo "<td>" . htmlspecialchars($session['status'], ENT_QUOTES, 'UTF-8') . "</td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='4' style='text-align: center;'>No counselling sessions found.</td></tr>";
+                }
+            } catch (PDOException $e) {
+                die("Error fetching counselling sessions: " . $e->getMessage());
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
