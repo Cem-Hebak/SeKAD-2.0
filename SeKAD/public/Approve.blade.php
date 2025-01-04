@@ -170,10 +170,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
 <!--  -->
 <div class="container mt-5">
     <h2>Booking Table</h2>
+    <style>
+        /* Ensure all table columns have the same width */
+        .table th, .table td {
+            text-align: center; /* Center align the text and buttons */
+            vertical-align: middle; /* Center align content vertically */
+            width: 20%; /* Set equal width for all columns */
+        }
+
+        /* Add some spacing and styling for the table */
+        .table {
+            table-layout: fixed; /* Ensures consistent column width */
+            width: 100%;
+        }
+    </style>
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>User Name</th>
+                <th>Name</th>
                 <th>Venue</th>
                 <th>Booking Date</th>
                 <th>Status</th>
@@ -203,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>User Name</th>
+            <th>Name</th>
             <th>Venue</th>
             <th>Booking Date</th>
             <th>Status</th>
