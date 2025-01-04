@@ -108,7 +108,7 @@
         <div class="col-md-6">
             <form method="GET" action="">
                 <div class="mb-3">
-                <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Please check the availabality before submit the form</h4>
+                <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Please check the availability before submit the form</h4>
                     <input type="date" name="date" id="dateSelect" class="form-control" 
                            value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
