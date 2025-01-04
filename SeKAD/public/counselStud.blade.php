@@ -101,75 +101,76 @@
     ?>
 
     <div class="container2">
-    <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Please check the availabality before submit the form</h4>
     
-    <!-- Filter Form -->
-    <form method="GET" action="">
-        <div class="row mb-3">
-            <!-- Date Picker -->
-            <div class="col-md-4">
-                <label for="dateSelect">Select Date:</label>
-                <input type="date" name="date" id="dateSelect" class="form-control" 
-                       value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
-            </div>
+    <div class="container mt-4">
+    <div class="row">
+        <!-- Filter Form Section -->
+        <div class="col-md-6">
+            <form method="GET" action="">
+                <div class="mb-3">
+                <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Please check the availabality before submit the form</h4>
+                    <input type="date" name="date" id="dateSelect" class="form-control" 
+                           value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </form>
         </div>
-        
-        <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary">Filter</button>
-    </form>
 
-    <!-- Displaying the counselling session status before form submission -->
-    <table class="table table-striped table-bordered mt-3">
-        <thead>
-            <tr>
-                <th style="width: 20%;">Date</th>
-                <th style="width: 20%;">Time</th>
-                <th style="width: 20%;">Status</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php
-            if (!empty($dateFilter)) {
-                try {
-                    // SQL query to fetch data based on the selected date
-                    $sql = "SELECT session_date, time_slot, `status` 
-                            FROM counselling_sessions 
-                            WHERE `status` = 'Accepted' AND session_date = :session_date";
+        <!-- Counselling Sessions Table Section -->
+        <div class="col-md-6">
+            <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Table session booked by students:</h4>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 40%;">Date</th>
+                        <th style="width: 60%;">Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                    if (!empty($dateFilter)) {
+                        try {
+                            // SQL query to fetch data based on the selected date
+                            $sql = "SELECT session_date, time_slot, `status` 
+                                    FROM counselling_sessions 
+                                    WHERE `status` = 'Accepted' AND session_date = :session_date";
 
-                    $stmt = $pdo->prepare($sql);
+                            $stmt = $pdo->prepare($sql);
 
-                    // Bind the date parameter
-                    $stmt->bindParam(':session_date', $dateFilter);
+                            // Bind the date parameter
+                            $stmt->bindParam(':session_date', $dateFilter);
 
-                    // Execute the query
-                    $stmt->execute();
+                            // Execute the query
+                            $stmt->execute();
 
-                    // Fetch the data
-                    $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            // Fetch the data
+                            $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                    // Check if data is available
-                    if (!empty($sessions)) {
-                        foreach ($sessions as $session) {
-                            echo "<tr>";
-                            echo "<td>" . htmlspecialchars($session['session_date'], ENT_QUOTES, 'UTF-8') . "</td>";
-                            echo "<td>" . htmlspecialchars($session['time_slot'], ENT_QUOTES, 'UTF-8') . "</td>";
-                            echo "<td>" . htmlspecialchars($session['status'], ENT_QUOTES, 'UTF-8') . "</td>";
-                            echo "</tr>";
+                            // Check if data is available
+                            if (!empty($sessions)) {
+                                foreach ($sessions as $session) {
+                                    echo "<tr>";
+                                    echo "<td>" . htmlspecialchars($session['session_date'], ENT_QUOTES, 'UTF-8') . "</td>";
+                                    echo "<td>" . htmlspecialchars($session['time_slot'], ENT_QUOTES, 'UTF-8') . "</td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='2' style='text-align: center;'>No counselling sessions found for the selected date.</td></tr>";
+                            }
+                        } catch (PDOException $e) {
+                            die("Error fetching counselling sessions: " . $e->getMessage());
                         }
                     } else {
-                        echo "<tr><td colspan='3' style='text-align: center;'>No counselling sessions found for the selected date.</td></tr>";
+                        echo "<tr><td colspan='2' style='text-align: center;'>Please select a date to view counselling sessions.</td></tr>";
                     }
-                } catch (PDOException $e) {
-                    die("Error fetching counselling sessions: " . $e->getMessage());
-                }
-            } else {
-                echo "<tr><td colspan='3' style='text-align: center;'>Please select a date to view counselling sessions.</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
+                ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-    
+    <h1> </h1>
     <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Counselling Session Booking Form</h4>
 
     <?php
