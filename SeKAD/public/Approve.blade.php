@@ -223,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
     </table>
 </div>
 <div class="container mt-5">
-<h2>Approved Table</h2>
+<h2>Reviewed Table</h2>
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
@@ -238,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
     </thead>
     <tbody>
         <?php foreach ($bookings as $booking): ?>
-            <?php if ($booking['status'] == 1): // Only display approved bookings ?>
+            <?php if ($booking['status'] == 1 || $booking['status'] == 3): // Only display approved bookings ?>
             <tr>
                 <td><?= htmlspecialchars($booking['user_name'], ENT_QUOTES, 'UTF-8') ?></td>
                 <td><?= htmlspecialchars($booking['venue_name'], ENT_QUOTES, 'UTF-8') ?></td>
@@ -255,7 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
                     echo $startTime->format('h:i A') . ' - ' . $endTime->format('h:i A'); // Booking time in 12-hour format
                     ?>
                 </td>
-                    <td><?= 'Approved' ?></td>
+                    <td> <?= $booking['status'] == 1 ? 'Approved' : 'Rejected' ?></td>
                     <td>
 
                         <button class="btn btn-danger delete-booking" style=" padding: 5px 15px; font-size: 14px; background-color: #e74c3c; border: none;" data-id="<?= $booking['booking_id'] ?>">Remove</button>
