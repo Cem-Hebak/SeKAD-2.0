@@ -95,10 +95,10 @@
     <!-- Navbar End -->
 
     <?php
-     $id = isset($_SESSION['id']) ? htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8') : ''; 
-     $name = isset($_SESSION['student_name']) ? htmlspecialchars($_SESSION['student_name'], ENT_QUOTES, 'UTF-8') : ''; 
-     $dateFilter = isset($_GET['date']) ? $_GET['date'] : '';
-     ?>
+    $id = isset($_SESSION['id']) ? htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8') : ''; 
+    $name = isset($_SESSION['student_name']) ? htmlspecialchars($_SESSION['student_name'], ENT_QUOTES, 'UTF-8') : ''; 
+    $dateFilter = isset($_GET['date']) ? $_GET['date'] : '';
+    ?>
 
 <div class="container2">
     <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Please check the availability before submitting the form</h4>
@@ -116,7 +116,6 @@
         <button type="submit" class="btn btn-primary">Filter</button>
     </form>
 
-    <!-- Displaying the counselling session status after form submission -->
     <table class="table table-striped table-bordered mt-3">
         <thead>
             <tr>
@@ -126,49 +125,47 @@
             </tr>
         </thead>
         <tbody>
-            <?php
-            try {
-                // SQL query to fetch data based on the selected date
-                $sql = "SELECT session_date, time_slot, `status` 
-                        FROM counselling_sessions 
-                        WHERE `status` = 'Accepted'";
+        <?php
+            if (!empty($dateFilter)) {
+                try {
+                    // SQL query to fetch data based on the selected date
+                    $sql = "SELECT session_date, time_slot, `status` 
+                            FROM counselling_sessions 
+                            WHERE `status` = 'Accepted' AND session_date = :session_date";
 
-                // Append date filter if provided
-                if (!empty($dateFilter)) {
-                    $sql .= " AND session_date = :session_date";
-                }
+                    $stmt = $pdo->prepare($sql);
 
-                $stmt = $pdo->prepare($sql);
-
-                // Bind the date parameter if a filter is applied
-                if (!empty($dateFilter)) {
+                    // Bind the date parameter
                     $stmt->bindParam(':session_date', $dateFilter);
-                }
 
-                // Execute the query
-                $stmt->execute();
+                    // Execute the query
+                    $stmt->execute();
 
-                // Fetch the data
-                $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    // Fetch the data
+                    $sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                // Check if data is available
-                if (!empty($sessions)) {
-                    foreach ($sessions as $session) {
-                        echo "<tr>";
-                        echo "<td>" . htmlspecialchars($session['session_date'], ENT_QUOTES, 'UTF-8') . "</td>";
-                        echo "<td>" . htmlspecialchars($session['time_slot'], ENT_QUOTES, 'UTF-8') . "</td>";
-                        echo "<td>" . htmlspecialchars($session['status'], ENT_QUOTES, 'UTF-8') . "</td>";
-                        echo "</tr>";
+                    // Check if data is available
+                    if (!empty($sessions)) {
+                        foreach ($sessions as $session) {
+                            echo "<tr>";
+                            echo "<td>" . htmlspecialchars($session['session_date'], ENT_QUOTES, 'UTF-8') . "</td>";
+                            echo "<td>" . htmlspecialchars($session['time_slot'], ENT_QUOTES, 'UTF-8') . "</td>";
+                            echo "<td>" . htmlspecialchars($session['status'], ENT_QUOTES, 'UTF-8') . "</td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='3' style='text-align: center;'>No counselling sessions found for the selected date.</td></tr>";
                     }
-                } else {
-                    echo "<tr><td colspan='3' style='text-align: center;'>No counselling sessions found for the selected date.</td></tr>";
+                } catch (PDOException $e) {
+                    die("Error fetching counselling sessions: " . $e->getMessage());
                 }
-            } catch (PDOException $e) {
-                die("Error fetching counselling sessions: " . $e->getMessage());
+            } else {
+                echo "<tr><td colspan='3' style='text-align: center;'>Please select a date to view counselling sessions.</td></tr>";
             }
             ?>
         </tbody>
     </table>
+
     
     <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Counselling Session Booking Form</h4>
     <form method="POST" action="update_booking.php" enctype="multipart/form-data">
