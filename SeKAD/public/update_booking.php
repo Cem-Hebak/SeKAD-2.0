@@ -2,7 +2,11 @@
 include("db_connection.php"); // Include your database connection file
 session_start();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Initialize messages
+    $error_message = '';
+    $success_message = '';
+
     // Get form data
     $student_name = $_POST['student_name'];
     $student_form = $_POST['student_form'];
@@ -11,30 +15,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $time_slot = $_POST['time_slot'];
     $session_reason = $_POST['session_reason'];
 
-    // Prepare the SQL statement to insert the booking into the database
-    $sql = "INSERT INTO counselling_sessions (student_name, student_form, student_class, time_slot, session_reason, session_date, status) 
-            VALUES (:student_name, :student_form, :student_class, :time_slot, :session_reason, :session_date, 'Pending')";
-
     try {
-        // Prepare and execute the statement using PDO
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':student_name', $student_name);
-        $stmt->bindParam(':student_form', $student_form);
-        $stmt->bindParam(':student_class', $student_class);
-        $stmt->bindParam(':session_date', $session_date);
-        $stmt->bindParam(':time_slot', $time_slot);
-        $stmt->bindParam(':session_reason', $session_reason);
-        
-        
-        // Execute the statement
-        $stmt->execute();
+        // Check if the time slot on the selected date is already taken
+        $stmt = $pdo->prepare("SELECT * FROM counselling_sessions 
+                               WHERE session_date = :session_date 
+                               AND time_slot = :time_slot");
+        $stmt->execute([
+            ':session_date' => $session_date,
+            ':time_slot' => $time_slot,
+        ]);
+        $existing_booking = $stmt->fetch();
 
-        // Redirect to the counselStud.blade.php after successful submission
-        header("Location: counselStud.blade.php");
-        exit(); // Ensure that the script stops here
+        if ($existing_booking) {
+            // If a conflicting session exists, set an error message
+            $_SESSION['error_message'] = "The selected time slot is already taken. Please choose a different time.";
+        } else {
+            // If no conflict, proceed to insert the booking
+            $stmt = $pdo->prepare("INSERT INTO counselling_sessions (student_name, student_form, student_class, time_slot, session_reason, session_date, status) 
+                                   VALUES (:student_name, :student_form, :student_class, :time_slot, :session_reason, :session_date, 'Pending')");
+            $stmt->execute([
+                ':student_name' => $student_name,
+                ':student_form' => $student_form,
+                ':student_class' => $student_class,
+                ':time_slot' => $time_slot,
+                ':session_reason' => $session_reason,
+                ':session_date' => $session_date,
+            ]);
+
+            // Set success message
+            $_SESSION['success_message'] = "Booking successful!";
+        }
     } catch (PDOException $e) {
-        // Handle any errors
-        echo "Error: " . $e->getMessage();
+        // Handle database errors
+        $_SESSION['error_message'] = "An error occurred: " . $e->getMessage();
     }
+
+    // Redirect back to the Blade view
+    header("Location: counselStud.blade.php");
+    exit();
 }
 ?>

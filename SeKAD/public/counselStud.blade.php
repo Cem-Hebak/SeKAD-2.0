@@ -171,6 +171,34 @@
 
     
     <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Counselling Session Booking Form</h4>
+
+    <?php
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Retrieve messages from the session
+        $error_message = $_SESSION['error_message'] ?? null;
+        $success_message = $_SESSION['success_message'] ?? null;
+
+        // Clear messages after displaying them
+        unset($_SESSION['error_message'], $_SESSION['success_message']);
+    ?>
+
+    <!-- Display error message -->
+        <?php if ($error_message): ?>
+            <div style="color: red; margin-bottom: 15px; font-weight: bold;">
+                <?php echo htmlspecialchars($error_message); ?>
+            </div>
+        <?php endif; ?>
+
+    <!-- Display success message -->
+    <?php if ($success_message): ?>
+        <div style="color: green; margin-bottom: 15px; font-weight: bold;">
+            <?php echo htmlspecialchars($success_message); ?>
+        </div>
+    <?php endif; ?>
+
     <form method="POST" action="update_booking.php" enctype="multipart/form-data">
         <!-- Name input -->
         <div style="margin-bottom: 15px;">
