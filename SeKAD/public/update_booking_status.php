@@ -7,6 +7,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dbUser = 'root'; // Database username
     $dbPass = ''; // Database password
 
+    // Set the response header to JSON
+    header('Content-Type: application/json');
+
     try {
         // Create PDO instance
         $pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
@@ -22,14 +25,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Prepare the SQL query
-        $stmt = $pdo->prepare("UPDATE booking SET status = :status WHERE booking_id = :booking_id");
+        // Handle deletion if status is 4
+        if ((int) $status === 4) {
+            $stmt = $pdo->prepare("DELETE FROM booking WHERE booking_id = :booking_id");
+            $stmt->bindParam(':booking_id', $bookingId, PDO::PARAM_INT);
 
-        // Bind parameters
+            if ($stmt->execute()) {
+                echo json_encode(['success' => true, 'message' => 'Booking deleted successfully.']);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Failed to delete booking.']);
+            }
+            exit;
+        }
+
+        // Handle status updates
+        $stmt = $pdo->prepare("UPDATE booking SET status = :status WHERE booking_id = :booking_id");
         $stmt->bindParam(':status', $status, PDO::PARAM_INT);
         $stmt->bindParam(':booking_id', $bookingId, PDO::PARAM_INT);
 
-        // Execute the query
         if ($stmt->execute()) {
             echo json_encode(['success' => true, 'message' => 'Status updated successfully.']);
         } else {

@@ -38,15 +38,16 @@ foreach ($rows as $row) {
 // Fetch bookings data
 $bookingQuery = "
     SELECT
-     b.booking_id AS booking_id,
-    b.venue_id,
-    b.start_time AS booking_date,
-    b.booked_by AS user_name,
-    b.subject,
-    b.status,
-    v.venue_name
-FROM booking b
-JOIN venue v ON b.venue_id = v.id
+        b.booking_id AS booking_id,
+        b.venue_id,
+        b.start_time,
+        b.end_time, -- Include end_time
+        b.booked_by AS user_name,
+        b.subject,
+        b.status,
+        v.venue_name
+    FROM booking b
+    JOIN venue v ON b.venue_id = v.id
 ";
 $bookingStmt = $pdo->prepare($bookingQuery);
 $bookingStmt->execute();
@@ -102,11 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
 
 <body>
     <!-- Spinner Start -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
     <!-- Spinner End -->
 
 
@@ -184,12 +180,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
             width: 100%;
         }
     </style>
-    <table class="table table-bordered">
+    <table class="table table-striped table-bordered">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Venue</th>
+                <th>Subject</th>
                 <th>Booking Date</th>
+                <th>Booking Time</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
@@ -197,14 +195,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
         <tbody>
             <?php foreach ($bookings as $booking): ?>
                 <?php if ($booking['status'] == 2): // Only display pending bookings ?>
-                    <tr>
-                        <td><?= htmlspecialchars($booking['user_name']) ?></td>
-                        <td><?= htmlspecialchars($booking['venue_name']) ?></td>
-                        <td><?= htmlspecialchars($booking['booking_date']) ?></td>
+                <tr>
+                <td><?= htmlspecialchars($booking['user_name'], ENT_QUOTES, 'UTF-8') ?></td>
+                <td><?= htmlspecialchars($booking['venue_name'], ENT_QUOTES, 'UTF-8') ?></td>
+                <td><?= htmlspecialchars($booking['subject'], ENT_QUOTES, 'UTF-8') ?></td>
+                <td>
+                    <?php
+                    $startTime = new DateTime($booking['start_time']);
+                    echo $startTime->format('d/m/Y'); // Display date in DD/MM/YYYY format
+                    ?>
+                </td>
+                <td>
+                    <?php
+                    $endTime = new DateTime($booking['end_time']);
+                    echo $startTime->format('h:i A') . ' - ' . $endTime->format('h:i A'); // Booking time in 12-hour format
+                    ?>
+                </td>
                         <td><?= 'Pending' ?></td>
                         <td>
-                            <button class="btn btn-success update-status" data-id="<?= $booking['booking_id'] ?>" data-status="1">Approve</button>
-                            <button class="btn btn-danger update-status" data-id="<?= $booking['booking_id'] ?>" data-status="3">Reject</button>
+                            <button class="btn btn-success update-status" style=" padding: 5px 15px; font-size: 14px; background-color: #2bc5d4; border: none;" data-id="<?= $booking['booking_id'] ?>" data-status="1">Approve</button>
+                            <button class="btn btn-danger update-status" style=" padding: 5px 15px; font-size: 14px; background-color: #e74c3c; border: none;" data-id="<?= $booking['booking_id'] ?>" data-status="3">Reject</button>
                         </td>
                     </tr>
                 <?php endif; ?>
@@ -214,12 +224,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
 </div>
 <div class="container mt-5">
 <h2>Approved Table</h2>
-<table class="table table-bordered">
+<table class="table table-striped table-bordered">
     <thead>
         <tr>
             <th>Name</th>
             <th>Venue</th>
+            <th>Subject</th>
             <th>Booking Date</th>
+            <th>Booking Time</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
@@ -227,13 +239,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
     <tbody>
         <?php foreach ($bookings as $booking): ?>
             <?php if ($booking['status'] == 1): // Only display approved bookings ?>
-                <tr>
-                    <td><?= htmlspecialchars($booking['user_name']) ?></td>
-                    <td><?= htmlspecialchars($booking['venue_name']) ?></td>
-                    <td><?= htmlspecialchars($booking['booking_date']) ?></td>
+            <tr>
+                <td><?= htmlspecialchars($booking['user_name'], ENT_QUOTES, 'UTF-8') ?></td>
+                <td><?= htmlspecialchars($booking['venue_name'], ENT_QUOTES, 'UTF-8') ?></td>
+                <td><?= htmlspecialchars($booking['subject'], ENT_QUOTES, 'UTF-8') ?></td>
+                <td>
+                    <?php
+                    $startTime = new DateTime($booking['start_time']);
+                    echo $startTime->format('d/m/Y'); // Display date in DD/MM/YYYY format
+                    ?>
+                </td>
+                <td>
+                    <?php
+                    $endTime = new DateTime($booking['end_time']);
+                    echo $startTime->format('h:i A') . ' - ' . $endTime->format('h:i A'); // Booking time in 12-hour format
+                    ?>
+                </td>
                     <td><?= 'Approved' ?></td>
                     <td>
-                        <button class="btn btn-danger delete-booking" data-id="<?= $booking['booking_id'] ?>">Delete</button>
+
+                        <button class="btn btn-danger delete-booking" style=" padding: 5px 15px; font-size: 14px; background-color: #e74c3c; border: none;" data-id="<?= $booking['booking_id'] ?>">Remove</button>
                     </td>
                 </tr>
             <?php endif; ?>
