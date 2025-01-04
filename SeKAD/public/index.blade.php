@@ -262,6 +262,7 @@ include('db_connection.php'); // Include database connection
                         <a href="login.php" class="dropdown-item">Log In</a>
                         <a href="register.php" class="dropdown-item">Register</a>
                         <a href="showCalendar.php" class="dropdown-item">Calendar</a>
+                        <a href="editProfile.blade.php" class="dropdown-item">Edit Profile</a>
                     </div>
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
