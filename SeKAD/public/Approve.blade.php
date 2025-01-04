@@ -38,6 +38,7 @@ foreach ($rows as $row) {
 // Fetch bookings data
 $bookingQuery = "
     SELECT
+     b.booking_id AS booking_id,
     b.venue_id,
     b.start_time AS booking_date,
     b.booked_by AS user_name,
@@ -300,7 +301,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
             const bookingId = this.getAttribute('data-id');
             const status = this.getAttribute('data-status');
 
-            fetch('your_php_file.php', {
+            fetch('update_booking_status.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: `booking_id=${bookingId}&status=${status}`
