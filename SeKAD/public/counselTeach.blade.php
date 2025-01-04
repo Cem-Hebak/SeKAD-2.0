@@ -64,6 +64,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+// nak buang accepted
+// Handle deletion of accepted students
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_accepted_id'])) {
+    $deleteAcceptedId = intval($_POST['delete_accepted_id']);
+
+    $deleteSql = "
+        UPDATE counselling_sessions 
+        SET status = 'Rejected', updated_at = NOW() 
+        WHERE id = {$deleteAcceptedId} AND status = 'Accepted';
+    ";
+    if ($conn->query($deleteSql)) {
+        header("Location: counselTeach.blade.php"); // Redirect to refresh the page
+        exit;
+    } else {
+        $error = "Failed to delete accepted student. Please try again.";
+    }
+}
+$sqlAccepted = "
+    SELECT id, student_name, time_slot, session_date 
+    FROM counselling_sessions 
+    WHERE status = 'Accepted';
+";
+$resultAccepted = $conn->query($sqlAccepted);
+$acceptedSessionsTable = [];
+
+if ($resultAccepted->num_rows > 0) {
+    while ($row = $resultAccepted->fetch_assoc()) {
+        $acceptedSessionsTable[] = $row;
+    }
+}
 
 $conn->close();
 ?>
@@ -197,7 +227,7 @@ $conn->close();
                                 </form>
                                 <form method="POST" style="display: inline-block;">
                                     <input type="hidden" name="id" value="<?php echo $session['id']; ?>">
-                                    <button type="submit" name="status" value="Rejected" class="btn btn-danger btn-sm">Reject</button>
+                                    <button type="submit" name="status" value="Rejected" class="btn btn-danger btn-sm" >Reject</button>
                                 </form>
                             </td>
                         </tr>
@@ -213,6 +243,42 @@ $conn->close();
     <div class="container mt-4">
     <h2 class="text-center">Counselling Session Calendar</h2>
     <div id="calendar"></div>
+    <div class="card">
+            <div class="card-header text-center bg-primary text-white">
+                <h4>Accepted Appointmets</h4>
+            </div>
+    <div class="card-body">
+        <?php if (!empty($acceptedSessionsTable)): ?>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Time Slot</th>
+                    <th>Session Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($acceptedSessionsTable as $session): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($session['student_name'], ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($session['time_slot'], ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($session['session_date'], ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td>
+                        <form method="POST" style="display: inline-block;">
+                            <input type="hidden" name="delete_accepted_id" value="<?php echo $session['id']; ?>">
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php else: ?>
+        <p class="text-center">No accepted appointments at the moment.</p>
+        <?php endif; ?>
+    </div>
+</div>
 </div>
 
 <!-- FullCalendar CSS and JS -->
@@ -220,6 +286,7 @@ $conn->close();
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
 <script>
+    
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
 
@@ -237,6 +304,8 @@ $conn->close();
         calendar.render();
     });
 </script>
+    
+
  <!-- Footer Start -->
  <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
