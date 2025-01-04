@@ -100,22 +100,25 @@
     $dateFilter = isset($_GET['date']) ? $_GET['date'] : '';
     ?>
 
-<div class="container2">
-    <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Please check the availability before submitting the form</h4>
+    <div class="container2">
+    <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Please check the availabality before submit the form</h4>
+    
+    <!-- Filter Form -->
     <form method="GET" action="">
         <div class="row mb-3">
             <!-- Date Picker -->
             <div class="col-md-4">
                 <label for="dateSelect">Select Date:</label>
                 <input type="date" name="date" id="dateSelect" class="form-control" 
-                       value="<?php echo htmlspecialchars($dateFilter, ENT_QUOTES, 'UTF-8'); ?>">
+                       value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
             </div>
         </div>
-
+        
         <!-- Submit Button -->
         <button type="submit" class="btn btn-primary">Filter</button>
     </form>
 
+    <!-- Displaying the counselling session status before form submission -->
     <table class="table table-striped table-bordered mt-3">
         <thead>
             <tr>
