@@ -92,17 +92,6 @@ try {
                 <label for="address">Address:</label>
                 <input type="text" id="address" name="address" value="<?php echo htmlspecialchars($user_data['address'], ENT_QUOTES, 'UTF-8'); ?>">
 
-                <label for="role">Role:</label>
-                <select id="role" name="role" required>
-                    <option value="">Select Role</option>
-                    <?php if ($role === 'Staff'): ?>
-                    <option value="Student" <?php echo $user_data['role'] === 'Student' ? 'selected' : ''; ?>>Student</option>
-                    <option value="Teacher" <?php echo $user_data['role'] === 'Teacher' ? 'selected' : ''; ?>>Teacher</option>
-                    <?php elseif ($role === 'Admin'): ?>
-                    <option value="Staff" <?php echo $user_data['role'] === 'Staff' ? 'selected' : ''; ?>>Staff</option>
-                    <option value="Admin" <?php echo $user_data['role'] === 'Admin' ? 'selected' : ''; ?>>Admin</option>
-                    <?php endif; ?>
-                </select>
 
                 <h3>Family Details</h3>
 
