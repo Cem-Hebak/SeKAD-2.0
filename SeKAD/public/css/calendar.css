@@ -148,3 +148,39 @@ h1 {
     color: #f8f9fa; /* Slightly lighter text for contrast */
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
+
+/* General styling for the dropdown */
+#venueFilter {
+    width: 200px; /* Set width for dropdown */
+    padding: 8px 12px; /* Padding for a clean look */
+    border: 1px solid #f8f9fa; /* Light gray border */
+    border-radius: 4px; /* Slightly rounded corners */
+    background-color: #ced4da; /* Light gray background */
+    color: #495057; /* Darker text for readability */
+    font-size: 1rem; /* Modern font size */
+    font-family: 'Arial', sans-serif; /* Clean font */
+    box-shadow: none; /* Remove any shadow */
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    margin: auto;
+}
+
+/* Hover and focus effects */
+#venueFilter:focus {
+    border-color: #007bff; /* Blue border on focus */
+    background-color: #ffffff; /* White background on focus */
+    outline: none; /* Remove default outline */
+}
+
+#venueFilter:hover {
+    border-color: #0056b3; /* Darker blue border on hover */
+}
+
+/* Label styling */
+label[for="venueFilter"] {
+    display: block; /* Ensure label is above the dropdown */
+    font-size: 1.5rem; /* Slightly smaller font for the label */
+    font-weight: bold; /* Bold label */
+    color: #343a40; /* Dark gray color for label text */
+    margin: 45px 0 0;
+    text-align: center;
+}

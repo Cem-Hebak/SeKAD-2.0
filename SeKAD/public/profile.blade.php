@@ -134,7 +134,11 @@ include('db_connection.php'); // Include database connection
     <!-- Header End -->
      
     <div style="width: 90%; margin: 0 auto;">
-    <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Biodata</h4>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 0;">Biodata</h4>
+        <a href="editProfile.blade.php" class="btn btn-primary py-md-3 px-md-5 animated slideInLeft" style="color: white;">Edit Profile</a>
+    </div>
+
     <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
                                     <thead>
                                         
