@@ -148,7 +148,7 @@ include('db_connection.php'); // Include database connection
     <!-- <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Venue Information</h4> -->
     <div class="container">
         <h2>Manage Venues</h2>
-        <table class="table table-hover table-bordered text-center" style="width: 100%; border-collapse: collapse; background-color: #f9f9f9;">
+        <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%; border-collapse: collapse; background-color: #f9f9f9;">
     <thead class="thead-dark" >
         <tr>
             <th style="width: 90%;">Venue Name</th>
