@@ -178,7 +178,7 @@ $conn->close();
     <!-- Header End -->
      
     <!-- Features Start -->
-
+    <div class="container" style="padding: 20px;">
     <form method="GET" action="">
         <label for="year_filter">Filter by Year:</label>
         <select id="year_filter" name="year" class="form-select" onchange="this.form.submit()">
@@ -190,56 +190,62 @@ $conn->close();
             <option value="5" <?php echo $selectedYear == 5 ? 'selected' : ''; ?>>Year 5</option>
         </select>
     </form>
+    </div>
 
-    <h2>Students List</h2>
-    <table class = "table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Date of Birth</th>
-                <th>Class</th>
-                <th>Assign Class</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (!empty($students)): ?>
-                <?php foreach ($students as $student): ?>
-                    <?php
-                    // Extract the current class of the student
-                    $currentClass = $student['class'] ?? '';
-                    
-                    // Generate class options dynamically based on the selected year
-                    $classOptions = [
-                        "$selectedYear Pendeta",
-                        "$selectedYear Cendekiawan",
-                        "$selectedYear Intelek",
-                        "$selectedYear Sarjana"
-                    ];
-                    ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($student['name']); ?></td>
-                        <td><?php echo htmlspecialchars($student['date_of_birth']); ?></td>
-                        <td><?php echo htmlspecialchars($student['class']); ?></td>
-                        <td>
-                            <form method="POST" action="update_class_student.blade.php">
-                                <input type="hidden" name="user_id" value="<?php echo $student['id']; ?>">
-                                <select name="class" class="form-select" onchange="this.form.submit()">
-                                    <option value="" <?php echo empty($currentClass) ? 'selected' : ''; ?>>Select Class</option>
-                                    <?php foreach ($classOptions as $class): ?>
-                                        <option value="<?php echo $class; ?>" <?php echo $currentClass === $class ? 'selected' : ''; ?>>
-                                            <?php echo $class; ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </form>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <tr><td colspan="4">No students found for the selected year.</td></tr>
-            <?php endif; ?>
-        </tbody>
-    </table>                 
+    <div class="container" style="padding: 20px;">
+    <div class="table-responsive">
+        <h2 class="text-center">Students List</h2>
+        <table class="table table-striped table-bordered text-center">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Date of Birth</th>
+                    <th>Class</th>
+                    <th>Assign Class</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($students)): ?>
+                    <?php foreach ($students as $student): ?>
+                        <?php
+                        // Extract the current class of the student
+                        $currentClass = $student['class'] ?? '';
+
+                        // Generate class options dynamically based on the selected year
+                        $classOptions = [
+                            "$selectedYear Pendeta",
+                            "$selectedYear Cendekiawan",
+                            "$selectedYear Intelek",
+                            "$selectedYear Sarjana"
+                        ];
+                        ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($student['name']); ?></td>
+                            <td><?php echo htmlspecialchars($student['date_of_birth']); ?></td>
+                            <td><?php echo htmlspecialchars($student['class']); ?></td>
+                            <td>
+                                <form method="POST" action="update_class_student.blade.php">
+                                    <input type="hidden" name="user_id" value="<?php echo $student['id']; ?>">
+                                    <select name="class" class="form-select" onchange="this.form.submit()">
+                                        <option value="" <?php echo empty($currentClass) ? 'selected' : ''; ?>>Select Class</option>
+                                        <?php foreach ($classOptions as $class): ?>
+                                            <option value="<?php echo $class; ?>" <?php echo $currentClass === $class ? 'selected' : ''; ?>>
+                                                <?php echo $class; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="4">No students found for the selected year.</td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+               
     <!-- Team End -->
 
     <!-- Footer Start -->

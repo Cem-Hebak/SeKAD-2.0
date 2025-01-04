@@ -170,10 +170,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
 <!--  -->
 <div class="container mt-5">
     <h2>Booking Table</h2>
+    <style>
+        /* Ensure all table columns have the same width */
+        .table th, .table td {
+            text-align: center; /* Center align the text and buttons */
+            vertical-align: middle; /* Center align content vertically */
+            width: 20%; /* Set equal width for all columns */
+        }
+
+        /* Add some spacing and styling for the table */
+        .table {
+            table-layout: fixed; /* Ensures consistent column width */
+            width: 100%;
+        }
+    </style>
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>User Name</th>
+                <th>Name</th>
                 <th>Venue</th>
                 <th>Booking Date</th>
                 <th>Status</th>
@@ -182,21 +196,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
         </thead>
         <tbody>
             <?php foreach ($bookings as $booking): ?>
-                <tr>
-                    <td><?= htmlspecialchars($booking['user_name']) ?></td>
-                    <td><?= htmlspecialchars($booking['venue_name']) ?></td>
-                    <td><?= htmlspecialchars($booking['booking_date']) ?></td>
-                    <td><?= $booking['status'] == 2 ? 'Pending' : ($booking['status'] == 1 ? 'Approved' : 'Rejected') ?></td>
-                    <td>
-                        <button class="btn btn-success update-status" data-id="<?= $booking['booking_id'] ?>" data-status="1">Approve</button>
-                        <button class="btn btn-danger update-status" data-id="<?= $booking['booking_id'] ?>" data-status="3">Reject</button>
-                    </td>
-                </tr>
+                <?php if ($booking['status'] == 2): // Only display pending bookings ?>
+                    <tr>
+                        <td><?= htmlspecialchars($booking['user_name']) ?></td>
+                        <td><?= htmlspecialchars($booking['venue_name']) ?></td>
+                        <td><?= htmlspecialchars($booking['booking_date']) ?></td>
+                        <td><?= 'Pending' ?></td>
+                        <td>
+                            <button class="btn btn-success update-status" data-id="<?= $booking['booking_id'] ?>" data-status="1">Approve</button>
+                            <button class="btn btn-danger update-status" data-id="<?= $booking['booking_id'] ?>" data-status="3">Reject</button>
+                        </td>
+                    </tr>
+                <?php endif; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
 </div>
-
+<div class="container mt-5">
+<h2>Approved Table</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Venue</th>
+            <th>Booking Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($bookings as $booking): ?>
+            <?php if ($booking['status'] == 1): // Only display approved bookings ?>
+                <tr>
+                    <td><?= htmlspecialchars($booking['user_name']) ?></td>
+                    <td><?= htmlspecialchars($booking['venue_name']) ?></td>
+                    <td><?= htmlspecialchars($booking['booking_date']) ?></td>
+                    <td><?= 'Approved' ?></td>
+                    <td>
+                        <button class="btn btn-danger delete-booking" data-id="<?= $booking['booking_id'] ?>">Delete</button>
+                    </td>
+                </tr>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
 
 
     <!-- Footer Start -->
@@ -296,30 +340,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
     <script src="js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.update-status').forEach(button => {
-        button.addEventListener('click', function () {
-            const bookingId = this.getAttribute('data-id');
-            const status = this.getAttribute('data-status');
+            // Attach click event to all buttons with the class 'update-status'
+            document.querySelectorAll('.update-status').forEach(button => {
+                button.addEventListener('click', function () {
+                    // Get booking ID and status from data attributes
+                    const bookingId = this.getAttribute('data-id');
+                    const status = this.getAttribute('data-status');
 
-            fetch('update_booking_status.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `booking_id=${bookingId}&status=${status}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Status updated successfully!');
-                    location.reload(); // Reload to show updated status
-                } else {
-                    alert('Failed to update status.');
-                }
-            })
-            .catch(err => console.error(err));
+                    // Show a confirmation dialog before proceeding
+                    const confirmAction = confirm(
+                        status === '1'
+                            ? 'Are you sure you want to approve this booking?'
+                            : status === '3'
+                            ? 'Are you sure you want to reject this booking?'
+                            : 'Are you sure you want to delete this booking?'
+                    );
+
+                    if (!confirmAction) return; // Exit if user cancels
+
+                    // Send request to update_booking_status.php
+                    fetch('update_booking_status.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `booking_id=${bookingId}&status=${status}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Status updated successfully!');
+                            location.reload(); // Reload the page to reflect changes
+                        } else {
+                            alert(`Failed to update status: ${data.error || 'Unknown error'}`);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error:', err);
+                        alert('An error occurred while updating the status.');
+                    });
+                });
+            });
         });
-    });
-});
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Attach click event to all buttons with the class 'delete-booking'
+            document.querySelectorAll('.delete-booking').forEach(button => {
+                button.addEventListener('click', function () {
+                    const bookingId = this.getAttribute('data-id');
+
+                    // Show a confirmation prompt before deletion
+                    const confirmAction = confirm('Are you sure you want to delete this booking? This action cannot be undone.');
+
+                    if (!confirmAction) return; // Exit if the user cancels
+
+                    // Send the delete request to update_booking_status.php
+                    fetch('update_booking_status.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `booking_id=${bookingId}&status=4` // 4 indicates delete
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Booking deleted successfully!');
+                                location.reload(); // Reload the page to reflect changes
+                            } else {
+                                alert(`Failed to delete booking: ${data.error || 'Unknown error'}`);
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Error:', err);
+                            alert('An error occurred. Please try again.');
+                        });
+                });
+            });
+        });
+    </script>
+
 </body>
 
 </html>

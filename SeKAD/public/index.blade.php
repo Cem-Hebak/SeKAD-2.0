@@ -1,39 +1,67 @@
-<!-- <?php
-// Fetch the two latest announcements
-// $sql = "SELECT Title, Description, TimeStamp FROM announcement ORDER BY TimeStamp DESC LIMIT 2";
-// $result = $conn->query($sql);
+<?php
+include('db_connection.php');
 
-// $announcements = [];
-// if ($result->num_rows > 0) {
-//     while ($row = $result->fetch_assoc()) {
-//         $announcements[] = $row;
-//     }
+// Ensure the student is logged in
+// if (!isset($_SESSION['student_id'])) {
+//     header("Location: login.blade.php");
+//     exit;
 // }
-    // atas ni for announcement    
 
-// $student_id = 1; // Replace with the actual student's ID or a dynamic value
-// $sql = "SELECT attend, total_days FROM attendance WHERE student_id = ?";
-// $stmt = $conn->prepare($sql);
-// $stmt->bind_param("i", $student_id);
-// $stmt->execute();
-// $stmt->bind_result($attend, $total_days);
-// $stmt->fetch();
-// $stmt->close();
-// $conn->close();
+// Get the logged-in student's details
+$ic_number = htmlspecialchars($_SESSION['ic_number'], ENT_QUOTES, 'UTF-8');
+$name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
 
-// Calculate absence
-// $absence = $total_days - $attend;
+$filter_month = isset($_GET['filter_month']) ? $_GET['filter_month'] : null;
 
-// Send data as JSON for the frontend
-// echo json_encode([
-//     "attend" => $attend,
-//     "absence" => $absence,
-//     "total_days" => $total_days
-// ]);
-// atas ni untuk attendance chart
-//
-// for announcement ambik dari database
-?> -->
+// Fetch attendance data grouped by status
+try {
+    $query = "
+        SELECT
+            present,
+            COUNT(*) AS count
+        FROM attendance a
+        INNER JOIN users u ON a.user_id = u.id
+        WHERE u.ic_number = :ic_number
+    ";
+
+    if ($filter_month) {
+        $query .= " AND DATE_FORMAT(a.date, '%Y-%m') = :filter_month";
+    }
+
+    $query .= " GROUP BY present ORDER BY present ASC";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':ic_number', $ic_number, PDO::PARAM_STR);
+
+    if ($filter_month) {
+        $stmt->bindParam(':filter_month', $filter_month, PDO::PARAM_STR);
+    }
+
+    $stmt->execute();
+    $attendance_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Error fetching attendance data: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
+}
+
+// Map status codes to labels
+$status_labels = [
+    1 => "Present",
+    2 => "Absent",
+    3 => "Pending Submission Form",
+    4 => "Absent With MC",
+    5 => "Absent Because Family Matter",
+    6 => "Absent Because Natural Disasters",
+    7 => "Others"
+];
+
+$labels = [];
+$data = [];
+
+foreach ($attendance_data as $row) {
+    $labels[] = $status_labels[$row['present']];
+    $data[] = $row['count'];
+}
+?>
 <?php
 session_start(); // Start the session
 include('db_connection.php'); // Include database connection
@@ -451,193 +479,30 @@ include('db_connection.php'); // Include database connection
 
     <!-- Attendance chart -->
     
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Compact Attendance Chart</title>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <style>
-            .chart-container {
-                width: 40%;
-                margin: 30px auto;
-            }
-            .chart-summary {
-                text-align: center;
-                margin-top: 10px;
-                font-size: 1em;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="chart-container">
-            <canvas id="attendanceChart"></canvas>
-            <div class="chart-summary" id="chartSummary"></div>
-        </div>
-    
-        <script>
-            // Dummy attendance data
-            const data = {
-                attend: 85,
-                total_days: 100
-            };
-    
-            // Calculate absences
-            const absence = data.total_days - data.attend;
-    
-            // Render the chart
-            const ctx = document.getElementById('attendanceChart').getContext('2d');
-            const attendanceChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Attendance', 'Absence'],
-                    datasets: [{
-                        label: 'Attendance',
-                        data: [data.attend, absence],
-                        backgroundColor: ['#4CAF50', '#FF5252'],
-                        borderColor: ['#4CAF50', '#FF5252'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    const total = data.attend + absence;
-                                    const value = tooltipItem.raw;
-                                    const percentage = ((value / total) * 100).toFixed(2);
-                                    return `${tooltipItem.label}: ${value} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-    
-            // Display summary
-            document.getElementById('chartSummary').innerText = `Attendance: ${data.attend} / ${data.total_days}`;
-        </script>
-    </body>
-    <!-- Dummy -->
-    
-    <!-- <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Attendance Chart</title>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <style>
-            .chart-container {
-                width: 40%;
-                margin: 30px auto;
-            }
-            .chart-summary {
-                text-align: center;
-                margin-top: 10px;
-                font-size: 1em;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="chart-container">
-            <canvas id="attendanceChart"></canvas>
-            <div class="chart-summary" id="chartSummary"></div>
-        </div>
-    
-        <script>
-            // Fetch attendance data
-            fetch('attendance.php') // Replace with the correct PHP file path
-                .then(response => response.json())
-                .then(data => {
-                    const ctx = document.getElementById('attendanceChart').getContext('2d');
-                    const attendanceChart = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['Attendance', 'Absence'],
-                            datasets: [{
-                                label: 'Attendance',
-                                data: [data.attend, data.absence],
-                                backgroundColor: ['#4CAF50', '#FF5252'],
-                                borderColor: ['#4CAF50', '#FF5252'],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    position: 'top',
-                                },
-                                tooltip: {
-                                    callbacks: {
-                                        label: function(tooltipItem) {
-                                            const total = data.attend + data.absence;
-                                            const value = tooltipItem.raw;
-                                            const percentage = ((value / total) * 100).toFixed(2);
-                                            return `${tooltipItem.label}: ${value} (${percentage}%)`;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    });
-    
-                    // Display summary
-                    document.getElementById('chartSummary').innerText = `Attendance: ${data.attend} / ${data.total_days}`;
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        </script>
-    </body> -->
-    <!-- About Start -->
-    <!-- <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
-                    <div class="position-relative h-100">
-                        <img class="img-fluid position-absolute w-100 h-100" src="img/about.jpg" alt="" style="object-fit: cover;">
-                    </div>
-                </div>
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <h6 class="section-title bg-white text-start text-primary pe-3">About Us</h6>
-                    <h1 class="mb-4">Welcome to eLEARNING</h1>
-                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit.</p>
-                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                    <div class="row gy-2 gx-4 mb-4">
-                        <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Skilled Instructors</p>
-                        </div>
-                        <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Online Classes</p>
-                        </div>
-                        <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>International Certificate</p>
-                        </div>
-                        <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Skilled Instructors</p>
-                        </div>
-                        <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Online Classes</p>
-                        </div>
-                        <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>International Certificate</p>
-                        </div>
-                    </div>
-                    <a class="btn btn-primary py-3 px-5 mt-2" href="">Read More</a>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- About End -->
+    <table align="center" style="width: 100%; max-width: 1000px; margin: auto; border-collapse: collapse;">
+    <tr>
+        <td>
+            <div class="container py-5">
+            <h1 class="text-center mb-4">Personal Analytics By Month</h1>
 
+            <form method="GET" class="mb-4">
+                <label for="month" class="form-label">Filter by Month:</label>
+                <input type="month" id="month" name="filter_month" class="form-control"
+                    value="<?php echo isset($_GET['filter_month']) ? htmlspecialchars($_GET['filter_month'], ENT_QUOTES, 'UTF-8') : ''; ?>">
+                <button type="submit" class="btn btn-primary mt-2">Filter</button>
+                </div>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td>
+        <div class="chart-container" style="position: relative; height:75vh; width:100%;">
+            <canvas id="attendanceChart"></canvas>
+        </div>
 
+        </td>
+    </tr>
+    </table>
     
     
         
