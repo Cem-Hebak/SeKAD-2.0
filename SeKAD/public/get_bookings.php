@@ -3,8 +3,11 @@
 include 'db_connection.php';
 
 try {
-    // Query to fetch booking data with venue details
-    $stmt = $pdo->query("
+    // Retrieve venue ID from the request (if provided)
+    $venueId = isset($_GET['venue_id']) ? intval($_GET['venue_id']) : null;
+
+    // Base query
+    $query = "
         SELECT 
             booking.start_time, 
             booking.end_time, 
@@ -12,7 +15,21 @@ try {
             venue.venue_name 
         FROM booking
         JOIN venue ON booking.venue_id = venue.id
-    ");
+    ";
+
+    // Add condition for venue filter if applicable
+    if ($venueId) {
+        $query .= " WHERE venue.id = :venueId";
+    }
+
+    $stmt = $pdo->prepare($query);
+
+    // Bind parameter if venueId is provided
+    if ($venueId) {
+        $stmt->bindParam(':venueId', $venueId, PDO::PARAM_INT);
+    }
+
+    $stmt->execute();
 
     // Fetch and format events
     $events = [];
