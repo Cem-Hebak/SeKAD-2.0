@@ -24,6 +24,17 @@
 
         <a href="login.blade.php">Log In</a>
     </div>
+
+    <script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en', // Default language of your website
+            includedLanguages: 'en,ms', // Languages to include (English and Bahasa Melayu)
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+    }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 
 </html>

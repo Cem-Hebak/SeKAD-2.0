@@ -149,8 +149,33 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <div class="modal fade" id="exampleModalCenter6" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h6 class="modal-title m-0" id="exampleModalCenterTitle"><?= $t['language'] ?></h6>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-9">
+                                            <h5><?= $t['language'] ?></h5>
+                                            <p><?= $t['select_language'] ?></p>
+                                            <!-- Google Translate Widget -->
+                                            <div id="google_translate_element"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-soft-primary btn-sm" data-bs-dismiss="modal"><?= $t['save_changes'] ?></button>
+                                <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-dismiss="modal"><?= $t['close'] ?></button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- <div class="modal fade" id="exampleModalCenter6" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -175,7 +200,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="row">
                         <div class="col-lg-12">
@@ -311,6 +336,18 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en', // Default language of your website
+            includedLanguages: 'en,ms', // Languages to include (English and Bahasa Melayu)
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+    }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script src="js/language-persistence.js"></script>
+
 </body>
 
 </html>
