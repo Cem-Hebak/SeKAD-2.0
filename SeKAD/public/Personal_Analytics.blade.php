@@ -178,6 +178,31 @@ foreach ($attendance_data as $row) {
         </td>
     </tr>
     </table>
+
+    <table align="center" style="width: 100%; max-width: 1000px; margin: auto; border-collapse: collapse;">
+    <tr>
+        <td>
+            <div class="container py-5">
+            <h1 class="text-center mb-4">Personal Analytics By Month</h1>
+
+            <form method="GET" class="mb-4">
+                <label for="month" class="form-label">Filter by Month:</label>
+                <input type="month" id="month" name="filter_month" class="form-control"
+                    value="<?php echo isset($_GET['filter_month']) ? htmlspecialchars($_GET['filter_month'], ENT_QUOTES, 'UTF-8') : ''; ?>">
+                <button type="submit" class="btn btn-primary mt-2">Filter</button>
+                </div>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td>
+        <div class="chart-container" style="position: relative; height:75vh; width:100%;">
+            <canvas id="attendanceChart"></canvas>
+        </div>
+
+        </td>
+    </tr>
+    </table>
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
     <div class="container py-5">

@@ -1,24 +1,47 @@
+
 <?php
+session_start();
 include('db_connection.php');
 
-// Ensure the student is logged in
-// if (!isset($_SESSION['student_id'])) {
-//     header("Location: login.blade.php");
-//     exit;
-// }
+// Ensure the user is logged in
+if (!isset($_SESSION['ic_number']) || !isset($_SESSION['role'])) {
+    header("Location: login.php");
+    exit;
+}
 
 // Get the logged-in student's details
 $ic_number = htmlspecialchars($_SESSION['ic_number'], ENT_QUOTES, 'UTF-8');
 $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
+$email = htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8');
+$mobilenumber = htmlspecialchars($_SESSION['mobilenumber'], ENT_QUOTES, 'UTF-8');
+$role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
+$nationality = htmlspecialchars($_SESSION['nationality'], ENT_QUOTES, 'UTF-8');
 
+// Optional fields with fallback values
+$emergencymobilenumber = htmlspecialchars($_SESSION['emergencymobilenumber'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+$class = htmlspecialchars($_SESSION['class'] ?? 'Not Assigned', ENT_QUOTES, 'UTF-8');
+$date_of_birth = htmlspecialchars($_SESSION['date_of_birth'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+$gender = htmlspecialchars($_SESSION['gender'] ?? 'Not Specified', ENT_QUOTES, 'UTF-8');
+$address = htmlspecialchars($_SESSION['address'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
+$fname = htmlspecialchars($_SESSION['fname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+$fcontact = htmlspecialchars($_SESSION['fcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+$foccupation = htmlspecialchars($_SESSION['foccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+$mname = htmlspecialchars($_SESSION['mname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+$mcontact = htmlspecialchars($_SESSION['mcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+$moccupation = htmlspecialchars($_SESSION['moccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+$gname = htmlspecialchars($_SESSION['gname'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+$gcontact = htmlspecialchars($_SESSION['gcontact'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+$goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+$blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
+$allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
+
+// Attendance filtering options
 $filter_month = isset($_GET['filter_month']) ? $_GET['filter_month'] : null;
 
 // Fetch attendance data grouped by status
 try {
     $query = "
-        SELECT
-            present,
-            COUNT(*) AS count
+        SELECT present, COUNT(*) AS count
         FROM attendance a
         INNER JOIN users u ON a.user_id = u.id
         WHERE u.ic_number = :ic_number
@@ -61,87 +84,41 @@ foreach ($attendance_data as $row) {
     $labels[] = $status_labels[$row['present']];
     $data[] = $row['count'];
 }
-?>
-<?php
-session_start(); // Start the session
-include('db_connection.php'); // Include database connection
 
-    
-    // Retrieve user data from the session
-    $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
-    $email = htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8');
-    $mobilenumber = htmlspecialchars($_SESSION['mobilenumber'], ENT_QUOTES, 'UTF-8');
-    $emergencymobilenumber = htmlspecialchars($_SESSION['emergencymobilenumber'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
-    $class = htmlspecialchars($_SESSION['class'] ?? 'Not Assigned', ENT_QUOTES, 'UTF-8');
-    $date_of_birth = htmlspecialchars($_SESSION['date_of_birth'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $gender = htmlspecialchars($_SESSION['gender'] ?? 'Not Specified', ENT_QUOTES, 'UTF-8');
-    $ic_number = htmlspecialchars($_SESSION['ic_number'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
-    $nationality = htmlspecialchars($_SESSION['nationality'], ENT_QUOTES, 'UTF-8');
-    $address = htmlspecialchars($_SESSION['address'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
-    $fname = htmlspecialchars($_SESSION['fname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $fcontact = htmlspecialchars($_SESSION['fcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $foccupation = htmlspecialchars($_SESSION['foccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $mname = htmlspecialchars($_SESSION['mname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $mcontact = htmlspecialchars($_SESSION['mcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $moccupation = htmlspecialchars($_SESSION['moccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    $gname = htmlspecialchars($_SESSION['gname'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $gcontact = htmlspecialchars($_SESSION['gcontact'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
-    $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
+// Calculate attendance percentage for the student
+$presentValues = [1, 4]; // Present and Absent With MC are considered as present
+$attendanceThreshold = 75;
 
-    // Check if the user is logged in
-    if (!isset($_SESSION['ic_number']) || !isset($_SESSION['role'])) {
-        header("Location: login.php");
-        exit;
+$lowAttendanceAlert = false; // Default: no alert
+
+try {
+    // Query to calculate attendance percentage
+    $query = "SELECT 
+                COUNT(CASE WHEN present IN (" . implode(',', $presentValues) . ") THEN 1 END) AS total_attendances,
+                COUNT(*) AS total_records
+              FROM attendance
+              WHERE ic_number = :ic_number";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->execute(['ic_number' => $ic_number]);
+    $result = $stmt->fetch();
+
+    $totalAttendances = $result['total_attendances'] ?? 0;
+    $totalRecords = $result['total_records'] ?? 0;
+    $attendancePercentage = ($totalRecords > 0) ? ($totalAttendances / $totalRecords) * 100 : 0;
+
+    // Check if attendance is below the threshold
+    if ($attendancePercentage < $attendanceThreshold) {
+        $lowAttendanceAlert = true; // Trigger low attendance alert
     }
+} catch (PDOException $e) {
+    die("Error calculating attendance percentage: " . $e->getMessage());
+}
 
-    try {
-        // Define attendance thresholds
-        $presentValues = [1, 4];
-        $attendanceThreshold = 75;
-
-        // Get logged-in student's IC number
-        $loggedInICNumber = $_SESSION['ic_number'];
-        $loggedInRole = $_SESSION['role'];
-
-        // Check if the logged-in user is a student
-        $lowAttendanceAlert = false; // Default: no alert
-
-        // Query to calculate attendance percentage
-        if($loggedInRole === 'Student'){
-            $query = "SELECT 
-                        COUNT(CASE WHEN present IN (" . implode(',', $presentValues) . ") THEN 1 END) AS total_attendances,
-                        COUNT(*) AS total_records
-                    FROM attendance
-                    WHERE ic_number = :ic_number";
-    
-            // Prepare and execute the query
-            $stmt = $pdo->prepare($query);
-            $stmt->execute(['ic_number' => $loggedInICNumber]);
-            $result = $stmt->fetch();
-    
-            // Calculate attendance percentage
-            $totalAttendances = $result['total_attendances'] ?? 0;
-            $totalRecords = $result['total_records'] ?? 0;
-            $attendancePercentage = ($totalRecords > 0) ? ($totalAttendances / $totalRecords) * 100 : 0;
-    
-            // Check if attendance is below the threshold
-            $lowAttendanceAlert = "";
-            if ($attendancePercentage < $attendanceThreshold) {
-                $lowAttendanceAlert = true; // Set a flag to trigger the pop-up notification
-            }
-        }
-
-    } catch (PDOException $e) {
-        die("Error fetching attendance data: " . $e->getMessage());
-    }
-
-    // Close the connection
-    $pdo = null;
-
+// Close the connection
+$pdo = null;
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -152,6 +129,7 @@ include('db_connection.php'); // Include database connection
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
     <!-- css for low attendance alert -->
@@ -477,8 +455,7 @@ include('db_connection.php'); // Include database connection
     </div>
     <!-- Service End -->
 
-    <!-- Attendance chart -->
-    
+    <!-- Personal Attendance Chart Start -->
     <table align="center" style="width: 100%; max-width: 1000px; margin: auto; border-collapse: collapse;">
     <tr>
         <td>
@@ -503,7 +480,10 @@ include('db_connection.php'); // Include database connection
         </td>
     </tr>
     </table>
+
+    <!-- Personal Attendance Chart End -->
     
+  
     
         
 
@@ -612,6 +592,42 @@ include('db_connection.php'); // Include database connection
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+
+    <!-- Personal Attendance Javascript -->
+    <script>
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        const attendanceChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: <?php echo json_encode($labels); ?>,
+            datasets: [{
+                data: <?php echo json_encode($data); ?>,
+                backgroundColor: [
+                    '#4CAF50', '#F44336', '#FF9800', '#03A9F4', '#9C27B0', '#FFC107', '#8BC34A'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const count = tooltipItem.raw;
+                            const total = <?php echo array_sum($data); ?>;
+                            const percentage = ((count / total) * 100).toFixed(2);
+                            return `${tooltipItem.label}: ${count} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+        });
+
+    </script>
 </body>
 
 </html>
