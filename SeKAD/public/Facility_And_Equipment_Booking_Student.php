@@ -5,27 +5,6 @@ include('db_connection.php'); // Include database connection
     
     // Retrieve user data from the session
     $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
-    // $email = htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8');
-    // $mobilenumber = htmlspecialchars($_SESSION['mobilenumber'], ENT_QUOTES, 'UTF-8');
-    // $emergencymobilenumber = htmlspecialchars($_SESSION['emergencymobilenumber'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    // $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
-    // $class = htmlspecialchars($_SESSION['class'] ?? 'Not Assigned', ENT_QUOTES, 'UTF-8');
-    // $date_of_birth = htmlspecialchars($_SESSION['date_of_birth'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    // $gender = htmlspecialchars($_SESSION['gender'] ?? 'Not Specified', ENT_QUOTES, 'UTF-8');
-    // $ic_number = htmlspecialchars($_SESSION['ic_number'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
-    // $nationality = htmlspecialchars($_SESSION['nationality'], ENT_QUOTES, 'UTF-8');
-    // $address = htmlspecialchars($_SESSION['address'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
-    // $fname = htmlspecialchars($_SESSION['fname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    // $fcontact = htmlspecialchars($_SESSION['fcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    // $foccupation = htmlspecialchars($_SESSION['foccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    // $mname = htmlspecialchars($_SESSION['mname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    // $mcontact = htmlspecialchars($_SESSION['mcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    // $moccupation = htmlspecialchars($_SESSION['moccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-    // $gname = htmlspecialchars($_SESSION['gname'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    // $gcontact = htmlspecialchars($_SESSION['gcontact'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    // $goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-    // $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
-    // $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
 
     // Fetch venues from the database
     try {
@@ -193,65 +172,52 @@ include('db_connection.php'); // Include database connection
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
                 showNonCurrentDates: false, // Hide dates outside the current month
-                events: fetchEvents(venueFilter.value), function (fetchInfo, successCallback, failureCallback) {
-                    fetch('get_bookings.php')
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Failed to fetch events. Status: ' + response.status);
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            loadingEl.style.display = 'none'; // Hide loading indicator
-                            successCallback(data); // Pass events to the calendar
-                            handleLastRowVisibility(calendarEl); // Check for empty last row after events are loaded
-                        })
-                        .catch(error => {
-                            console.error('Error fetching events:', error);
-                            loadingEl.textContent = 'Failed to load calendar. Please try again later.';
-                            failureCallback(error);
-                        });
+                events: fetchEvents(venueFilter.value), 
+                
+                // Format event content to display time properly
+                eventContent: function (info) {
+                    const startTime = new Date(info.event.start).toLocaleTimeString([], {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true, // Enables 'am/pm' format
+                    });
+
+                    return {
+                        html: `<div>${startTime} (${info.event.title})</div>`, // Properly formatted time + title
+                    };
                 },
+
                 eventMouseEnter: function (info) {
                     var tooltip = document.createElement('div');
                     tooltip.className = 'tooltip';
-                    tooltip.style.position = 'absolute';
-                    tooltip.style.backgroundColor = '#333';
-                    tooltip.style.color = '#fff';
-                    tooltip.style.padding = '10px';
-                    tooltip.style.borderRadius = '5px';
-                    tooltip.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
-                    tooltip.style.zIndex = '1000';
-                    tooltip.style.whiteSpace = 'pre-line';
-
                     tooltip.innerHTML = `
-                        <div class="tooltip-header">Booking Details</div>
-                        <div class="tooltip-content">
-                            <strong>Venue:</strong> ${info.event.extendedProps.venue}<br>
-                            <strong>Start:</strong> ${info.event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}<br>
-                            <strong>End:</strong> ${info.event.end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </div>
+                    <div><strong>Booking Details</strong></div>
+                    <div><strong>Venue:</strong> ${info.event.extendedProps.venue}</div>
+                    <div><strong>From:</strong> ${info.event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</div>
+                    <div><strong>To:</strong> ${info.event.end ? info.event.end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : 'N/A'}</div>
+                    <div><strong>Booked by:</strong> ${info.event.extendedProps.booked_by}</div>
                     `;
-
                     document.body.appendChild(tooltip);
 
-                    // Position tooltip near mouse cursor
-                    document.addEventListener('mousemove', moveTooltip);
-
                     function moveTooltip(e) {
-                        tooltip.style.left = `${e.pageX + 15}px`;
-                        tooltip.style.top = `${e.pageY + 15}px`;
+                        tooltip.style.left = `${e.pageX + 10}px`; // Offset tooltip from cursor
+                        tooltip.style.top = `${e.pageY + 10}px`;
                     }
 
-                    info.el.addEventListener('mouseleave', function () {
-                        document.body.removeChild(tooltip);
+                    document.addEventListener('mousemove', moveTooltip);
+
+                    function removeTooltip() {
+                        tooltip.remove();
                         document.removeEventListener('mousemove', moveTooltip);
-                    });
+                        info.el.removeEventListener('mouseleave', removeTooltip);
+                    }
+
+                    info.el.addEventListener('mouseleave', removeTooltip);
                 },
-                eventColor: '#28a745', // Green background for events
-                eventTextColor: '#ffffff', // White text for events
-                editable: false, // Disable drag-and-drop
-                navLinks: true, // Enable clickable day/week views
+                eventColor: '#28a745',
+                eventTextColor: '#ffffff',
+                editable: false,
+                navLinks: true,
                 datesSet: function () {
                     handleLastRowVisibility(calendarEl); // Check after each view change
                 }

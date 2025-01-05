@@ -101,39 +101,40 @@ h1 {
 
 /* Tooltip styles */
 .tooltip {
-    position: absolute;
-    background-color: #80baf4; /* Tooltip background */
-    color: #ffffff; /* Text color */
-    border: 1px solid #ffffff; /* White border */
-    border-radius: 8px; /* Rounded corners */
+    position: absolute !important;
+    z-index: 9999 !important; /* Ensure it stays on top of other elements */
+    background-color: rgba(0, 0, 0, 0.8); /* Dark background for readability */
+    color: #fff; /* White text for contrast */
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 14px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-    padding: 12px 16px; /* Inner spacing */
-    font-size: 0.9rem; /* Font size */
-    line-height: 1.6; /* Line spacing */
-    max-width: 300px; /* Limit tooltip width */
-    z-index: 1000; /* Ensure it stays on top */
-    animation: fadeIn 0.2s ease-in-out; /* Fade-in animation */
+    pointer-events: none; /* Prevent interference with hover state */
+    animation: fadeIn 0.3s ease-in-out; /* Smooth appearance */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 /* Tooltip header */
 .tooltip .tooltip-header {
-    font-weight: bold; /* Bold header */
-    font-size: 1rem; /* Slightly larger font */
-    margin-bottom: 4px; /* Space below the header */
-    color: #17a2b8; /* Bright color */
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 4px;
+    color: #17a2b8;
 }
 
 /* Tooltip content */
 .tooltip .tooltip-content {
-    font-size: 0.85rem; /* Smaller font */
-    color: #ced4da; /* Light gray text */
+    font-size: 0.85rem;
+    color: #ced4da;
 }
 
-/* Tooltip fade-in animation */
+/* Prevent Bootstrap overrides on animation */
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(-10px); /* Slide in from above */
+        transform: translateY(-10px);
     }
     to {
         opacity: 1;
@@ -173,6 +174,8 @@ h1 {
 
 #venueFilter:hover {
     border-color: #0056b3; /* Darker blue border on hover */
+    background-color: #dee2e6; /* Slightly darker gray background */
+    cursor: pointer; /* Indicate interactiveness */
 }
 
 /* Label styling */

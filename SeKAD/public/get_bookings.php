@@ -11,7 +11,8 @@ try {
         SELECT 
             booking.start_time, 
             booking.end_time, 
-            booking.Subject, 
+            booking.Subject,
+            booking.booked_by, 
             venue.venue_name 
         FROM booking
         JOIN venue ON booking.venue_id = venue.id
@@ -34,12 +35,16 @@ try {
     // Fetch and format events
     $events = [];
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $startTime = date("g a", strtotime($row['start_time'])); // Format time as '9 am'
+        $endTime = date("g a", strtotime($row['end_time']));     // Format time as '5 pm'
+
         $events[] = [
             'title' => htmlspecialchars($row['Subject'], ENT_QUOTES, 'UTF-8'),
             'start' => $row['start_time'],
             'end'   => $row['end_time'],
             'extendedProps' => [
                 'venue' => htmlspecialchars($row['venue_name'], ENT_QUOTES, 'UTF-8'),
+                'booked_by' => htmlspecialchars($row['booked_by'], ENT_QUOTES, 'UTF-8'), // Move booked_by here
             ],
         ];
     }
