@@ -482,7 +482,7 @@ try {
 
     <!-- Personal Attendance Chart Start -->
     <div class="container mt-5">
-        <h2>Personal Analytics By Month</h2>
+        <h2>Personal Analytics</h2>
         <style>
             /* Ensure all table columns have the same width */
             .table th, .table td {
