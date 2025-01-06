@@ -62,6 +62,34 @@ foreach ($attendance_data as $row) {
     $labels[] = $status_labels[$row['present']];
     $data[] = $row['count'];
 }
+try {
+    $query = "
+        SELECT
+            a.date,
+            a.present
+        FROM attendance a
+        INNER JOIN users u ON a.user_id = u.id
+        WHERE u.ic_number = :ic_number
+    ";
+
+    if ($filter_month) {
+        $query .= " AND DATE_FORMAT(a.date, '%Y-%m') = :filter_month";
+    }
+
+    $query .= " ORDER BY a.date ASC";
+
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':ic_number', $ic_number, PDO::PARAM_STR);
+
+    if ($filter_month) {
+        $stmt->bindParam(':filter_month', $filter_month, PDO::PARAM_STR);
+    }
+
+    $stmt->execute();
+    $attendance_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Error fetching attendance data: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
+}
 ?>
 
 <!DOCTYPE html>
@@ -152,57 +180,127 @@ foreach ($attendance_data as $row) {
         </div>
     </div>
     </div>
-    <!-- Header End -->
+    <div class="container mt-5">
+        <h2>Personal Analytics By Month</h2>
+        <style>
+            /* Ensure all table columns have the same width */
+            .table th, .table td {
+                 /* Center align the text and buttons */
+                vertical-align: middle; /* Center align content vertically */
+                width: 20%; /* Set equal width for all columns */
+            }
 
-    <table align="center" style="width: 100%; max-width: 1000px; margin: auto; border-collapse: collapse;">
-    <tr>
-        <td>
-            <div class="container py-5">
-            <h1 class="text-center mb-4">Personal Analytics By Month</h1>
+            /* Add some spacing and styling for the table */
+            .table {
+                table-layout: fixed; /* Ensures consistent column width */
+                width: 100%;
+            }
+        </style>
+        <table class="table table-striped table-bordered">
 
-            <form method="GET" class="mb-4">
-                <label for="month" class="form-label">Filter by Month:</label>
-                <input type="month" id="month" name="filter_month" class="form-control"
-                    value="<?php echo isset($_GET['filter_month']) ? htmlspecialchars($_GET['filter_month'], ENT_QUOTES, 'UTF-8') : ''; ?>">
-                <button type="submit" class="btn btn-primary mt-2">Filter</button>
+        <tr>
+            <td colspan="2">
+                <form method="GET" class="mb-4">
+                    <label for="month" class="form-label">Filter by Month:</label>
+                    <input type="month" id="month" name="filter_month" class="form-control"
+                        value="<?php echo isset($_GET['filter_month']) ? htmlspecialchars($_GET['filter_month'], ENT_QUOTES, 'UTF-8') : ''; ?>">
+
+                    <form method="GET" class="mb-4">
+                        <label for="status_filter" class="form-label mt-3">Filter by Status:</label>
+                        <select id="status_filter" name="status_filter" class="form-select">
+                            <option value="both" <?php echo (isset($_GET['status_filter']) && $_GET['status_filter'] === 'both') ? 'selected' : ''; ?>>Both</option>
+                            <option value="present" <?php echo (isset($_GET['status_filter']) && $_GET['status_filter'] === 'present') ? 'selected' : ''; ?>>Present Only</option>
+                            <option value="absent" <?php echo (isset($_GET['status_filter']) && $_GET['status_filter'] === 'absent') ? 'selected' : ''; ?>>Absent Only</option>
+                        </select>
+
+                        <button type="submit" class="btn btn-primary mt-2">Filter</button>
+                    </form>
+            </td>
+        </tr>
+        <tr>
+            <td>
+
+
+
+                <?php
+                // Apply status filter
+                $status_filter = isset($_GET['status_filter']) ? $_GET['status_filter'] : 'both';
+                $status_condition = '';
+
+                if ($status_filter === 'present') {
+                    $status_condition = " AND a.present = 1";
+                } elseif ($status_filter === 'absent') {
+                    $status_condition = " AND a.present != 1";
+                }
+
+                // Update query to include status filter
+                $query = "
+                    SELECT
+                        a.date,
+                        a.present
+                    FROM attendance a
+                    INNER JOIN users u ON a.user_id = u.id
+                    WHERE u.ic_number = :ic_number
+                ";
+
+                if ($filter_month) {
+                    $query .= " AND DATE_FORMAT(a.date, '%Y-%m') = :filter_month";
+                }
+
+                $query .= $status_condition;
+                $query .= " ORDER BY a.date ASC";
+
+                $stmt = $pdo->prepare($query);
+                $stmt->bindParam(':ic_number', $ic_number, PDO::PARAM_STR);
+
+                if ($filter_month) {
+                    $stmt->bindParam(':filter_month', $filter_month, PDO::PARAM_STR);
+                }
+
+                $stmt->execute();
+                $attendance_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                ?>
+
+                <?php if ($filter_month): ?>
+                    <div class="container mt-4">
+                        <h3>Attendance Details for <?php echo htmlspecialchars($filter_month, ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <table class="table table-bordered text-center">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($attendance_data)): ?>
+                                    <?php foreach ($attendance_data as $row): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($row['date'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                            <td><?php echo htmlspecialchars($status_labels[$row['present']], ENT_QUOTES, 'UTF-8'); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="2">No attendance data found for the selected filters.</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
+            </td>
+            <td>
+                <div class="chart-container" style="position: center; height:75vh; width:100%; padding: 10%;">
+                    <canvas id="attendanceChart"></canvas>
                 </div>
-            </form>
-        </td>
-    </tr>
-    <tr>
-        <td>
-        <div class="chart-container" style="position: relative; height:75vh; width:100%;">
-            <canvas id="attendanceChart"></canvas>
-        </div>
+            </td>
 
-        </td>
-    </tr>
+        </tr>
     </table>
+    </div>
 
-    <table align="center" style="width: 100%; max-width: 1000px; margin: auto; border-collapse: collapse;">
-    <tr>
-        <td>
-            <div class="container py-5">
-            <h1 class="text-center mb-4">Personal Analytics By Month</h1>
 
-            <form method="GET" class="mb-4">
-                <label for="month" class="form-label">Filter by Month:</label>
-                <input type="month" id="month" name="filter_month" class="form-control"
-                    value="<?php echo isset($_GET['filter_month']) ? htmlspecialchars($_GET['filter_month'], ENT_QUOTES, 'UTF-8') : ''; ?>">
-                <button type="submit" class="btn btn-primary mt-2">Filter</button>
-                </div>
-            </form>
-        </td>
-    </tr>
-    <tr>
-        <td>
-        <div class="chart-container" style="position: relative; height:75vh; width:100%;">
-            <canvas id="attendanceChart"></canvas>
-        </div>
 
-        </td>
-    </tr>
-    </table>
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
     <div class="container py-5">
@@ -300,7 +398,7 @@ foreach ($attendance_data as $row) {
             responsive: true,
             plugins: {
                 legend: {
-                    position: 'top',
+                    position: 'bottom',
                 },
                 tooltip: {
                     callbacks: {
