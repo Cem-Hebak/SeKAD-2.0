@@ -165,7 +165,7 @@ if ($startDate && $endDate) {
     $query = "SELECT 
                 DATE(date) AS date, 
                 SUM(CASE WHEN present = 1 OR present = 4 THEN 1 ELSE 0 END) AS count_1, -- Present
-                SUM(CASE WHEN present = 2 OR present = 3 THEN 1 ELSE 0 END) AS count_2  -- Absent
+                SUM(CASE WHEN present = 2 OR present = 3 OR present = 5 OR present = 6 OR present = 7 THEN 1 ELSE 0 END) AS count_2  -- Absent
               FROM attendance 
               WHERE DATE(date) BETWEEN '$startDate' AND '$endDate'";
 
