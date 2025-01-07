@@ -1,147 +1,155 @@
 
 <?php
-session_start();
-include('db_connection.php');
+    session_start();
+    include('db_connection.php');
 
-// Ensure the user is logged in
-if (!isset($_SESSION['ic_number']) || !isset($_SESSION['role'])) {
-    header("Location: login.php");
-    exit;
-}
-
-// Get the logged-in student's details
-$ic_number = htmlspecialchars($_SESSION['ic_number'], ENT_QUOTES, 'UTF-8');
-$name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
-$email = htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8');
-$mobilenumber = htmlspecialchars($_SESSION['mobilenumber'], ENT_QUOTES, 'UTF-8');
-$role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
-$nationality = htmlspecialchars($_SESSION['nationality'], ENT_QUOTES, 'UTF-8');
-
-// Optional fields with fallback values
-$emergencymobilenumber = htmlspecialchars($_SESSION['emergencymobilenumber'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-$class = htmlspecialchars($_SESSION['class'] ?? 'Not Assigned', ENT_QUOTES, 'UTF-8');
-$date_of_birth = htmlspecialchars($_SESSION['date_of_birth'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-$gender = htmlspecialchars($_SESSION['gender'] ?? 'Not Specified', ENT_QUOTES, 'UTF-8');
-$address = htmlspecialchars($_SESSION['address'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
-$fname = htmlspecialchars($_SESSION['fname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-$fcontact = htmlspecialchars($_SESSION['fcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-$foccupation = htmlspecialchars($_SESSION['foccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-$mname = htmlspecialchars($_SESSION['mname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-$mcontact = htmlspecialchars($_SESSION['mcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-$moccupation = htmlspecialchars($_SESSION['moccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
-$gname = htmlspecialchars($_SESSION['gname'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-$gcontact = htmlspecialchars($_SESSION['gcontact'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-$goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
-$blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
-$allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
-
-// Attendance filtering options
-$filter_month = isset($_GET['filter_month']) ? $_GET['filter_month'] : null;
-
-// Fetch attendance data grouped by status
-try {
-    $query = "
-        SELECT present, COUNT(*) AS count
-        FROM attendance a
-        INNER JOIN users u ON a.user_id = u.id
-        WHERE u.ic_number = :ic_number
-    ";
-
-    if ($filter_month) {
-        $query .= " AND DATE_FORMAT(a.date, '%Y-%m') = :filter_month";
+    // Ensure the user is logged in
+    if (!isset($_SESSION['ic_number']) || !isset($_SESSION['role'])) {
+        header("Location: login.php");
+        exit;
     }
 
-    $query .= " GROUP BY present ORDER BY present ASC";
+    // Get the logged-in student's details
+    $ic_number = htmlspecialchars($_SESSION['ic_number'], ENT_QUOTES, 'UTF-8');
+    $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
+    $email = htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8');
+    $mobilenumber = htmlspecialchars($_SESSION['mobilenumber'], ENT_QUOTES, 'UTF-8');
+    $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
+    $nationality = htmlspecialchars($_SESSION['nationality'], ENT_QUOTES, 'UTF-8');
 
-    $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':ic_number', $ic_number, PDO::PARAM_STR);
+    // Optional fields with fallback values
+    $emergencymobilenumber = htmlspecialchars($_SESSION['emergencymobilenumber'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $class = htmlspecialchars($_SESSION['class'] ?? 'Not Assigned', ENT_QUOTES, 'UTF-8');
+    $date_of_birth = htmlspecialchars($_SESSION['date_of_birth'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $gender = htmlspecialchars($_SESSION['gender'] ?? 'Not Specified', ENT_QUOTES, 'UTF-8');
+    $address = htmlspecialchars($_SESSION['address'] ?? 'Not Available', ENT_QUOTES, 'UTF-8');
+    $fname = htmlspecialchars($_SESSION['fname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $fcontact = htmlspecialchars($_SESSION['fcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $foccupation = htmlspecialchars($_SESSION['foccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $mname = htmlspecialchars($_SESSION['mname'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $mcontact = htmlspecialchars($_SESSION['mcontact'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $moccupation = htmlspecialchars($_SESSION['moccupation'] ?? 'Not Provided', ENT_QUOTES, 'UTF-8');
+    $gname = htmlspecialchars($_SESSION['gname'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    $gcontact = htmlspecialchars($_SESSION['gcontact'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    $goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
+    $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
+    $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
 
-    if ($filter_month) {
-        $stmt->bindParam(':filter_month', $filter_month, PDO::PARAM_STR);
+    // Attendance filtering options
+    $filter_month = isset($_GET['filter_month']) ? $_GET['filter_month'] : null;
+
+    // Fetch attendance data grouped by status
+    try {
+
+        // Get logged-in student's IC number
+        $loggedInICNumber = $_SESSION['ic_number'];
+        $loggedInRole = $_SESSION['role'];
+
+        $query = "
+            SELECT present, COUNT(*) AS count
+            FROM attendance a
+            INNER JOIN users u ON a.user_id = u.id
+            WHERE u.ic_number = :ic_number
+        ";
+
+        if ($filter_month) {
+            $query .= " AND DATE_FORMAT(a.date, '%Y-%m') = :filter_month";
+        }
+
+        $query .= " GROUP BY present ORDER BY present ASC";
+
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':ic_number', $ic_number, PDO::PARAM_STR);
+
+        if ($filter_month) {
+            $stmt->bindParam(':filter_month', $filter_month, PDO::PARAM_STR);
+        }
+
+        $stmt->execute();
+        $attendance_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        die("Error fetching attendance data: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
     }
 
-    $stmt->execute();
-    $attendance_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    die("Error fetching attendance data: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
-}
+    // Map status codes to labels
+    $status_labels = [
+        1 => "Present",
+        2 => "Absent",
+        3 => "Pending Submission Form",
+        4 => "Absent With MC",
+        5 => "Absent Because Family Matter",
+        6 => "Absent Because Natural Disasters",
+        7 => "Others"
+    ];
 
-// Map status codes to labels
-$status_labels = [
-    1 => "Present",
-    2 => "Absent",
-    3 => "Pending Submission Form",
-    4 => "Absent With MC",
-    5 => "Absent Because Family Matter",
-    6 => "Absent Because Natural Disasters",
-    7 => "Others"
-];
+    $labels = [];
+    $data = [];
 
-$labels = [];
-$data = [];
-
-foreach ($attendance_data as $row) {
-    $labels[] = $status_labels[$row['present']];
-    $data[] = $row['count'];
-}
-
-// Calculate attendance percentage for the student
-$presentValues = [1, 4]; // Present and Absent With MC are considered as present
-$attendanceThreshold = 75;
-
-$lowAttendanceAlert = false; // Default: no alert
-
-try {
-    // Query to calculate attendance percentage
-    $query = "SELECT
-                COUNT(CASE WHEN present IN (" . implode(',', $presentValues) . ") THEN 1 END) AS total_attendances,
-                COUNT(*) AS total_records
-              FROM attendance
-              WHERE ic_number = :ic_number";
-
-    $stmt = $pdo->prepare($query);
-    $stmt->execute(['ic_number' => $ic_number]);
-    $result = $stmt->fetch();
-
-    $totalAttendances = $result['total_attendances'] ?? 0;
-    $totalRecords = $result['total_records'] ?? 0;
-    $attendancePercentage = ($totalRecords > 0) ? ($totalAttendances / $totalRecords) * 100 : 0;
-
-    // Check if attendance is below the threshold
-    if ($attendancePercentage < $attendanceThreshold) {
-        $lowAttendanceAlert = true; // Trigger low attendance alert
-    }
-} catch (PDOException $e) {
-    die("Error calculating attendance percentage: " . $e->getMessage());
-}
-try {
-    $query = "
-        SELECT
-            a.date,
-            a.present
-        FROM attendance a
-        INNER JOIN users u ON a.user_id = u.id
-        WHERE u.ic_number = :ic_number
-    ";
-
-    if ($filter_month) {
-        $query .= " AND DATE_FORMAT(a.date, '%Y-%m') = :filter_month";
+    foreach ($attendance_data as $row) {
+        $labels[] = $status_labels[$row['present']];
+        $data[] = $row['count'];
     }
 
-    $query .= " ORDER BY a.date ASC";
+    // Calculate attendance percentage for the student
+    $presentValues = [1, 4]; // Present and Absent With MC are considered as present
+    $attendanceThreshold = 75;
 
-    $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':ic_number', $ic_number, PDO::PARAM_STR);
+    $lowAttendanceAlert = false; // Default: no alert
 
-    if ($filter_month) {
-        $stmt->bindParam(':filter_month', $filter_month, PDO::PARAM_STR);
+    try {
+        // Query to calculate attendance percentage
+        if($loggedInRole === 'Student'){
+            $query = "SELECT
+                        COUNT(CASE WHEN present IN (" . implode(',', $presentValues) . ") THEN 1 END) AS total_attendances,
+                        COUNT(*) AS total_records
+                    FROM attendance
+                    WHERE ic_number = :ic_number";
+
+            $stmt = $pdo->prepare($query);
+            $stmt->execute(['ic_number' => $ic_number]);
+            $result = $stmt->fetch();
+
+            $totalAttendances = $result['total_attendances'] ?? 0;
+            $totalRecords = $result['total_records'] ?? 0;
+            $attendancePercentage = ($totalRecords > 0) ? ($totalAttendances / $totalRecords) * 100 : 0;
+
+            // Check if attendance is below the threshold
+            $lowAttendanceAlert = "";
+            if ($attendancePercentage < $attendanceThreshold) {
+                $lowAttendanceAlert = true; // Trigger low attendance alert
+            }
+        }
+    } catch (PDOException $e) {
+        die("Error calculating attendance percentage: " . $e->getMessage());
     }
+    try {
+        $query = "
+            SELECT
+                a.date,
+                a.present
+            FROM attendance a
+            INNER JOIN users u ON a.user_id = u.id
+            WHERE u.ic_number = :ic_number
+        ";
 
-    $stmt->execute();
-    $attendance_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    die("Error fetching attendance data: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
-}
+        if ($filter_month) {
+            $query .= " AND DATE_FORMAT(a.date, '%Y-%m') = :filter_month";
+        }
+
+        $query .= " ORDER BY a.date ASC";
+
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':ic_number', $ic_number, PDO::PARAM_STR);
+
+        if ($filter_month) {
+            $stmt->bindParam(':filter_month', $filter_month, PDO::PARAM_STR);
+        }
+
+        $stmt->execute();
+        $attendance_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        die("Error fetching attendance data: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
+    }
 ?>
 
 
@@ -194,7 +202,7 @@ try {
     <!-- Pop-up notification for low attendance -->
     <?php if ($lowAttendanceAlert): ?>
         <div id="attendanceAlert" onclick="window.location.href='low-attendance.php';">
-            <strong>Alert:</strong> Your attendance is below the required threshold!
+            <strong>Alert:</strong> Your attendance is below the minimum requirement!
             <a href="low-attendance.php">Click here to view details.</a>
         </div>
     <?php endif; ?>
@@ -563,13 +571,40 @@ try {
                 ?>
 
                 <?php if ($filter_month): ?>
-                    <div class="container mt-4">
-                        <h3>Attendance Details for <?php echo htmlspecialchars($filter_month, ENT_QUOTES, 'UTF-8'); ?></h3>
+                <div class="container mt-4">
+                    <style>
+                        .table-container {
+                            max-height: 350px; /* Total height of the scrollable area */
+                            overflow-y: auto; /* Enable vertical scrolling */
+                        }
+
+                        .table {
+                            table-layout: fixed; /* Ensures consistent column widths */
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+
+                        .table th,
+                        .table td {
+                            text-align: center;
+                            box-sizing: border-box; /* Includes padding and borders in width calculation */
+                        }
+
+                        .table thead th {
+                            position: sticky;
+                            top: 0;
+                            background-color: #f8f9fa; /* Matches header background */
+                            z-index: 1; /* Keeps the header above the scrolling content */
+                        }
+                    </style>
+
+                    <h3>Attendance Details for <?php echo htmlspecialchars($filter_month, ENT_QUOTES, 'UTF-8'); ?></h3>
+                    <div class="table-container">
                         <table class="table table-bordered text-center">
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Status</th>
+                                    <th style="width: 50%;">Date</th>
+                                    <th style="width: 50%;">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -588,6 +623,8 @@ try {
                             </tbody>
                         </table>
                     </div>
+                </div>
+
                 <?php endif; ?>
             </td>
             <td>
@@ -730,7 +767,7 @@ try {
             responsive: true,
             plugins: {
                 legend: {
-                    position: 'top',
+                    position: 'bottom',
                 },
                 tooltip: {
                     callbacks: {
