@@ -38,7 +38,7 @@ foreach ($rows as $row) {
 // Fetch bookings data
 $bookingQuery = "
     SELECT
-        b.booking_id AS booking_id,
+        b.id AS booking_id,
         b.venue_id,
         b.start_time,
         b.end_time, -- Include end_time
