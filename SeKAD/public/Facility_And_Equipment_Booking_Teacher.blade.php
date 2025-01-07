@@ -182,6 +182,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <!-- Header End -->
 <!-- Venue Booking Form Start -->
+<?php    if ($role === 'Staff'): ?>
+    
 <div class="container2">
     <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Venue Booking Form</h4>
 
@@ -243,7 +245,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 </div>
 
-
+<?php endif; ?>
 <!-- Venue Booking Form End -->
     <!-- Venue Booking Start -->
     <?php    if ($role === 'Staff'): ?>
