@@ -10,7 +10,7 @@ body {
 h1 {
     text-align: center;
     font-size: 2.5rem;
-    color: #007bff; /* Primary color for the title */
+    color: #33383d; /* Primary color for the title */
     margin-top: 20px;
     font-weight: bold;
 }
@@ -37,7 +37,7 @@ h1 {
 
 /* Header toolbar styles */
 .fc-toolbar {
-    background-color: #007bff; /* Primary color for toolbar */
+    background-color: #05b9c7; /* Primary color for toolbar */
     color: #ffffff; /* White text */
     padding: 10px;
     border-radius: 8px; /* Rounded corners for the toolbar */
@@ -47,6 +47,7 @@ h1 {
 .fc-toolbar-title {
     font-size: 1.25rem;
     font-weight: bold;
+    color: #ffffff;
 }
 
 .fc-button {

@@ -291,112 +291,150 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                
      
 <!-- Calendar Start -->
+<?php
+    // Fetch venues from the database for calendar filter
+    try {
+        $stmt = $pdo->query("SELECT id, venue_name FROM venue");
+        $venues = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all venues as an associative array
+    } catch (PDOException $e) {
+        // Handle errors in fetching venues
+        die("Failed to fetch venues: " . $e->getMessage());
+    }
+?>
+
 <body>
-    <h2 style="text-align: center; margin: 20px 0;">Venue Booking Calendar</h2>
-    <div id="loading">Loading calendar...</div>
-    <div id="calendar"></div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-            var loadingEl = document.getElementById('loading');
+    <h1>Venue Booking Calendar</h1>
+        
+        <!-- Venue filter dropdown -->
+        <label for="venueFilter">Select Venue:</label>
+        <select id="venueFilter" class="form-control">
+            <option value="">All Venues</option>
+            <?php foreach ($venues as $venue): ?>
+                <option value="<?php echo htmlspecialchars($venue['id'], ENT_QUOTES, 'UTF-8'); ?>">
+                    <?php echo htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8'); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
 
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                showNonCurrentDates: false, // Hide dates outside the current month
-                events: function (fetchInfo, successCallback, failureCallback) {
-                    fetch('get_bookings.php')
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Failed to fetch events. Status: ' + response.status);
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            loadingEl.style.display = 'none'; // Hide loading indicator
-                            successCallback(data); // Pass events to the calendar
-                            handleLastRowVisibility(calendarEl); // Check for empty last row after events are loaded
-                        })
-                        .catch(error => {
-                            console.error('Error fetching events:', error);
-                            loadingEl.textContent = 'Failed to load calendar. Please try again later.';
-                            failureCallback(error);
+        <div id="loading">Loading calendar...</div>
+        <div id="calendar"></div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var calendarEl = document.getElementById('calendar');
+                var loadingEl = document.getElementById('loading');
+                var venueFilter = document.getElementById('venueFilter');
+
+                function fetchEvents(venueId) {
+                    return function (fetchInfo, successCallback, failureCallback) {
+                        fetch(`get_bookings.php?venue_id=${venueId || ''}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Failed to fetch events. Status: ' + response.status);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                loadingEl.style.display = 'none'; // Hide loading indicator
+                                successCallback(data);
+                            })
+                            .catch(error => {
+                                console.error('Error fetching events:', error);
+                                loadingEl.textContent = 'Failed to load calendar. Please try again later.';
+                                failureCallback(error);
+                            });
+                    };
+                }
+
+                venueFilter.addEventListener('change', function () {
+                    const selectedVenue = venueFilter.value;
+                    calendar.removeAllEventSources(); // Clear previous events
+                    calendar.addEventSource(fetchEvents(selectedVenue)); // Add new events based on venue
+                    calendar.refetchEvents(); // Refetch events
+                });
+
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    },
+                    showNonCurrentDates: false, // Hide dates outside the current month
+                    events: fetchEvents(venueFilter.value), 
+                    
+                    // Format event content to display time properly
+                    eventContent: function (info) {
+                        const startTime = new Date(info.event.start).toLocaleTimeString([], {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true, // Enables 'am/pm' format
                         });
-                },
-                eventMouseEnter: function (info) {
-                    var tooltip = document.createElement('div');
-                    tooltip.className = 'tooltip';
-                    tooltip.style.position = 'absolute';
-                    tooltip.style.backgroundColor = '#333';
-                    tooltip.style.color = '#fff';
-                    tooltip.style.padding = '10px';
-                    tooltip.style.borderRadius = '5px';
-                    tooltip.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
-                    tooltip.style.zIndex = '1000';
-                    tooltip.style.whiteSpace = 'pre-line';
 
-                    tooltip.innerHTML = `
-                        <div class="tooltip-header">Booking Details</div>
-                        <div class="tooltip-content">
-                            <strong>Venue:</strong> ${info.event.extendedProps.venue}<br>
-                            <strong>Start:</strong> ${info.event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}<br>
-                            <strong>End:</strong> ${info.event.end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </div>
-                    `;
+                        return {
+                            html: `<div>${startTime} (${info.event.title})</div>`, // Properly formatted time + title
+                        };
+                    },
 
-                    document.body.appendChild(tooltip);
+                    eventMouseEnter: function (info) {
+                        var tooltip = document.createElement('div');
+                        tooltip.className = 'tooltip';
+                        tooltip.innerHTML = `
+                        <div><strong>Booking Details</strong></div>
+                        <div><strong>Venue:</strong> ${info.event.extendedProps.venue}</div>
+                        <div><strong>From:</strong> ${info.event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</div>
+                        <div><strong>To:</strong> ${info.event.end ? info.event.end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : 'N/A'}</div>
+                        <div><strong>Booked by:</strong> ${info.event.extendedProps.booked_by}</div>
+                        `;
+                        document.body.appendChild(tooltip);
 
-                    // Position tooltip near mouse cursor
-                    document.addEventListener('mousemove', moveTooltip);
+                        function moveTooltip(e) {
+                            tooltip.style.left = `${e.pageX + 10}px`; // Offset tooltip from cursor
+                            tooltip.style.top = `${e.pageY + 10}px`;
+                        }
 
-                    function moveTooltip(e) {
-                        tooltip.style.left = `${e.pageX + 15}px`;
-                        tooltip.style.top = `${e.pageY + 15}px`;
+                        document.addEventListener('mousemove', moveTooltip);
+
+                        function removeTooltip() {
+                            tooltip.remove();
+                            document.removeEventListener('mousemove', moveTooltip);
+                            info.el.removeEventListener('mouseleave', removeTooltip);
+                        }
+
+                        info.el.addEventListener('mouseleave', removeTooltip);
+                    },
+                    eventColor: '#28a745',
+                    eventTextColor: '#ffffff',
+                    editable: false,
+                    navLinks: true,
+                    datesSet: function () {
+                        handleLastRowVisibility(calendarEl); // Check after each view change
                     }
+                });
 
-                    info.el.addEventListener('mouseleave', function () {
-                        document.body.removeChild(tooltip);
-                        document.removeEventListener('mousemove', moveTooltip);
-                    });
-                },
-                eventColor: '#28a745', // Green background for events
-                eventTextColor: '#ffffff', // White text for events
-                editable: false, // Disable drag-and-drop
-                navLinks: true, // Enable clickable day/week views
-                datesSet: function () {
-                    handleLastRowVisibility(calendarEl); // Check after each view change
+                calendar.render();
+
+                // Function to check and hide the last row dynamically
+                function handleLastRowVisibility(calendarElement) {
+                    // Wait for the calendar DOM to fully render
+                    setTimeout(() => {
+                        const rows = calendarElement.querySelectorAll('.fc-daygrid-body tr');
+                        if (rows.length > 0) {
+                            const lastRow = rows[rows.length - 1];
+                            const hasContent = Array.from(lastRow.querySelectorAll('.fc-day')).some(
+                                cell => cell.classList.contains('fc-daygrid-day') && cell.textContent.trim() !== ''
+                            );
+
+                            // Hide the last row if it contains no dates or events
+                            if (!hasContent) {
+                                lastRow.style.display = 'none';
+                            } else {
+                                lastRow.style.display = ''; // Ensure the row is visible if needed
+                            }
+                        }
+                    }, 10); // Small delay to ensure DOM is updated
                 }
             });
-
-            calendar.render();
-
-            // Function to check and hide the last row dynamically
-            function handleLastRowVisibility(calendarElement) {
-                // Wait for the calendar DOM to fully render
-                setTimeout(() => {
-                    const rows = calendarElement.querySelectorAll('.fc-daygrid-body tr');
-                    if (rows.length > 0) {
-                        const lastRow = rows[rows.length - 1];
-                        const hasContent = Array.from(lastRow.querySelectorAll('.fc-day')).some(
-                            cell => cell.classList.contains('fc-daygrid-day') && cell.textContent.trim() !== ''
-                        );
-
-                        // Hide the last row if it contains no dates or events
-                        if (!hasContent) {
-                            lastRow.style.display = 'none';
-                        } else {
-                            lastRow.style.display = ''; // Ensure the row is visible if needed
-                        }
-                    }
-                }, 10); // Small delay to ensure DOM is updated
-            }
-        });
-    </script>
-
+        </script>
 </body>
  <!-- Calendar End -->
 

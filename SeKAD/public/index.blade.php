@@ -164,40 +164,8 @@
     <meta content="" name="description">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-
-    <!-- css for low attendance alert -->
-    <style>
-        /* Styling for the pop-up notification */
-        #attendanceAlert {
-            display: none;
-            position: fixed;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%); /* Center it horizontally */
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 15px 30px;
-            border: 1px solid #f5c6cb;
-            border-radius: 5px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            z-index: 1000; /* Ensure it stays above other content */
-            transition: all 0.3s ease;
-        }
-
-        #attendanceAlert:hover {
-            background-color: #f5c6cb; /* Lighten on hover for a better user experience */
-            color: #471122;
-        }
-
-        #attendanceAlert a {
-            color: #721c24;
-            text-decoration: underline;
-            font-weight: bold;
-        }
-    </style>
+    <!-- Low Attendance css -->
+    <link href="css/lowAttend.css" rel="stylesheet">
 
     <!-- Pop-up notification for low attendance -->
     <?php if ($lowAttendanceAlert): ?>
