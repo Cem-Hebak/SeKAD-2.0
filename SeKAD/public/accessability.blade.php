@@ -302,7 +302,6 @@
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
     <script src="assets/global.js"></script>
-    <script src="js/language-persistence.js"></script>
 
     <script src="js/main.js"></script>
     <script type="text/javascript">

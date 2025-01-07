@@ -60,6 +60,9 @@ include('db_connection.php'); // Include database connection
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <link href="css/font-size.css" rel="stylesheet">
 </head>
 
 <body>
@@ -381,7 +384,7 @@ include('db_connection.php'); // Include database connection
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-
+    <script src="assets/global.js"></script>
     <script type="text/javascript">
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({

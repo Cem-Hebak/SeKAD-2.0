@@ -252,6 +252,10 @@ try {
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <link href="css/style.css" rel="stylesheet">
+
+    <link href="css/font-size.css" rel="stylesheet">
 </head>
 
 <body>
@@ -711,6 +715,7 @@ try {
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="assets/global.js"></script>
 
     <!-- Personal Attendance Javascript -->
     <script>
