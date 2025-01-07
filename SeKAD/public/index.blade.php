@@ -280,7 +280,7 @@ try {
                 <a href="register.blade.php" class="nav-item nav-link">Register</a>
                 <a href="profile.blade.php" class="nav-item nav-link">Profile</a>
                 <a href="counselStud.blade.php" class="nav-item nav-link">Counselling Session</a>
-                <a href="courses.html" class="nav-item nav-link">Courses</a>
+                <a href="AdminInsight.blade.php" class="nav-item nav-link">Admin Insight</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
