@@ -26,7 +26,38 @@ include('db_connection.php'); // Include database connection
     $goccupation = htmlspecialchars($_SESSION['goccupation'] ?? 'Not Applicable', ENT_QUOTES, 'UTF-8');
     $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
     $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
-
+    try {
+        // Prepare the query to count users by role
+        $query = "SELECT role, COUNT(*) AS count FROM users GROUP BY role";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+    
+        // Fetch results
+        $roleCounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Initialize default counts for roles
+        $counts = [
+            'Student' => 0,
+            'Teacher' => 0,
+            'Staff' => 0,
+            'Admin' => 0
+        ];
+    
+        // Populate counts from the database results
+        foreach ($roleCounts as $row) {
+            $role = $row['role'];
+            $count = $row['count'];
+            $counts[$role] = $count;
+        }
+    
+        
+    
+    } catch (PDOException $e) {
+        die("Error fetching role counts: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
+    }
+    
+    // Close the database connection
+    $pdo = null;
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +65,7 @@ include('db_connection.php'); // Include database connection
 
 <head>
     <meta charset="utf-8">
-    <title>Profile</title>
+    <title>Admin Insight</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -60,9 +91,9 @@ include('db_connection.php'); // Include database connection
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
 
-    <link href="css/font-size.css" rel="stylesheet">
+    <!-- Google Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -75,11 +106,10 @@ include('db_connection.php'); // Include database connection
     <!-- Spinner End -->
 
 
-    
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>eLEARNING</h2>
+            <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>SeKAD</h2>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
@@ -89,7 +119,6 @@ include('db_connection.php'); // Include database connection
                 <a href="index.blade.php" class="nav-item nav-link active">Home</a>
                 <a href="about.html" class="nav-item nav-link">About</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
-                <a href="attendanceRecord1.blade.php" class="nav-item nav-link">Attendance Record</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
@@ -98,8 +127,6 @@ include('db_connection.php'); // Include database connection
                         <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="404.html" class="dropdown-item">404 Page</a>
                         <a href="profile.blade.php" class="dropdown-item">Profile</a>
-                        <a href="setting.blade.php" class="dropdown-item">Setting</a>
-                        <a href="announce.blade.php" class="dropdown-item">Announcement</a>
                         <a href="login.blade.php" class="dropdown-item">Log In</a>
                         <a href="logout.blade.php" class="dropdown-item">Log Out</a>
                         <a href="register.blade.php" class="dropdown-item">Register</a>
@@ -112,6 +139,7 @@ include('db_connection.php'); // Include database connection
         </div>
     </nav>
     <!-- Navbar End -->
+
 
     <!-- Header Start -->
     <div class="container-fluid bg-primary py-5 mb-5 page-header">
@@ -136,162 +164,104 @@ include('db_connection.php'); // Include database connection
     </div>
     <!-- Header End -->
      
-    <div style="width: 90%; margin: 0 auto;">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 0;">Biodata</h4>
-        <a href="editProfile.blade.php" class="btn btn-primary py-md-3 px-md-5 animated slideInLeft" style="color: white;">Edit Profile</a>
+<!-- Admin Insight Start -->
+<div style="width: 90%; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
+    <!-- Table Section -->
+    <div style="width: 45%; background-color: #f9f9f9; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 0; color: #333;">Number of Users</h4>
+        </div>
+
+        <table class="table table-striped table-bordered" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: #03A9F4; color: white;">
+                    <th style="width:50%; padding: 8px; text-align: left;">Role</th>
+                    <th style="width:50%; padding: 8px; text-align: left;">Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($counts as $role => $count): ?>
+                    <tr>
+                        <td style="padding: 8px; display: flex; align-items: center;">
+                            <?php if ($role === 'Student'): ?>
+                                <i class="fas fa-user-graduate" style="margin-right: 10px; color: #4CAF50;"></i>
+                            <?php elseif ($role === 'Teacher'): ?>
+                                <i class="fas fa-chalkboard-teacher" style="margin-right: 10px; color: #F44336;"></i>
+                            <?php elseif ($role === 'Staff'): ?>
+                                <i class="fas fa-users-cog" style="margin-right: 10px; color: #FF9800;"></i>
+                            <?php elseif ($role === 'Admin'): ?>
+                                <i class="fas fa-user-shield" style="margin-right: 10px; color: #03A9F4;"></i>
+                            <?php endif; ?>
+                            <?php echo htmlspecialchars($role, ENT_QUOTES, 'UTF-8'); ?>
+                        </td>
+                        <td style="padding: 8px;"><?php echo htmlspecialchars($count, ENT_QUOTES, 'UTF-8'); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 
-    <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
-                                    <thead>
-                                        
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th style="width: 150px;">Name</th>
-                                            <td><?php echo $name; ?></td>
-                                            
-                                        </tr>
-                                         <tr>
-                                            <th style="width: 150px;">Date of Birth</th>
-                                            <td><?php echo htmlspecialchars($_SESSION['date_of_birth']); ?></td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 150px;">Gender</th>
-                                            <td><?php echo $gender; ?></td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 150px;">Identification Card Number</th>
-                                            <td><?php echo $ic_number; ?></td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 150px;">Nationality</th>
-                                            <td><?php echo $nationality; ?></td>
-                                           
-                                            
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 150px;">Address</th>
-                                            <td><?php echo $address; ?></td>
-                                            
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 150px;">Role</th>
-                                            <td><?php echo $role; ?></td>
-                                        
-                                            
-                                        </tr>
-                                        <?php    if ($role === 'Student'): ?>
-                                        <tr>
-                                            <th style="width: 150px;">Class</th>
-                                            <td><?php echo $class; ?></td>
-                                        </tr>
+    <!-- Chart Section -->
+    <div style="width: 50%; background-color: #f9f9f9; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <canvas id="userChart" style="width: 100%; max-width: 600px;"></canvas>
+    </div>
+</div>
 
-                                        <?php    elseif ($role === 'Teacher'): ?>
-                                            <tr>
-                                            <th style="width: 150px;">Class Teacher</th>
-                                            <td><?php echo $class; ?></td>
-                                            </tr>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- For Font Awesome Icons -->
+<script>
+    // Prepare the data for the chart
+    const userRoles = <?php echo json_encode(array_keys($counts), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+    const userCounts = <?php echo json_encode(array_values($counts), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
 
-                                        <?php    elseif ($role === 'Staff'): ?>
-                                        <tr>
-                                        <th style="width: 150px;">Location</th>
-                                        <td><?php echo $class; ?></td>
-                                        </tr>
+    // Get the chart canvas
+    const ctx = document.getElementById('userChart').getContext('2d');
 
-                                        <?php    elseif ($role === 'Admin'): ?>
-                                        <?php endif; ?>
+    // Create the chart
+    const userChart = new Chart(ctx, {
+        type: 'pie', // Specify the chart type
+        data: {
+            labels: userRoles, // Roles as labels
+            datasets: [{
+                label: 'Number of Users',
+                data: userCounts, // User counts as data
+                backgroundColor: [
+                    '#4CAF50', // Student
+                    '#F44336', // Teacher
+                    '#FF9800', // Staff
+                    '#03A9F4'  // Admin
+                ],
+                borderColor: ['white'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            return `${label}: ${value}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+<!-- Admin Insight End -->
 
-                                        <tr>
-                                            <th style="width: 150px;">Contact</th>
-                                            <td><?php echo $mobilenumber; ?></td>
-                                        </tr>
-
-                                        <tr>
-                                            <th style="width: 150px;">Email</th>
-                                            <td><?php echo $email; ?></td>
-                                        </tr>
-                                        
-
-
-                                        </tbody>
-                                    </table>
-                                    </div>
-                                
-
-                                    <div style="width: 90%; margin: 0 auto;">
-    <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Family Information</h4>
-    <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
-                                    <thead>
-                                        
-                                    </thead>
-                                    <tbody>
-                                         <tr>
-                                            <th style="width: 150px;">Father's Name</th>
-                                            <td><?php echo $fname; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 150px;">Father's Contact</th>
-                                            <td><?php echo $fcontact; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 150px;">Father's Occupation</th>
-                                            <td><?php echo $foccupation; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 150px;">Mother's Name</th>
-                                            <td><?php echo $mname; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 150px;">Mother's Contact</th>
-                                            <td><?php echo $mcontact; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 150px;">Mother's Occupation</th>
-                                            <td><?php echo $moccupation; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 150px;">Guardian's Name</th>
-                                            <td><?php echo $gname; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 150px;">Guardian's Contact</th>
-                                            <td><?php echo $gcontact; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 150px;">Guardian's Occupation</th>
-                                            <td><?php echo $goccupation; ?></td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
-                                    </div>
-
-                                    <div style="width: 90%; margin: 0 auto;">
-    <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Health Information</h4>
-    <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
-                                    <thead>
-                                        
-                                    </thead>
-                                    <tbody>
-                                         <tr>
-                                            <th style="width: 150px;">Blood Type</th>
-                                            <td><?php echo $blood_type; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 150px;">Allergies</th>
-                                            <td><?php echo $allergies; ?></td>
-                                        </tr>
-                                        
-                                    </tbody>
-                                    </table>
-                                    </div>
-
-                                  
-    <!-- Team End -->
-
+    
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
@@ -384,7 +354,6 @@ include('db_connection.php'); // Include database connection
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="assets/global.js"></script>
     <script type="text/javascript">
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({

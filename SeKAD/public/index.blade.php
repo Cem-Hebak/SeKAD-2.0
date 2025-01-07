@@ -228,6 +228,10 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <link href="css/style.css" rel="stylesheet">
+
+    <link href="css/font-size.css" rel="stylesheet">
 </head>
 
 <body>
@@ -256,7 +260,7 @@
                 <a href="register.blade.php" class="nav-item nav-link">Register</a>
                 <a href="profile.blade.php" class="nav-item nav-link">Profile</a>
                 <a href="counselStud.blade.php" class="nav-item nav-link">Counselling Session</a>
-                <a href="courses.html" class="nav-item nav-link">Courses</a>
+                <a href="AdminInsight.blade.php" class="nav-item nav-link">Admin Insight</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
@@ -539,13 +543,40 @@
                 ?>
 
                 <?php if ($filter_month): ?>
-                    <div class="container mt-4">
-                        <h3>Attendance Details for <?php echo htmlspecialchars($filter_month, ENT_QUOTES, 'UTF-8'); ?></h3>
+                <div class="container mt-4">
+                    <style>
+                        .table-container {
+                            max-height: 350px; /* Total height of the scrollable area */
+                            overflow-y: auto; /* Enable vertical scrolling */
+                        }
+
+                        .table {
+                            table-layout: fixed; /* Ensures consistent column widths */
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+
+                        .table th,
+                        .table td {
+                            text-align: center;
+                            box-sizing: border-box; /* Includes padding and borders in width calculation */
+                        }
+
+                        .table thead th {
+                            position: sticky;
+                            top: 0;
+                            background-color: #f8f9fa; /* Matches header background */
+                            z-index: 1; /* Keeps the header above the scrolling content */
+                        }
+                    </style>
+
+                    <h3>Attendance Details for <?php echo htmlspecialchars($filter_month, ENT_QUOTES, 'UTF-8'); ?></h3>
+                    <div class="table-container">
                         <table class="table table-bordered text-center">
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Status</th>
+                                    <th style="width: 50%;">Date</th>
+                                    <th style="width: 50%;">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -564,6 +595,8 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+
                 <?php endif; ?>
             </td>
             <td>
@@ -687,6 +720,7 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="assets/global.js"></script>
 
     <!-- Personal Attendance Javascript -->
     <script>
@@ -706,7 +740,7 @@
             responsive: true,
             plugins: {
                 legend: {
-                    position: 'top',
+                    position: 'bottom',
                 },
                 tooltip: {
                     callbacks: {
