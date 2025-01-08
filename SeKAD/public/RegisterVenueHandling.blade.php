@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $capacity = (int) $_POST['capacity'];
     $venue_picture = $_FILES['venue_picture']['name'];
     $venue_picture_tmp = $_FILES['venue_picture']['tmp_name'];
+    $venue_type = htmlspecialchars($_POST['venue_type'], ENT_QUOTES, 'UTF-8');
 
     // Check if file upload is valid
     $target_dir = "uploads/";
@@ -42,10 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert venue details
     try {
         // Insert venue into the database
-        $stmt = $pdo->prepare("INSERT INTO venue (venue_name, venue_picture, capacity) VALUES (:venue_name, :venue_picture, :capacity)");
+        $stmt = $pdo->prepare("INSERT INTO venue (venue_name, venue_picture, capacity, venue_type) VALUES (:venue_name, :venue_picture, :capacity, :venue_type)");
         $stmt->bindParam(':venue_name', $venue_name);
         $stmt->bindParam(':venue_picture', $target_file);
         $stmt->bindParam(':capacity', $capacity);
+        $stmt->bindParam(':venue_type', $venue_type);
         $stmt->execute();
 
         // Get the ID of the newly inserted venue
