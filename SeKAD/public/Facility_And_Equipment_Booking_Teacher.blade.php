@@ -109,6 +109,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
 
+    <!-- Venue Details -->
+    <link rel="stylesheet" href="css/venueBook.css">    
+
     <!-- Calendar -->
     <link rel="stylesheet" href="css/calendar.css">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
@@ -256,41 +259,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
     </div> 
     <div class="container-xxl py-5">
-     <div class="container">
-     <div class="row g-4">
-     <?php foreach ($venues as $venue): ?>
-    <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="service-item text-center shadow rounded overflow-hidden position-relative" style="width: 400px; height: 300px;">
-            <a target="_blank" style="text-decoration: none; color: inherit;">
-                <div class="p-4" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-                    <div class="img-container position-relative" style="height: 60%; overflow: hidden;">
-                        <img class="img-fluid w-100 h-100" src="<?php echo htmlspecialchars($venue['venue_picture'], ENT_QUOTES, 'UTF-8'); ?>" alt="" style="object-fit: cover; border-radius: 10px;">
+        <div class="container">
+            <div class="row g-4">
+                <?php foreach ($venues as $index => $venue): ?>
+                    <div 
+                        class="col-lg-4 col-sm-6 venue-card" 
+                        data-index="<?php echo $index; ?>" 
+                        data-name="<?php echo htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8'); ?>" 
+                        data-picture="<?php echo htmlspecialchars($venue['venue_picture'], ENT_QUOTES, 'UTF-8'); ?>" 
+                        data-facilities='<?php echo json_encode($venue['facilities'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>'
+                    >
+                        <div class="service-item">
+                            <div class="img-container">
+                                <img class="img-fluid" src="<?php echo htmlspecialchars($venue['venue_picture'], ENT_QUOTES, 'UTF-8'); ?>" alt="">
+                            </div>
+                            <h5 class="venue-name"><?php echo htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8'); ?></h5>
+                        </div>
                     </div>
-                    <div class="content mt-3">
-                        <h5 class="mb-3" style="color: #2c3e50;"><?php echo htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8'); ?></h5>
-                        <ul style="list-style: none; padding: 0; text-align: left;">
-                            <?php foreach ($venue['facilities'] as $facility): ?>
-                                <li>
-                                    <h6><?php echo htmlspecialchars($facility['facility_name'], ENT_QUOTES, 'UTF-8'); ?>:
-                                    <?php echo htmlspecialchars($facility['quantity'], ENT_QUOTES, 'UTF-8'); ?> </h6>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                </div>
-            </a>
+                <?php endforeach; ?>
+            </div>
         </div>
     </div>
-<?php endforeach; ?>
 
-</div>
-
-</div>
-
+    <!-- Modal -->
+    <div id="venueModal" class="custom-modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-body">
+                <div class="img-container">
+                    <img id="modalVenuePicture" class="img-fluid" alt="">
+                </div>
+                <h5 id="modalVenueName"></h5>
+                <ul id="modalVenueFacilities"></ul>
+            </div>
+        </div>
     </div>
-</div>
 
-               
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const venueCards = document.querySelectorAll('.venue-card');
+            const modal = document.getElementById('venueModal');
+            const closeModalBtn = document.querySelector('.close-btn');
+            const modalVenuePicture = document.getElementById('modalVenuePicture');
+            const modalVenueName = document.getElementById('modalVenueName');
+            const modalVenueFacilities = document.getElementById('modalVenueFacilities');
+
+            // Open Modal and Populate Data
+            venueCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const venueName = card.getAttribute('data-name');
+                    const venuePicture = card.getAttribute('data-picture');
+                    const facilities = JSON.parse(card.getAttribute('data-facilities'));
+
+                    modalVenueName.textContent = venueName;
+                    modalVenuePicture.src = venuePicture;
+
+                    modalVenueFacilities.innerHTML = '';
+                    facilities.forEach(facility => {
+                        const li = document.createElement('li');
+                        li.textContent = `${facility.facility_name}: ${facility.quantity}`;
+                        modalVenueFacilities.appendChild(li);
+                    });
+
+                    modal.style.display = 'flex';
+                });
+            });
+
+            // Close Modal
+            closeModalBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            // Close Modal on Click Outside Content
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+        </script>
      
 <!-- Calendar Start -->
 <?php

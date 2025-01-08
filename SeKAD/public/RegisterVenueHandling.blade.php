@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $venue_type = htmlspecialchars($_POST['venue_type'], ENT_QUOTES, 'UTF-8');
 
     // Check if file upload is valid
-    $target_dir = "uploads/";
+    $target_dir = "uploads/venue/";
     $target_file = $target_dir . basename($venue_picture);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
