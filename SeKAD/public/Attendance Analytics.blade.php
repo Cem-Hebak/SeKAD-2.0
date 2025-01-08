@@ -132,7 +132,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Initialize database connection
-$link = mysqli_connect("localhost", "root", "", "admin1");
+$link = mysqli_connect("localhost", "root", "", "admin");
 
 // Check connection
 if (!$link) {

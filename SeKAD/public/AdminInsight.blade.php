@@ -50,7 +50,13 @@ include('db_connection.php'); // Include database connection
             $counts[$role] = $count;
         }
     
-        
+         // Prepare the query to count venues by type
+    $venueQuery = "SELECT venue_type AS Venue_Type, COUNT(*) AS Count FROM venue GROUP BY venue_type";
+    $venueStmt = $pdo->prepare($venueQuery);
+    $venueStmt->execute();
+
+    // Fetch venue type counts
+    $venueCounts = $venueStmt->fetchAll(PDO::FETCH_ASSOC);
     
     } catch (PDOException $e) {
         die("Error fetching role counts: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
@@ -166,49 +172,97 @@ include('db_connection.php'); // Include database connection
      
 <!-- Admin Insight Start -->
 <div style="width: 90%; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
-    <!-- Table Section -->
-    <div style="width: 45%; background-color: #f9f9f9; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+  <table  style="width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 00 4px 8px rgba(0, 0, 0, .1);">
+    <tr>
+      <td style="padding: 16px; text-align: left; vertical-align: top; width: 50%;">
+        <div style="background-color: #f9f9f9; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+          <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 0; color: #333;">Number of Users</h4>
-        </div>
+          </div>
 
-        <table class="table table-striped table-bordered" style="width: 100%; border-collapse: collapse;">
+          <table class="table table-striped table-bordered" style="width: 100%; border-collapse: collapse;">
             <thead>
-                <tr style="background-color: #03A9F4; color: white;">
-                    <th style="width:50%; padding: 8px; text-align: left;">Role</th>
-                    <th style="width:50%; padding: 8px; text-align: left;">Count</th>
-                </tr>
+              <tr style="background-color: #05b9c7; color: white;">
+                <th style="width:50%; padding: 12px; text-align: left;">Role</th>
+                <th style="width:50%; padding: 12px; text-align: left;">Count</th>
+              </tr>
             </thead>
             <tbody>
-                <?php foreach ($counts as $role => $count): ?>
-                    <tr>
-                        <td style="padding: 8px; display: flex; align-items: center;">
-                            <?php if ($role === 'Student'): ?>
-                                <i class="fas fa-user-graduate" style="margin-right: 10px; color: #4CAF50;"></i>
-                            <?php elseif ($role === 'Teacher'): ?>
-                                <i class="fas fa-chalkboard-teacher" style="margin-right: 10px; color: #F44336;"></i>
-                            <?php elseif ($role === 'Staff'): ?>
-                                <i class="fas fa-users-cog" style="margin-right: 10px; color: #FF9800;"></i>
-                            <?php elseif ($role === 'Admin'): ?>
-                                <i class="fas fa-user-shield" style="margin-right: 10px; color: #03A9F4;"></i>
-                            <?php endif; ?>
-                            <?php echo htmlspecialchars($role, ENT_QUOTES, 'UTF-8'); ?>
-                        </td>
-                        <td style="padding: 8px;"><?php echo htmlspecialchars($count, ENT_QUOTES, 'UTF-8'); ?></td>
-                    </tr>
-                <?php endforeach; ?>
+              <?php foreach ($counts as $role => $count): ?>
+                <tr>
+                  <td style="padding: 12px; display: flex; align-items: center;">
+                    <?php if ($role === 'Student'): ?>
+                      <i class="fas fa-user-graduate" style="margin-right: 10px; color: #4CAF50;"></i>
+                    <?php elseif ($role === 'Teacher'): ?>
+                      <i class="fas fa-chalkboard-teacher" style="margin-right: 10px; color: #F44336;"></i>
+                    <?php elseif ($role === 'Staff'): ?>
+                      <i class="fas fa-users-cog" style="margin-right: 10px; color: #FF9800;"></i>
+                    <?php elseif ($role === 'Admin'): ?>
+                      <i class="fas fa-user-shield" style="margin-right: 10px; color: #03A9F4;"></i>
+                    <?php endif; ?>
+                    <?php echo htmlspecialchars($role, ENT_QUOTES, 'UTF-8'); ?>
+                  </td>
+                  <td style="padding: 12px;"><?php echo htmlspecialchars($count, ENT_QUOTES, 'UTF-8'); ?></td>
+                </tr>
+              <?php endforeach; ?>
             </tbody>
-        </table>
-    </div>
+          </table>
+        </div>
+      </td>
+
+      <td rowspan="2" style="padding: 16px; text-align: left; vertical-align: top; width: 50%;">
+        <div style="background-color: #f9f9f9; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+          <label for="chartType" class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 10px; color: #333;">Select Chart Type:</label>
+          <select id="chartType" style="width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #ccc; margin-bottom: 20px;">
+            <option value="pie">Pie</option>
+            <option value="bar">Bar</option>
+            <option value="line">Line</option>
+            <option value="doughnut">Doughnut</option>
+          </select>
+          <canvas id="userChart" style="width: 100%; height: 200px;"></canvas>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 16px; text-align: left; vertical-align: top;">
+        <div style="width: 100%; display: flex; justify-content: space-between; gap: 20px;">
+          <div style="width: 100%; background-color: #f9f9f9; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 0; color: #333;">Number of Venues</h4>
+            <table class="table table-striped table-bordered" style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background-color: #05b9c7; color: white;">
+                  <th style="width:50%; padding: 12px; text-align: left;">Venue Type</th>
+                  <th style="width:50%; padding: 12px; text-align: left;">Count</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($venueCounts as $venue): ?>
+                  <tr>
+                    <td style="padding: 12px;"><?php echo htmlspecialchars($venue['Venue_Type'], ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td style="padding: 12px;"><?php echo htmlspecialchars($venue['Count'], ENT_QUOTES, 'UTF-8'); ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+<!-- Admin Insight End -->
+
+    <!-- Table Section -->
+    
 
     <!-- Chart Section -->
-    <div style="width: 50%; background-color: #f9f9f9; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <canvas id="userChart" style="width: 100%; max-width: 600px;"></canvas>
-    </div>
-</div>
+   
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- For Font Awesome Icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
 <script>
     // Prepare the data for the chart
     const userRoles = <?php echo json_encode(array_keys($counts), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
@@ -217,19 +271,22 @@ include('db_connection.php'); // Include database connection
     // Get the chart canvas
     const ctx = document.getElementById('userChart').getContext('2d');
 
-    // Create the chart
-    const userChart = new Chart(ctx, {
-        type: 'pie', // Specify the chart type
+    // Initial chart type
+    let currentChartType = 'pie';
+
+    // Create the chart instance
+    let userChart = new Chart(ctx, {
+        type: currentChartType,
         data: {
-            labels: userRoles, // Roles as labels
+            labels: userRoles,
             datasets: [{
                 label: 'Number of Users',
-                data: userCounts, // User counts as data
+                data: userCounts,
                 backgroundColor: [
-                    '#4CAF50', // Student
-                    '#F44336', // Teacher
-                    '#FF9800', // Staff
-                    '#03A9F4'  // Admin
+                    '#4CAF50',
+                    '#F44336',
+                    '#FF9800',
+                    '#03A9F4'
                 ],
                 borderColor: ['white'],
                 borderWidth: 1
@@ -258,10 +315,73 @@ include('db_connection.php'); // Include database connection
             }
         }
     });
+
+    // Add event listener to dynamically change chart type
+    document.getElementById('chartType').addEventListener('change', function () {
+        const newChartType = this.value;
+
+        // Destroy the current chart instance
+        userChart.destroy();
+
+        // Create a new chart with the selected type
+        userChart = new Chart(ctx, {
+            type: newChartType,
+            data: {
+                labels: userRoles,
+                datasets: [{
+                    label: 'Number of Users',
+                    data: userCounts,
+                    backgroundColor: [
+                        '#4CAF50',
+                        '#F44336',
+                        '#FF9800',
+                        '#03A9F4'
+                    ],
+                    borderColor: ['white'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                return `${label}: ${value}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        currentChartType = newChartType;
+    });
 </script>
 <!-- Admin Insight End -->
 
+<!-- user chart end -->
+
+
+
+
     
+<!-- Admin Insight End -->
+
+                            </div>  
+    
+
+                           
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">

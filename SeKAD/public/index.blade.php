@@ -459,158 +459,158 @@
         </div>
     </div>
     <!-- Service End -->
-
+    <?php    if ($role === 'Student'): ?>
     <!-- Personal Attendance Chart Start -->
-    <div class="container mt-5">
-        <h2>Personal Analytics</h2>
-        <style>
-            /* Ensure all table columns have the same width */
-            .table th, .table td {
-                 /* Center align the text and buttons */
-                vertical-align: middle; /* Center align content vertically */
-                width: 20%; /* Set equal width for all columns */
-            }
+        <div class="container mt-5">
+            <h2>Personal Analytics</h2>
+            <style>
+                /* Ensure all table columns have the same width */
+                .table th, .table td {
+                    /* Center align the text and buttons */
+                    vertical-align: middle; /* Center align content vertically */
+                    width: 20%; /* Set equal width for all columns */
+                }
 
-            /* Add some spacing and styling for the table */
-            .table {
-                table-layout: fixed; /* Ensures consistent column width */
-                width: 100%;
-            }
-        </style>
-        <table class="table table-striped table-bordered">
+                /* Add some spacing and styling for the table */
+                .table {
+                    table-layout: fixed; /* Ensures consistent column width */
+                    width: 100%;
+                }
+            </style>
+            <table class="table table-striped table-bordered">
 
-        <tr>
-            <td colspan="2">
-                <form method="GET" class="mb-4">
-                    <label for="month" class="form-label">Filter by Month:</label>
-                    <input type="month" id="month" name="filter_month" class="form-control"
-                        value="<?php echo isset($_GET['filter_month']) ? htmlspecialchars($_GET['filter_month'], ENT_QUOTES, 'UTF-8') : ''; ?>">
-
+            <tr>
+                <td colspan="2">
                     <form method="GET" class="mb-4">
-                        <label for="status_filter" class="form-label mt-3">Filter by Status:</label>
-                        <select id="status_filter" name="status_filter" class="form-select">
-                            <option value="both" <?php echo (isset($_GET['status_filter']) && $_GET['status_filter'] === 'both') ? 'selected' : ''; ?>>Both</option>
-                            <option value="present" <?php echo (isset($_GET['status_filter']) && $_GET['status_filter'] === 'present') ? 'selected' : ''; ?>>Present Only</option>
-                            <option value="absent" <?php echo (isset($_GET['status_filter']) && $_GET['status_filter'] === 'absent') ? 'selected' : ''; ?>>Absent Only</option>
-                        </select>
+                        <label for="month" class="form-label">Filter by Month:</label>
+                        <input type="month" id="month" name="filter_month" class="form-control"
+                            value="<?php echo isset($_GET['filter_month']) ? htmlspecialchars($_GET['filter_month'], ENT_QUOTES, 'UTF-8') : ''; ?>">
 
-                        <button type="submit" class="btn btn-primary mt-2">Filter</button>
-                    </form>
-            </td>
-        </tr>
-        <tr>
-            <td>
+                        <form method="GET" class="mb-4">
+                            <label for="status_filter" class="form-label mt-3">Filter by Status:</label>
+                            <select id="status_filter" name="status_filter" class="form-select">
+                                <option value="both" <?php echo (isset($_GET['status_filter']) && $_GET['status_filter'] === 'both') ? 'selected' : ''; ?>>Both</option>
+                                <option value="present" <?php echo (isset($_GET['status_filter']) && $_GET['status_filter'] === 'present') ? 'selected' : ''; ?>>Present Only</option>
+                                <option value="absent" <?php echo (isset($_GET['status_filter']) && $_GET['status_filter'] === 'absent') ? 'selected' : ''; ?>>Absent Only</option>
+                            </select>
+
+                            <button type="submit" class="btn btn-primary mt-2">Filter</button>
+                        </form>
+                </td>
+            </tr>
+            <tr>
+                <td>
 
 
 
-                <?php
-                // Apply status filter
-                $status_filter = isset($_GET['status_filter']) ? $_GET['status_filter'] : 'both';
-                $status_condition = '';
+                    <?php
+                    // Apply status filter
+                    $status_filter = isset($_GET['status_filter']) ? $_GET['status_filter'] : 'both';
+                    $status_condition = '';
 
-                if ($status_filter === 'present') {
-                    $status_condition = " AND a.present = 1";
-                } elseif ($status_filter === 'absent') {
-                    $status_condition = " AND a.present != 1";
-                }
+                    if ($status_filter === 'present') {
+                        $status_condition = " AND a.present = 1";
+                    } elseif ($status_filter === 'absent') {
+                        $status_condition = " AND a.present != 1";
+                    }
 
-                // Update query to include status filter
-                $query = "
-                    SELECT
-                        a.date,
-                        a.present
-                    FROM attendance a
-                    INNER JOIN users u ON a.user_id = u.id
-                    WHERE u.ic_number = :ic_number
-                ";
+                    // Update query to include status filter
+                    $query = "
+                        SELECT
+                            a.date,
+                            a.present
+                        FROM attendance a
+                        INNER JOIN users u ON a.user_id = u.id
+                        WHERE u.ic_number = :ic_number
+                    ";
 
-                if ($filter_month) {
-                    $query .= " AND DATE_FORMAT(a.date, '%Y-%m') = :filter_month";
-                }
+                    if ($filter_month) {
+                        $query .= " AND DATE_FORMAT(a.date, '%Y-%m') = :filter_month";
+                    }
 
-                $query .= $status_condition;
-                $query .= " ORDER BY a.date ASC";
+                    $query .= $status_condition;
+                    $query .= " ORDER BY a.date ASC";
 
-                $stmt = $pdo->prepare($query);
-                $stmt->bindParam(':ic_number', $ic_number, PDO::PARAM_STR);
+                    $stmt = $pdo->prepare($query);
+                    $stmt->bindParam(':ic_number', $ic_number, PDO::PARAM_STR);
 
-                if ($filter_month) {
-                    $stmt->bindParam(':filter_month', $filter_month, PDO::PARAM_STR);
-                }
+                    if ($filter_month) {
+                        $stmt->bindParam(':filter_month', $filter_month, PDO::PARAM_STR);
+                    }
 
-                $stmt->execute();
-                $attendance_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                ?>
+                    $stmt->execute();
+                    $attendance_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    ?>
 
-                <?php if ($filter_month): ?>
-                <div class="container mt-4">
-                    <style>
-                        .table-container {
-                            max-height: 350px; /* Total height of the scrollable area */
-                            overflow-y: auto; /* Enable vertical scrolling */
-                        }
+                    <?php if ($filter_month): ?>
+                    <div class="container mt-4">
+                        <style>
+                            .table-container {
+                                max-height: 350px; /* Total height of the scrollable area */
+                                overflow-y: auto; /* Enable vertical scrolling */
+                            }
 
-                        .table {
-                            table-layout: fixed; /* Ensures consistent column widths */
-                            width: 100%;
-                            border-collapse: collapse;
-                        }
+                            .table {
+                                table-layout: fixed; /* Ensures consistent column widths */
+                                width: 100%;
+                                border-collapse: collapse;
+                            }
 
-                        .table th,
-                        .table td {
-                            text-align: center;
-                            box-sizing: border-box; /* Includes padding and borders in width calculation */
-                        }
+                            .table th,
+                            .table td {
+                                text-align: center;
+                                box-sizing: border-box; /* Includes padding and borders in width calculation */
+                            }
 
-                        .table thead th {
-                            position: sticky;
-                            top: 0;
-                            background-color: #f8f9fa; /* Matches header background */
-                            z-index: 1; /* Keeps the header above the scrolling content */
-                        }
-                    </style>
+                            .table thead th {
+                                position: sticky;
+                                top: 0;
+                                background-color: #f8f9fa; /* Matches header background */
+                                z-index: 1; /* Keeps the header above the scrolling content */
+                            }
+                        </style>
 
-                    <h3>Attendance Details for <?php echo htmlspecialchars($filter_month, ENT_QUOTES, 'UTF-8'); ?></h3>
-                    <div class="table-container">
-                        <table class="table table-bordered text-center">
-                            <thead>
-                                <tr>
-                                    <th style="width: 50%;">Date</th>
-                                    <th style="width: 50%;">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (!empty($attendance_data)): ?>
-                                    <?php foreach ($attendance_data as $row): ?>
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($row['date'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                            <td><?php echo htmlspecialchars($status_labels[$row['present']], ENT_QUOTES, 'UTF-8'); ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
+                        <h3>Attendance Details for <?php echo htmlspecialchars($filter_month, ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <div class="table-container">
+                            <table class="table table-bordered text-center">
+                                <thead>
                                     <tr>
-                                        <td colspan="2">No attendance data found for the selected filters.</td>
+                                        <th style="width: 50%;">Date</th>
+                                        <th style="width: 50%;">Status</th>
                                     </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($attendance_data)): ?>
+                                        <?php foreach ($attendance_data as $row): ?>
+                                            <tr>
+                                                <td><?php echo htmlspecialchars($row['date'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                                <td><?php echo htmlspecialchars($status_labels[$row['present']], ENT_QUOTES, 'UTF-8'); ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="2">No attendance data found for the selected filters.</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
 
-                <?php endif; ?>
-            </td>
-            <td>
-                <div class="chart-container" style="position: center; height:75vh; width:100%; padding: 10%;">
-                    <canvas id="attendanceChart"></canvas>
-                </div>
-            </td>
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <div class="chart-container" style="position: center; height:75vh; width:100%; padding: 10%;">
+                        <canvas id="attendanceChart"></canvas>
+                    </div>
+                </td>
 
-        </tr>
-    </table>
-    </div>
+            </tr>
+        </table>
+        </div>
 
     <!-- Personal Attendance Chart End -->
-
+    <?php endif; ?>
 
 
 
