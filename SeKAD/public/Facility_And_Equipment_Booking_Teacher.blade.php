@@ -1,29 +1,30 @@
 <?php
-session_start(); // Start the session
-include('db_connection.php'); // Include database connection
+    session_start(); // Start the session
+    include('db_connection.php'); // Include database connection
 
-// Retrieve user data from the session
-$name = htmlspecialchars($_SESSION['name'] ?? '', ENT_QUOTES, 'UTF-8');
-$role = htmlspecialchars($_SESSION['role'] ?? '', ENT_QUOTES, 'UTF-8');
+    // Retrieve user data from the session
+    $name = htmlspecialchars($_SESSION['name'] ?? '', ENT_QUOTES, 'UTF-8');
+    $role = htmlspecialchars($_SESSION['role'] ?? '', ENT_QUOTES, 'UTF-8');
 
-// Fetch venues and facilities with a JOIN query
-$query = "
-    SELECT v.id AS venue_id, v.venue_picture, v.venue_name, vf.facility_name, vf.quantity
+    // Fetch venues and facilities with a JOIN query
+    $query = "
+    SELECT v.id AS venue_id, v.venue_picture, v.venue_name, v.venue_type, vf.facility_name, vf.quantity
     FROM venue v
     LEFT JOIN venue_facilities vf ON v.id = vf.venue_id
-";
-$stmt = $pdo->prepare($query);
-$stmt->execute();
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    ";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Group the results by venue
-$venues = [];
-foreach ($rows as $row) {
+    // Group the results by venue
+    $venues = [];
+    foreach ($rows as $row) {
     $venue_id = $row['venue_id'];
     if (!isset($venues[$venue_id])) {
         $venues[$venue_id] = [
             'venue_picture' => $row['venue_picture'],
             'venue_name' => $row['venue_name'],
+            'venue_type' => $row['venue_type'] ?? 'Unknown',
             'facilities' => [],
         ];
     }
@@ -33,47 +34,56 @@ foreach ($rows as $row) {
             'quantity' => $row['quantity'],
         ];
     }
-}
+    }
 
-$error_message = ''; // Initialize error message variable
+    $error_message = ''; // Initialize error message variable
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $venue_id = $_POST['venue_id'];
-    $start_time = $_POST['start_time'];
-    $end_time = $_POST['end_time'];
-    $booked_by = $_POST['booked_by'];
-    $subject = $_POST['subject'];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $venue_id = $_POST['venue_id'];
+        $start_time = $_POST['start_time'];
+        $end_time = $_POST['end_time'];
+        $booked_by = $_POST['booked_by'];
+        $subject = $_POST['subject'];
 
-    // Check if the venue is already booked at the selected time
-    $stmt = $pdo->prepare("SELECT * FROM booking 
-                           WHERE venue_id = :venue_id 
-                           AND ((start_time < :end_time AND end_time > :start_time))");
-    $stmt->execute([
-        ':venue_id' => $venue_id,
-        ':start_time' => $start_time,
-        ':end_time' => $end_time,
-    ]);
-    $existing_booking = $stmt->fetch();
-
-    // If an overlapping booking exists, set the error message
-    if ($existing_booking) {
-        $error_message = "The selected time for the venue is already booked.";
-    } else {
-        // If no conflict, proceed with the booking
-        $stmt = $pdo->prepare("INSERT INTO booking (venue_id, start_time, end_time, booked_by, Subject) 
-                               VALUES (:venue_id, :start_time, :end_time, :booked_by, :subject)");
+        // Check if the venue is already booked at the selected time
+        $stmt = $pdo->prepare("SELECT * FROM booking 
+                            WHERE venue_id = :venue_id 
+                            AND ((start_time < :end_time AND end_time > :start_time))");
         $stmt->execute([
             ':venue_id' => $venue_id,
             ':start_time' => $start_time,
             ':end_time' => $end_time,
-            ':booked_by' => $booked_by,
-            ':subject' => $subject,
         ]);
+        $existing_booking = $stmt->fetch();
 
-        // Success message (optional)
-        $success_message = "Booking successful!";
+        // If an overlapping booking exists, set the error message
+        if ($existing_booking) {
+            $error_message = "The selected time for the venue is already booked.";
+        } else {
+            // If no conflict, proceed with the booking
+            $stmt = $pdo->prepare("INSERT INTO booking (venue_id, start_time, end_time, booked_by, Subject) 
+                                VALUES (:venue_id, :start_time, :end_time, :booked_by, :subject)");
+            $stmt->execute([
+                ':venue_id' => $venue_id,
+                ':start_time' => $start_time,
+                ':end_time' => $end_time,
+                ':booked_by' => $booked_by,
+                ':subject' => $subject,
+            ]);
+
+            // Success message (optional)
+            $success_message = "Booking successful!";
+        }
+
+        // Fetch distinct venue types from the database
+        try {
+            $stmt = $pdo->query("SELECT DISTINCT venue_type FROM venue");
+            $venueTypes = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all venue types as an associative array
+        } catch (PDOException $e) {
+            // Handle errors in fetching venue types
+            die("Failed to fetch venue types: " . $e->getMessage());
+        }
     }
-}
 ?>
 
 
@@ -108,6 +118,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- Venue Details -->
+    <link rel="stylesheet" href="css/venueBook.css">    
 
     <!-- Calendar -->
     <link rel="stylesheet" href="css/calendar.css">
@@ -255,52 +268,134 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="DeleteVenue.blade.php" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" style="background-color: #c0504e; color: white; text-align: left;">Remove Venue</a>
             <?php endif; ?>
     </div> 
-    <div class="container-xxl py-5">
-     <div class="container">
-     <div class="row g-4">
-     <?php foreach ($venues as $venue): ?>
-    <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="service-item text-center shadow rounded overflow-hidden position-relative" style="width: 400px; height: 300px;">
-            <a target="_blank" style="text-decoration: none; color: inherit;">
-                <div class="p-4" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-                    <div class="img-container position-relative" style="height: 60%; overflow: hidden;">
-                        <img class="img-fluid w-100 h-100" src="<?php echo htmlspecialchars($venue['venue_picture'], ENT_QUOTES, 'UTF-8'); ?>" alt="" style="object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="content mt-3">
-                        <h5 class="mb-3" style="color: #2c3e50;"><?php echo htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8'); ?></h5>
-                        <ul style="list-style: none; padding: 0; text-align: left;">
-                            <?php foreach ($venue['facilities'] as $facility): ?>
-                                <li>
-                                    <h6><?php echo htmlspecialchars($facility['facility_name'], ENT_QUOTES, 'UTF-8'); ?>:
-                                    <?php echo htmlspecialchars($facility['quantity'], ENT_QUOTES, 'UTF-8'); ?> </h6>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                </div>
-            </a>
+
+    <body>
+        <h1 style="margin: 60px 0 0 ;">List of Venue</h1>
+    </body>
+    <!-- Venue filter dropdown -->
+    <div class="dropdown-container_venue">
+        <div>
+            <label for="venue_type_filter">Venue Type:</label>
+            <select id="venue_type_filter" name="venue_type_filter">
+                <option value="">Select Venue Type</option>
+                <option value="Activity">Activity Rooms</option>
+                <option value="General">General Areas</option>
+                <option value="Hostel">Hostel Areas</option>
+                <option value="Learning">Learning Areas</option>
+                <option value="Library">Library Areas</option>
+                <option value="Meeting">Meeting Areas</option>
+                <option value="Sport">Sport Areas</option>
+                <option value="Support">Religious and Support Areas</option>
+                <option value="Office">Teacher and Office Areas</option>
+                <option value="Teacher">Teacher Quarters</option>
+            </select>
         </div>
     </div>
-<?php endforeach; ?>
-
-</div>
-
-</div>
-
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-4" id="venueCardsContainer">
+                <?php foreach ($venues as $index => $venue): ?>
+                    <div 
+                        class="col-lg-4 col-sm-6 venue-card" 
+                        data-index="<?php echo $index; ?>" 
+                        data-name="<?php echo htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8'); ?>" 
+                        data-picture="<?php echo htmlspecialchars($venue['venue_picture'], ENT_QUOTES, 'UTF-8'); ?>" 
+                        data-type="<?php echo htmlspecialchars($venue['venue_type'], ENT_QUOTES, 'UTF-8'); ?>"
+                        data-facilities='<?php echo json_encode($venue['facilities'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>'
+                    >
+                        <div class="service-item">
+                            <div class="img-container">
+                                <img class="img-fluid" src="<?php echo htmlspecialchars($venue['venue_picture'], ENT_QUOTES, 'UTF-8'); ?>" alt="">
+                            </div>
+                            <h5 class="venue-name"><?php echo htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8'); ?></h5>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
     </div>
-</div>
 
-               
+    <!-- Modal -->
+    <div id="venueModal" class="custom-modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-body">
+                <div class="img-container">
+                    <img id="modalVenuePicture" class="img-fluid" alt="">
+                </div>
+                <h5 id="modalVenueName"></h5>
+                <ul id="modalVenueFacilities"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const venueCards = document.querySelectorAll('.venue-card');
+            const modal = document.getElementById('venueModal');
+            const closeModalBtn = document.querySelector('.close-btn');
+            const modalVenuePicture = document.getElementById('modalVenuePicture');
+            const modalVenueName = document.getElementById('modalVenueName');
+            const modalVenueFacilities = document.getElementById('modalVenueFacilities');
+            const venueTypeFilter = document.getElementById('venue_type_filter');
+
+            // Filter Venue Cards
+            venueTypeFilter.addEventListener('change', () => {
+                const selectedType = venueTypeFilter.value.toLowerCase();
+                venueCards.forEach(card => {
+                    const venueType = card.getAttribute('data-type').toLowerCase();
+                    if (selectedType === '' || venueType === selectedType) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+
+            // Open Modal and Populate Data
+            venueCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const venueName = card.getAttribute('data-name');
+                    const venuePicture = card.getAttribute('data-picture');
+                    const facilities = JSON.parse(card.getAttribute('data-facilities'));
+
+                    modalVenueName.textContent = venueName;
+                    modalVenuePicture.src = venuePicture;
+
+                    modalVenueFacilities.innerHTML = '';
+                    facilities.forEach(facility => {
+                        const li = document.createElement('li');
+                        li.textContent = `${facility.facility_name}: ${facility.quantity}`;
+                        modalVenueFacilities.appendChild(li);
+                    });
+
+                    modal.style.display = 'flex';
+                });
+            });
+
+            // Close Modal
+            closeModalBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            // Close Modal on Click Outside Content
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+        </script>
      
 <!-- Calendar Start -->
 <?php
-    // Fetch venues from the database for calendar filter
+    // Fetch distinct venue types from the database
     try {
-        $stmt = $pdo->query("SELECT id, venue_name FROM venue");
-        $venues = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all venues as an associative array
+        $stmt = $pdo->query("SELECT DISTINCT venue_type FROM venue");
+        $venueTypes = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all venue types as an associative array
     } catch (PDOException $e) {
-        // Handle errors in fetching venues
-        die("Failed to fetch venues: " . $e->getMessage());
+        // Handle errors in fetching venue types
+        die("Failed to fetch venue types: " . $e->getMessage());
     }
 ?>
 
@@ -308,15 +403,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1>Venue Booking Calendar</h1>
         
         <!-- Venue filter dropdown -->
-        <label for="venueFilter">Select Venue:</label>
-        <select id="venueFilter" class="form-control">
-            <option value="">All Venues</option>
-            <?php foreach ($venues as $venue): ?>
-                <option value="<?php echo htmlspecialchars($venue['id'], ENT_QUOTES, 'UTF-8'); ?>">
-                    <?php echo htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8'); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+        <div class = "dropdown-container">
+            <div>
+                <label for="venue_type">Venue Type:</label>
+                    <select id="venue_type" name="venue_type" required>
+                        <option value="">Select Venue Type</option>
+                        <option value="Activity">Activity Rooms</option>
+                        <option value="General">General Areas</option>
+                        <option value="Hostel">Hostel Areas</option>
+                        <option value="Learning">Learning Areas</option>
+                        <option value="Library">Library Areas</option>
+                        <option value="Meeting">Meeting Areas</option>
+                        <option value="Sport">Sport Areas</option>
+                        <option value="Support">Religious and Support Areas</option>
+                        <option value="Office">Teacher and Office Areas</option>
+                        <option value="Teacher">Teacher Quarters</option>
+                    </select>
+            </div>
+        </div>
 
         <div id="loading">Loading calendar...</div>
         <div id="calendar"></div>
@@ -324,11 +428,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             document.addEventListener('DOMContentLoaded', function () {
                 var calendarEl = document.getElementById('calendar');
                 var loadingEl = document.getElementById('loading');
-                var venueFilter = document.getElementById('venueFilter');
+                var venueType = document.getElementById('venue_type');
 
-                function fetchEvents(venueId) {
+                venueType.addEventListener('change', function () {
+                    const selectedVenueType = venueType.value;
+                    calendar.removeAllEventSources(); // Clear previous events
+                    calendar.addEventSource(fetchEvents(selectedVenueType)); // Add new events based on venue type
+                    calendar.refetchEvents(); // Refetch events
+                });
+
+                function fetchEvents(venueType) {
                     return function (fetchInfo, successCallback, failureCallback) {
-                        fetch(`get_bookings.php?venue_id=${venueId || ''}`)
+                        fetch(`get_bookings.php?venue_type=${venueType || ''}`)
                             .then(response => {
                                 if (!response.ok) {
                                     throw new Error('Failed to fetch events. Status: ' + response.status);
@@ -347,12 +458,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     };
                 }
 
-                venueFilter.addEventListener('change', function () {
-                    const selectedVenue = venueFilter.value;
-                    calendar.removeAllEventSources(); // Clear previous events
-                    calendar.addEventSource(fetchEvents(selectedVenue)); // Add new events based on venue
-                    calendar.refetchEvents(); // Refetch events
-                });
+                // venueFilter.addEventListener('change', function () {
+                //     const selectedVenue = venueFilter.value;
+                //     calendar.removeAllEventSources(); // Clear previous events
+                //     calendar.addEventSource(fetchEvents(selectedVenue)); // Add new events based on venue
+                //     calendar.refetchEvents(); // Refetch events
+                // });
 
                 var calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'dayGridMonth',
@@ -361,9 +472,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         center: 'title',
                         right: 'dayGridMonth,timeGridWeek,timeGridDay'
                     },
+
                     showNonCurrentDates: false, // Hide dates outside the current month
-                    events: fetchEvents(venueFilter.value), 
-                    
+                    events: fetchEvents(venueType ? venueType.value : ''), 
                     // Format event content to display time properly
                     eventContent: function (info) {
                         const startTime = new Date(info.event.start).toLocaleTimeString([], {

@@ -103,6 +103,21 @@ include('db_connection.php'); // Include database connection
             <label for="venue_name">Venue Name:</label>
             <input type="text" id="venue_name" name="venue_name" required>
 
+            <label for="venue_type">Venue Type:</label>
+                <select id="venue_type" name="venue_type" required>
+                    <option value="">Select Venue Type</option>
+                    <option value="Activity">Activity Rooms</option>
+                    <option value="General">General Areas</option>
+                    <option value="Hostel">Hostel Areas</option>
+                    <option value="Learning">Learning Areas</option>
+                    <option value="Library">Library Areas</option>
+                    <option value="Meeting">Meeting Areas</option>
+                    <option value="Sport">Sport Areas</option>
+                    <option value="Support">Religious and Support Areas</option>
+                    <option value="Office">Teacher and Office Areas</option>
+                    <option value="Teacher">Teacher Quarters</option>
+                </select>
+            
             <label for="venue_picture">Venue Picture:</label>
             <input type="file" id="venue_picture" name="venue_picture" accept=".jpg, .jpeg, .png" required>
 
