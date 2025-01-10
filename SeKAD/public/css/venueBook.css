@@ -118,7 +118,7 @@
 }
 
 /* Container for dropdown */
-.dropdown-container {
+.dropdown-container_venue {
     display: flex; /* Enable flexbox */
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
@@ -127,7 +127,7 @@
 }
 
 /* General styling for the dropdown */
-#venue_type {
+#venue_type_filter {
     width: 200px; /* Set width for dropdown */
     padding: 8px 12px; /* Padding for a clean look */
     border: 1px solid #f8f9fa; /* Light gray border */
@@ -141,20 +141,20 @@
 }
 
 /* Hover and focus effects */
-#venue_type:focus {
+#venue_type_filter:focus {
     border-color: #007bff; /* Blue border on focus */
     background-color: #ffffff; /* White background on focus */
     outline: none; /* Remove default outline */
 }
 
-#venue_type:hover {
+#venue_type_filter:hover {
     border-color: #0056b3; /* Darker blue border on hover */
     background-color: #dee2e6; /* Slightly darker gray background */
     cursor: pointer; /* Indicate interactiveness */
 }
 
 /* Label styling */
-label[for="venue_type"] {
+label[for="venue_type_filter"] {
     display: block; /* Ensure label is above the dropdown */
     font-size: 1.5rem; /* Slightly smaller font for the label */
     font-weight: bold; /* Bold label */

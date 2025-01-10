@@ -1,29 +1,30 @@
 <?php
-session_start(); // Start the session
-include('db_connection.php'); // Include database connection
+    session_start(); // Start the session
+    include('db_connection.php'); // Include database connection
 
-// Retrieve user data from the session
-$name = htmlspecialchars($_SESSION['name'] ?? '', ENT_QUOTES, 'UTF-8');
-$role = htmlspecialchars($_SESSION['role'] ?? '', ENT_QUOTES, 'UTF-8');
+    // Retrieve user data from the session
+    $name = htmlspecialchars($_SESSION['name'] ?? '', ENT_QUOTES, 'UTF-8');
+    $role = htmlspecialchars($_SESSION['role'] ?? '', ENT_QUOTES, 'UTF-8');
 
-// Fetch venues and facilities with a JOIN query
-$query = "
-    SELECT v.id AS venue_id, v.venue_picture, v.venue_name, vf.facility_name, vf.quantity
+    // Fetch venues and facilities with a JOIN query
+    $query = "
+    SELECT v.id AS venue_id, v.venue_picture, v.venue_name, v.venue_type, vf.facility_name, vf.quantity
     FROM venue v
     LEFT JOIN venue_facilities vf ON v.id = vf.venue_id
-";
-$stmt = $pdo->prepare($query);
-$stmt->execute();
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    ";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Group the results by venue
-$venues = [];
-foreach ($rows as $row) {
+    // Group the results by venue
+    $venues = [];
+    foreach ($rows as $row) {
     $venue_id = $row['venue_id'];
     if (!isset($venues[$venue_id])) {
         $venues[$venue_id] = [
             'venue_picture' => $row['venue_picture'],
             'venue_name' => $row['venue_name'],
+            'venue_type' => $row['venue_type'] ?? 'Unknown',
             'facilities' => [],
         ];
     }
@@ -33,56 +34,56 @@ foreach ($rows as $row) {
             'quantity' => $row['quantity'],
         ];
     }
-}
+    }
 
-$error_message = ''; // Initialize error message variable
+    $error_message = ''; // Initialize error message variable
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $venue_id = $_POST['venue_id'];
-    $start_time = $_POST['start_time'];
-    $end_time = $_POST['end_time'];
-    $booked_by = $_POST['booked_by'];
-    $subject = $_POST['subject'];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $venue_id = $_POST['venue_id'];
+        $start_time = $_POST['start_time'];
+        $end_time = $_POST['end_time'];
+        $booked_by = $_POST['booked_by'];
+        $subject = $_POST['subject'];
 
-    // Check if the venue is already booked at the selected time
-    $stmt = $pdo->prepare("SELECT * FROM booking 
-                           WHERE venue_id = :venue_id 
-                           AND ((start_time < :end_time AND end_time > :start_time))");
-    $stmt->execute([
-        ':venue_id' => $venue_id,
-        ':start_time' => $start_time,
-        ':end_time' => $end_time,
-    ]);
-    $existing_booking = $stmt->fetch();
-
-    // If an overlapping booking exists, set the error message
-    if ($existing_booking) {
-        $error_message = "The selected time for the venue is already booked.";
-    } else {
-        // If no conflict, proceed with the booking
-        $stmt = $pdo->prepare("INSERT INTO booking (venue_id, start_time, end_time, booked_by, Subject) 
-                               VALUES (:venue_id, :start_time, :end_time, :booked_by, :subject)");
+        // Check if the venue is already booked at the selected time
+        $stmt = $pdo->prepare("SELECT * FROM booking 
+                            WHERE venue_id = :venue_id 
+                            AND ((start_time < :end_time AND end_time > :start_time))");
         $stmt->execute([
             ':venue_id' => $venue_id,
             ':start_time' => $start_time,
             ':end_time' => $end_time,
-            ':booked_by' => $booked_by,
-            ':subject' => $subject,
         ]);
+        $existing_booking = $stmt->fetch();
 
-        // Success message (optional)
-        $success_message = "Booking successful!";
-    }
+        // If an overlapping booking exists, set the error message
+        if ($existing_booking) {
+            $error_message = "The selected time for the venue is already booked.";
+        } else {
+            // If no conflict, proceed with the booking
+            $stmt = $pdo->prepare("INSERT INTO booking (venue_id, start_time, end_time, booked_by, Subject) 
+                                VALUES (:venue_id, :start_time, :end_time, :booked_by, :subject)");
+            $stmt->execute([
+                ':venue_id' => $venue_id,
+                ':start_time' => $start_time,
+                ':end_time' => $end_time,
+                ':booked_by' => $booked_by,
+                ':subject' => $subject,
+            ]);
 
-    // Fetch distinct venue types from the database
-    try {
-        $stmt = $pdo->query("SELECT DISTINCT venue_type FROM venue");
-        $venueTypes = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all venue types as an associative array
-    } catch (PDOException $e) {
-        // Handle errors in fetching venue types
-        die("Failed to fetch venue types: " . $e->getMessage());
+            // Success message (optional)
+            $success_message = "Booking successful!";
+        }
+
+        // Fetch distinct venue types from the database
+        try {
+            $stmt = $pdo->query("SELECT DISTINCT venue_type FROM venue");
+            $venueTypes = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all venue types as an associative array
+        } catch (PDOException $e) {
+            // Handle errors in fetching venue types
+            die("Failed to fetch venue types: " . $e->getMessage());
+        }
     }
-}
 ?>
 
 
@@ -267,15 +268,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="DeleteVenue.blade.php" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" style="background-color: #c0504e; color: white; text-align: left;">Remove Venue</a>
             <?php endif; ?>
     </div> 
+
+    <body>
+        <h1 style="margin: 60px 0 0 ;">List of Venue</h1>
+    </body>
+    <!-- Venue filter dropdown -->
+    <div class="dropdown-container_venue">
+        <div>
+            <label for="venue_type_filter">Venue Type:</label>
+            <select id="venue_type_filter" name="venue_type_filter">
+                <option value="">Select Venue Type</option>
+                <option value="Activity">Activity Rooms</option>
+                <option value="General">General Areas</option>
+                <option value="Hostel">Hostel Areas</option>
+                <option value="Learning">Learning Areas</option>
+                <option value="Library">Library Areas</option>
+                <option value="Meeting">Meeting Areas</option>
+                <option value="Sport">Sport Areas</option>
+                <option value="Support">Religious and Support Areas</option>
+                <option value="Office">Teacher and Office Areas</option>
+                <option value="Teacher">Teacher Quarters</option>
+            </select>
+        </div>
+    </div>
     <div class="container-xxl py-5">
         <div class="container">
-            <div class="row g-4">
+            <div class="row g-4" id="venueCardsContainer">
                 <?php foreach ($venues as $index => $venue): ?>
                     <div 
                         class="col-lg-4 col-sm-6 venue-card" 
                         data-index="<?php echo $index; ?>" 
                         data-name="<?php echo htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8'); ?>" 
                         data-picture="<?php echo htmlspecialchars($venue['venue_picture'], ENT_QUOTES, 'UTF-8'); ?>" 
+                        data-type="<?php echo htmlspecialchars($venue['venue_type'], ENT_QUOTES, 'UTF-8'); ?>"
                         data-facilities='<?php echo json_encode($venue['facilities'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>'
                     >
                         <div class="service-item">
@@ -312,6 +337,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const modalVenuePicture = document.getElementById('modalVenuePicture');
             const modalVenueName = document.getElementById('modalVenueName');
             const modalVenueFacilities = document.getElementById('modalVenueFacilities');
+            const venueTypeFilter = document.getElementById('venue_type_filter');
+
+            // Filter Venue Cards
+            venueTypeFilter.addEventListener('change', () => {
+                const selectedType = venueTypeFilter.value.toLowerCase();
+                venueCards.forEach(card => {
+                    const venueType = card.getAttribute('data-type').toLowerCase();
+                    if (selectedType === '' || venueType === selectedType) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
 
             // Open Modal and Populate Data
             venueCards.forEach(card => {
