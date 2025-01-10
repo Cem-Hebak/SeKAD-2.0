@@ -73,6 +73,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Success message (optional)
         $success_message = "Booking successful!";
     }
+
+    // Fetch distinct venue types from the database
+    try {
+        $stmt = $pdo->query("SELECT DISTINCT venue_type FROM venue");
+        $venueTypes = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all venue types as an associative array
+    } catch (PDOException $e) {
+        // Handle errors in fetching venue types
+        die("Failed to fetch venue types: " . $e->getMessage());
+    }
 }
 ?>
 
@@ -341,13 +350,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
      
 <!-- Calendar Start -->
 <?php
-    // Fetch venues from the database for calendar filter
+    // Fetch distinct venue types from the database
     try {
-        $stmt = $pdo->query("SELECT id, venue_name FROM venue");
-        $venues = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all venues as an associative array
+        $stmt = $pdo->query("SELECT DISTINCT venue_type FROM venue");
+        $venueTypes = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all venue types as an associative array
     } catch (PDOException $e) {
-        // Handle errors in fetching venues
-        die("Failed to fetch venues: " . $e->getMessage());
+        // Handle errors in fetching venue types
+        die("Failed to fetch venue types: " . $e->getMessage());
     }
 ?>
 
@@ -355,15 +364,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1>Venue Booking Calendar</h1>
         
         <!-- Venue filter dropdown -->
-        <label for="venueFilter">Select Venue:</label>
-        <select id="venueFilter" class="form-control">
-            <option value="">All Venues</option>
-            <?php foreach ($venues as $venue): ?>
-                <option value="<?php echo htmlspecialchars($venue['id'], ENT_QUOTES, 'UTF-8'); ?>">
-                    <?php echo htmlspecialchars($venue['venue_name'], ENT_QUOTES, 'UTF-8'); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+        <div class = "dropdown-container">
+            <div>
+                <label for="venue_type">Venue Type:</label>
+                    <select id="venue_type" name="venue_type" required>
+                        <option value="">Select Venue Type</option>
+                        <option value="Activity">Activity Rooms</option>
+                        <option value="General">General Areas</option>
+                        <option value="Hostel">Hostel Areas</option>
+                        <option value="Learning">Learning Areas</option>
+                        <option value="Library">Library Areas</option>
+                        <option value="Meeting">Meeting Areas</option>
+                        <option value="Sport">Sport Areas</option>
+                        <option value="Support">Religious and Support Areas</option>
+                        <option value="Office">Teacher and Office Areas</option>
+                        <option value="Teacher">Teacher Quarters</option>
+                    </select>
+            </div>
+        </div>
 
         <div id="loading">Loading calendar...</div>
         <div id="calendar"></div>
@@ -371,11 +389,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             document.addEventListener('DOMContentLoaded', function () {
                 var calendarEl = document.getElementById('calendar');
                 var loadingEl = document.getElementById('loading');
-                var venueFilter = document.getElementById('venueFilter');
+                var venueType = document.getElementById('venue_type');
 
-                function fetchEvents(venueId) {
+                venueType.addEventListener('change', function () {
+                    const selectedVenueType = venueType.value;
+                    calendar.removeAllEventSources(); // Clear previous events
+                    calendar.addEventSource(fetchEvents(selectedVenueType)); // Add new events based on venue type
+                    calendar.refetchEvents(); // Refetch events
+                });
+
+                function fetchEvents(venueType) {
                     return function (fetchInfo, successCallback, failureCallback) {
-                        fetch(`get_bookings.php?venue_id=${venueId || ''}`)
+                        fetch(`get_bookings.php?venue_type=${venueType || ''}`)
                             .then(response => {
                                 if (!response.ok) {
                                     throw new Error('Failed to fetch events. Status: ' + response.status);
@@ -394,12 +419,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     };
                 }
 
-                venueFilter.addEventListener('change', function () {
-                    const selectedVenue = venueFilter.value;
-                    calendar.removeAllEventSources(); // Clear previous events
-                    calendar.addEventSource(fetchEvents(selectedVenue)); // Add new events based on venue
-                    calendar.refetchEvents(); // Refetch events
-                });
+                // venueFilter.addEventListener('change', function () {
+                //     const selectedVenue = venueFilter.value;
+                //     calendar.removeAllEventSources(); // Clear previous events
+                //     calendar.addEventSource(fetchEvents(selectedVenue)); // Add new events based on venue
+                //     calendar.refetchEvents(); // Refetch events
+                // });
 
                 var calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'dayGridMonth',
@@ -408,9 +433,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         center: 'title',
                         right: 'dayGridMonth,timeGridWeek,timeGridDay'
                     },
+
                     showNonCurrentDates: false, // Hide dates outside the current month
-                    events: fetchEvents(venueFilter.value), 
-                    
+                    events: fetchEvents(venueType ? venueType.value : ''), 
                     // Format event content to display time properly
                     eventContent: function (info) {
                         const startTime = new Date(info.event.start).toLocaleTimeString([], {

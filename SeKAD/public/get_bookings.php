@@ -3,8 +3,8 @@
 include 'db_connection.php';
 
 try {
-    // Retrieve venue ID from the request (if provided)
-    $venueId = isset($_GET['venue_id']) ? intval($_GET['venue_id']) : null;
+   // Retrieve venue type from the request (if provided)
+   $venueType = isset($_GET['venue_type']) ? $_GET['venue_type'] : null;
 
     // Base query
     $query = "
@@ -19,15 +19,15 @@ try {
     ";
 
     // Add condition for venue filter if applicable
-    if ($venueId) {
-        $query .= " WHERE venue.id = :venueId";
+    if ($venueType) {
+        $query .= " WHERE venue_type = :venueType";
     }
 
     $stmt = $pdo->prepare($query);
 
     // Bind parameter if venueId is provided
-    if ($venueId) {
-        $stmt->bindParam(':venueId', $venueId, PDO::PARAM_INT);
+    if ($venueType) {
+        $stmt->bindParam(':venueType', $venueType, PDO::PARAM_INT);
     }
 
     $stmt->execute();

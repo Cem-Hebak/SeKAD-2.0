@@ -116,3 +116,49 @@
     font-size: 1rem;
     text-align: left;
 }
+
+/* Container for dropdown */
+.dropdown-container {
+    display: flex; /* Enable flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    /*height: 100vh;  Full viewport height for vertical centering */
+    background-color: #f8f9fa; /* Optional: Light background for the container */
+}
+
+/* General styling for the dropdown */
+#venue_type {
+    width: 200px; /* Set width for dropdown */
+    padding: 8px 12px; /* Padding for a clean look */
+    border: 1px solid #f8f9fa; /* Light gray border */
+    border-radius: 4px; /* Slightly rounded corners */
+    background-color: #ced4da; /* Light gray background */
+    color: #495057; /* Darker text for readability */
+    font-size: 1rem; /* Modern font size */
+    font-family: 'Arial', sans-serif; /* Clean font */
+    box-shadow: none; /* Remove any shadow */
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Hover and focus effects */
+#venue_type:focus {
+    border-color: #007bff; /* Blue border on focus */
+    background-color: #ffffff; /* White background on focus */
+    outline: none; /* Remove default outline */
+}
+
+#venue_type:hover {
+    border-color: #0056b3; /* Darker blue border on hover */
+    background-color: #dee2e6; /* Slightly darker gray background */
+    cursor: pointer; /* Indicate interactiveness */
+}
+
+/* Label styling */
+label[for="venue_type"] {
+    display: block; /* Ensure label is above the dropdown */
+    font-size: 1.5rem; /* Slightly smaller font for the label */
+    font-weight: bold; /* Bold label */
+    color: #343a40; /* Dark gray color for label text */
+    margin-bottom: 10px; /* Add spacing below label */
+    text-align: center;
+}
