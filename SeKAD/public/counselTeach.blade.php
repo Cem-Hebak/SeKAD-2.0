@@ -147,7 +147,7 @@ $conn->close();
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="index.html" class="nav-item nav-link active">Home</a>
+                <a href="index.blade.php" class="nav-item nav-link active">Home</a>
                 <a href="setting.html" class="nav-item nav-link">Settings</a>
                 <a href="courses.html" class="nav-item nav-link">Courses</a>
                 <div class="nav-item dropdown">
@@ -223,11 +223,13 @@ $conn->close();
                             <td>
                                 <form method="POST" style="display: inline-block;">
                                     <input type="hidden" name="id" value="<?php echo $session['id']; ?>">
-                                    <button type="submit" name="status" value="Accepted" class="btn btn-success btn-sm">Accept</button>
+                                    <button type="submit" name="status" value="Accepted" class="btn btn-danger btn-sm" 
+                                    style=" padding: 5px 15px; font-size: 14px; background-color:#2bc5d4; border: none;">Accept</button>
                                 </form>
                                 <form method="POST" style="display: inline-block;">
                                     <input type="hidden" name="id" value="<?php echo $session['id']; ?>">
-                                    <button type="submit" name="status" value="Rejected" class="btn btn-danger btn-sm" >Reject</button>
+                                    <button type="submit" name="status" value="Rejected"  class="btn btn-danger btn-sm" 
+                                    style=" padding: 5px 15px; font-size: 14px; background-color: #e74c3c; border: none;" >Reject</button>
                                 </form>
                             </td>
                         </tr>
@@ -267,7 +269,8 @@ $conn->close();
                     <td>
                         <form method="POST" style="display: inline-block;">
                             <input type="hidden" name="delete_accepted_id" value="<?php echo $session['id']; ?>">
-                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                            <button type="submit" class="btn btn-danger btn-sm" 
+                            style=" padding: 5px 15px; font-size: 14px; background-color: #e74c3c; border: none;">Remove</button>
                         </form>
                     </td>
                 </tr>

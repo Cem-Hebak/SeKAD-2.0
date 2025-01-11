@@ -286,6 +286,7 @@
 
 
     <!-- Carousel Start -->
+     
     <!-- <div class="container-fluid p-0 mb-5">
         <div class="owl-carousel header-carousel position-relative">
             <?php foreach ($announcements as $announcement): ?>
@@ -353,7 +354,7 @@
             <div class="row g-4">
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="service-item text-center pt-3">
-                        <a href="https://www.google.com" target="_blank">
+                        <a href="profile.blade.php" target="_blank">
                         <div class="p-4">
                             <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
                             <h5 class="mb-3">Profile</h5>
@@ -362,61 +363,34 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="service-item text-center pt-3">
-                        <a href="https://www.google.com" target="_blank">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-globe text-primary mb-4"></i>
-                            <h5 class="mb-3">Class Registration</h5>
-                            <p>Register your class here !</p>
-                        </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item text-center pt-3">
-                        <a href="https://www.google.com" target="_blank">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-home text-primary mb-4"></i>
-                            <h5 class="mb-3">Facility Management</h5>
-                            <p>Book any facilities here !</p>
-                        </div>
-                        </a>
-                    </div>
-                </div>
+                <?php    if ($role === 'Teacher'): ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
-                        <a href="https://www.google.com" target="_blank">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
-                            <h5 class="mb-3">Attendance and Absence Management</h5>
-                            <p>Any problem with your attendance can be solved here!</p>
-                        </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="service-item text-center pt-3">
-                        <a href="https://www.google.com" target="_blank">
+                        <a href="counselTeach.blade.php" target="_blank">
                         <div class="p-4">
                             <i class="fa fa-3x fa-headset text-primary mb-4"></i>
-                            <h5 class="mb-3">Student Support Services</h5>
-                            <p>Book with a school Counsellor here!</p>
+                            <h5 class="mb-3">Counselling Sessions</h5>
+                            <p>Approve or Decline Student counselling appointment</p>
                         </div>
                         </a>
                     </div>
                 </div>
+                <?php endif; ?>
+                <?php    if ($role === 'Student'): ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
-                        <a href="https://www.google.com" target="_blank">
+                        <a href="counselStud.blade.php" target="_blank">
                         <div class="p-4">
-                            <i class="fa fa-3x fa-cog text-primary mb-4"></i>
-                            <h5 class="mb-3">Settings</h5>
-                            <p>Website settings</p>
+                            <i class="fa fa-3x fa-headset text-primary mb-4"></i>
+                            <h5 class="mb-3">Counselling Sessions</h5>
+                            <p>Set an appointment with School Counsellor to talk about anything !</p>
                         </div>
                         </a>
                     </div>
                 </div>
+                <?php endif; ?>
+                
+                
                 <?php    if ($role === 'Staff'): ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
@@ -435,7 +409,7 @@
                     <div class="service-item text-center pt-3">
                         <a href="Teacher Assign.blade.php" target="_blank">
                         <div class="p-4">
-                            <i class="fa fa-3x fa-book-open text-primary mb-4"></i>
+                            <i class="fa fa-3x fa-chalkboard text-primary mb-4"></i>
                             <h5 class="mb-3">Teacher Class Management</h5>
                             <p>Assign a teachers class here</p>
                         </div>
@@ -443,6 +417,17 @@
                     </div>
                 </div>
                 <?php endif; ?>
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3">
+                        <a href="Facility_And_Equipment_Booking_Teacher.blade.php" target="_blank">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-clipboard text-primary mb-4"></i>
+                            <h5 class="mb-3">Facility & Equipment Booking</h5>
+                            <p>Book or Check any Facility and Equipment here !</p>
+                        </div>
+                        </a>
+                    </div>
+                </div>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
                         <a href="attendance_rewards.blade.php" target="_blank">
@@ -454,146 +439,268 @@
                         </a>
                     </div>
                 </div>
+                <?php    if ($role === 'Teacher' || $role === 'Staff'): ?>
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3">
+                        <a href="Attendance Analytics.blade.php" target="_blank">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-chart-bar text-primary mb-4"></i>
+                            <h5 class="mb-3">Attendance Analytics</h5>
+                            <p>Check School Student Attendance Analytics here!</p>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+                <?php endif; ?>
+                <?php    if ($role === 'Teacher' || $role === 'Staff'): ?>
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3">
+                        <a href="attendanceRecordFiltered.blade.php" target="_blank">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-list text-primary mb-4"></i>
+                            <h5 class="mb-3">Attendance Record Management</h5>
+                            <p>Approve Or Decline Student Medical Certificate / Other Reason for student absence</p>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+                <?php endif; ?>
+                <?php    if ($role === 'Student'): ?>
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3">
+                        <a href="student_attendance.blade.php" target="_blank">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-list text-primary mb-4"></i>
+                            <h5 class="mb-3">Attendance Record Management</h5>
+                            <p>Upload your Medical Certificate or Other Certificate for your absence</p>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+                <?php endif; ?>
+                
+                <?php    if ($role === 'Staff' || $role === 'Teacher'): ?>
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3">
+                        <a href="announce.blade.php" target="_blank">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-school text-primary mb-4"></i>
+                            <h5 class="mb-3">Facility Maintenance Announcement Form</h5>
+                            <p>Create a new Announcement for Facility Maintenance</p>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+                <?php endif; ?>
+                <?php    if ($role === 'Staff' || $role === 'Teacher'): ?>
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3">
+                        <a href="event.blade.php" target="_blank">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-hand-holding-heart text-primary mb-4"></i>
+                            <h5 class="mb-3">Event & Charity Announcement Form</h5>
+                            <p>Create a new Announcement for any new Event or Charity here!</p>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+                <?php endif; ?>
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3">
+                        <a href="https://www.google.com" target="_blank">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-cog text-primary mb-4"></i>
+                            <h5 class="mb-3">Settings</h5>
+                            <p>Website settings</p>
+                        </div>
+                        </a>
+                    </div>
+                </div>
             </div>
             </div>
         </div>
     </div>
     <!-- Service End -->
-    <?php    if ($role === 'Student'): ?>
-    <!-- Personal Attendance Chart Start -->
-        <div class="container mt-5">
-            <h2>Personal Analytics</h2>
-            <style>
-                /* Ensure all table columns have the same width */
-                .table th, .table td {
-                    /* Center align the text and buttons */
-                    vertical-align: middle; /* Center align content vertically */
-                    width: 20%; /* Set equal width for all columns */
+
+    <!-- Attendance chart -->
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Compact Attendance Chart</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            .chart-container {
+                width: 40%;
+                margin: 30px auto;
+            }
+            .chart-summary {
+                text-align: center;
+                margin-top: 10px;
+                font-size: 1em;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="chart-container">
+            <canvas id="attendanceChart"></canvas>
+            <div class="chart-summary" id="chartSummary"></div>
+        </div>
+    
+        <script>
+            // Dummy attendance data
+            const data = {
+                attend: 85,
+                total_days: 100
+            };
+    
+            // Calculate absences
+            const absence = data.total_days - data.attend;
+    
+            // Render the chart
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            const attendanceChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Attendance', 'Absence'],
+                    datasets: [{
+                        label: 'Attendance',
+                        data: [data.attend, absence],
+                        backgroundColor: ['#4CAF50', '#FF5252'],
+                        borderColor: ['#4CAF50', '#FF5252'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    const total = data.attend + absence;
+                                    const value = tooltipItem.raw;
+                                    const percentage = ((value / total) * 100).toFixed(2);
+                                    return `${tooltipItem.label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
                 }
-
-                /* Add some spacing and styling for the table */
-                .table {
-                    table-layout: fixed; /* Ensures consistent column width */
-                    width: 100%;
-                }
-            </style>
-            <table class="table table-striped table-bordered">
-
-            <tr>
-                <td colspan="2">
-                    <form method="GET" class="mb-4">
-                        <label for="month" class="form-label">Filter by Month:</label>
-                        <input type="month" id="month" name="filter_month" class="form-control"
-                            value="<?php echo isset($_GET['filter_month']) ? htmlspecialchars($_GET['filter_month'], ENT_QUOTES, 'UTF-8') : ''; ?>">
-
-                        <form method="GET" class="mb-4">
-                            <label for="status_filter" class="form-label mt-3">Filter by Status:</label>
-                            <select id="status_filter" name="status_filter" class="form-select">
-                                <option value="both" <?php echo (isset($_GET['status_filter']) && $_GET['status_filter'] === 'both') ? 'selected' : ''; ?>>Both</option>
-                                <option value="present" <?php echo (isset($_GET['status_filter']) && $_GET['status_filter'] === 'present') ? 'selected' : ''; ?>>Present Only</option>
-                                <option value="absent" <?php echo (isset($_GET['status_filter']) && $_GET['status_filter'] === 'absent') ? 'selected' : ''; ?>>Absent Only</option>
-                            </select>
-
-                            <button type="submit" class="btn btn-primary mt-2">Filter</button>
-                        </form>
-                </td>
-            </tr>
-            <tr>
-                <td>
-
-
-
-                    <?php
-                    // Apply status filter
-                    $status_filter = isset($_GET['status_filter']) ? $_GET['status_filter'] : 'both';
-                    $status_condition = '';
-
-                    if ($status_filter === 'present') {
-                        $status_condition = " AND a.present = 1";
-                    } elseif ($status_filter === 'absent') {
-                        $status_condition = " AND a.present != 1";
-                    }
-
-                    // Update query to include status filter
-                    $query = "
-                        SELECT
-                            a.date,
-                            a.present
-                        FROM attendance a
-                        INNER JOIN users u ON a.user_id = u.id
-                        WHERE u.ic_number = :ic_number
-                    ";
-
-                    if ($filter_month) {
-                        $query .= " AND DATE_FORMAT(a.date, '%Y-%m') = :filter_month";
-                    }
-
-                    $query .= $status_condition;
-                    $query .= " ORDER BY a.date ASC";
-
-                    $stmt = $pdo->prepare($query);
-                    $stmt->bindParam(':ic_number', $ic_number, PDO::PARAM_STR);
-
-                    if ($filter_month) {
-                        $stmt->bindParam(':filter_month', $filter_month, PDO::PARAM_STR);
-                    }
-
-                    $stmt->execute();
-                    $attendance_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    ?>
-
-                    <?php if ($filter_month): ?>
-                    <div class="container mt-4">
-                        <style>
-                            .table-container {
-                                max-height: 350px; /* Total height of the scrollable area */
-                                overflow-y: auto; /* Enable vertical scrolling */
+            });
+    
+            // Display summary
+            document.getElementById('chartSummary').innerText = `Attendance: ${data.attend} / ${data.total_days}`;
+        </script>
+    </body>
+    <!-- Dummy -->
+    
+    <!-- <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Attendance Chart</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            .chart-container {
+                width: 40%;
+                margin: 30px auto;
+            }
+            .chart-summary {
+                text-align: center;
+                margin-top: 10px;
+                font-size: 1em;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="chart-container">
+            <canvas id="attendanceChart"></canvas>
+            <div class="chart-summary" id="chartSummary"></div>
+        </div>
+    
+        <script>
+            // Fetch attendance data
+            fetch('attendance.php') // Replace with the correct PHP file path
+                .then(response => response.json())
+                .then(data => {
+                    const ctx = document.getElementById('attendanceChart').getContext('2d');
+                    const attendanceChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Attendance', 'Absence'],
+                            datasets: [{
+                                label: 'Attendance',
+                                data: [data.attend, data.absence],
+                                backgroundColor: ['#4CAF50', '#FF5252'],
+                                borderColor: ['#4CAF50', '#FF5252'],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(tooltipItem) {
+                                            const total = data.attend + data.absence;
+                                            const value = tooltipItem.raw;
+                                            const percentage = ((value / total) * 100).toFixed(2);
+                                            return `${tooltipItem.label}: ${value} (${percentage}%)`;
+                                        }
+                                    }
+                                }
                             }
-
-                            .table {
-                                table-layout: fixed; /* Ensures consistent column widths */
-                                width: 100%;
-                                border-collapse: collapse;
-                            }
-
-                            .table th,
-                            .table td {
-                                text-align: center;
-                                box-sizing: border-box; /* Includes padding and borders in width calculation */
-                            }
-
-                            .table thead th {
-                                position: sticky;
-                                top: 0;
-                                background-color: #f8f9fa; /* Matches header background */
-                                z-index: 1; /* Keeps the header above the scrolling content */
-                            }
-                        </style>
-
-                        <h3>Attendance Details for <?php echo htmlspecialchars($filter_month, ENT_QUOTES, 'UTF-8'); ?></h3>
-                        <div class="table-container">
-                            <table class="table table-bordered text-center">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 50%;">Date</th>
-                                        <th style="width: 50%;">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (!empty($attendance_data)): ?>
-                                        <?php foreach ($attendance_data as $row): ?>
-                                            <tr>
-                                                <td><?php echo htmlspecialchars($row['date'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                                <td><?php echo htmlspecialchars($status_labels[$row['present']], ENT_QUOTES, 'UTF-8'); ?></td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="2">No attendance data found for the selected filters.</td>
-                                        </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
+                        }
+                    });
+    
+                    // Display summary
+                    document.getElementById('chartSummary').innerText = `Attendance: ${data.attend} / ${data.total_days}`;
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        </script>
+    </body> -->
+    <!-- About Start -->
+    <!-- <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
+                    <div class="position-relative h-100">
+                        <img class="img-fluid position-absolute w-100 h-100" src="img/about.jpg" alt="" style="object-fit: cover;">
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <h6 class="section-title bg-white text-start text-primary pe-3">About Us</h6>
+                    <h1 class="mb-4">Welcome to eLEARNING</h1>
+                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit.</p>
+                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
+                    <div class="row gy-2 gx-4 mb-4">
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Skilled Instructors</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Online Classes</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>International Certificate</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Skilled Instructors</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Online Classes</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>International Certificate</p>
                         </div>
                     </div>
 
