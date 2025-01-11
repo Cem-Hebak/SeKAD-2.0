@@ -549,175 +549,75 @@
     
         <script>
             // Dummy attendance data
-            const data = {
-                attend: 85,
-                total_days: 100
-            };
+            fetch('/api/getAttendancedata.php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch attendance data');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('chartSummary').innerText = data.error;
+                    return;
+                }
+
+                const { attend, total_days } = data;
+                const absence = total_days - attend;
     
             // Calculate absences
             const absence = data.total_days - data.attend;
     
             // Render the chart
             const ctx = document.getElementById('attendanceChart').getContext('2d');
-            const attendanceChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Attendance', 'Absence'],
-                    datasets: [{
-                        label: 'Attendance',
-                        data: [data.attend, absence],
-                        backgroundColor: ['#4CAF50', '#FF5252'],
-                        borderColor: ['#4CAF50', '#FF5252'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: {
-                                    size: 12
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Attendance', 'Absence'],
+                        datasets: [{
+                            label: 'Attendance',
+                            data: [attend, absence],
+                            backgroundColor: ['#4CAF50', '#FF5252'],
+                            borderColor: ['#4CAF50', '#FF5252'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: { size: 12 }
                                 }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    const total = data.attend + absence;
-                                    const value = tooltipItem.raw;
-                                    const percentage = ((value / total) * 100).toFixed(2);
-                                    return `${tooltipItem.label}: ${value} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-    
-            // Display summary
-            document.getElementById('chartSummary').innerText = `Attendance: ${data.attend} / ${data.total_days}`;
-        </script>
-    </body>
-    <!-- Dummy -->
-    
-    <!-- <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Attendance Chart</title>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <style>
-            .chart-container {
-                width: 40%;
-                margin: 30px auto;
-            }
-            .chart-summary {
-                text-align: center;
-                margin-top: 10px;
-                font-size: 1em;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="chart-container">
-            <canvas id="attendanceChart"></canvas>
-            <div class="chart-summary" id="chartSummary"></div>
-        </div>
-    
-        <script>
-            // Fetch attendance data
-            fetch('attendance.php') // Replace with the correct PHP file path
-                .then(response => response.json())
-                .then(data => {
-                    const ctx = document.getElementById('attendanceChart').getContext('2d');
-                    const attendanceChart = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['Attendance', 'Absence'],
-                            datasets: [{
-                                label: 'Attendance',
-                                data: [data.attend, data.absence],
-                                backgroundColor: ['#4CAF50', '#FF5252'],
-                                borderColor: ['#4CAF50', '#FF5252'],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    position: 'top',
-                                },
-                                tooltip: {
-                                    callbacks: {
-                                        label: function(tooltipItem) {
-                                            const total = data.attend + data.absence;
-                                            const value = tooltipItem.raw;
-                                            const percentage = ((value / total) * 100).toFixed(2);
-                                            return `${tooltipItem.label}: ${value} (${percentage}%)`;
-                                        }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        const total = attend + absence;
+                                        const value = tooltipItem.raw;
+                                        const percentage = ((value / total) * 100).toFixed(2);
+                                        return `${tooltipItem.label}: ${value} (${percentage}%)`;
                                     }
                                 }
                             }
                         }
-                    });
+                    }
+                });
     
-                    // Display summary
-                    document.getElementById('chartSummary').innerText = `Attendance: ${data.attend} / ${data.total_days}`;
-                })
-                .catch(error => console.error('Error fetching data:', error));
+            // Display summary
+            document.getElementById('chartSummary').innerText = `Attendance: ${attend} / ${total_days}`;
+            })
+            .catch(error => {
+                console.error(error);
+                document.getElementById('chartSummary').innerText = 'Failed to load attendance data.';
+            })
         </script>
-    </body> -->
-    <!-- About Start -->
-    <!-- <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
-                    <div class="position-relative h-100">
-                        <img class="img-fluid position-absolute w-100 h-100" src="img/about.jpg" alt="" style="object-fit: cover;">
-                    </div>
-                </div>
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <h6 class="section-title bg-white text-start text-primary pe-3">About Us</h6>
-                    <h1 class="mb-4">Welcome to eLEARNING</h1>
-                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit.</p>
-                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                    <div class="row gy-2 gx-4 mb-4">
-                        <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Skilled Instructors</p>
-                        </div>
-                        <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Online Classes</p>
-                        </div>
-                        <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>International Certificate</p>
-                        </div>
-                        <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Skilled Instructors</p>
-                        </div>
-                        <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Online Classes</p>
-                        </div>
-                        <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>International Certificate</p>
-                        </div>
-                    </div>
-
-                    <?php endif; ?>
-                </td>
-                <td>
-                    <div class="chart-container" style="position: center; height:75vh; width:100%; padding: 10%;">
-                        <canvas id="attendanceChart"></canvas>
-                    </div>
-                </td>
-
-            </tr>
-        </table>
-        </div>
+    </body>
+    
 
     <!-- Personal Attendance Chart End -->
-    <?php endif; ?>
+
 
 
 
