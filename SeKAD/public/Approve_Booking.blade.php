@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST[
                         <?php    if ($role === 'Student'): ?>
                         <a href="student_attendance.blade.php" class="dropdown-item">Attendance Record Management</a>
                         <?php endif; ?>
-                        <a href="attendanbce_rewards.blade.php" class="dropdown-item">Attendance Leaderboards</a>
+                        <a href="attendance_rewards.blade.php" class="dropdown-item">Attendance Leaderboards</a>
                         <?php    if ($role === 'Staff' || $role === 'Admin'): ?>
                         <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="assign-students.blade.php" class="dropdown-item">Student Assign</a>

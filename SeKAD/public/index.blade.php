@@ -299,7 +299,7 @@
                         <?php    if ($role === 'Student'): ?>
                         <a href="student_attendance.blade.php" class="dropdown-item">Attendance Record Management</a>
                         <?php endif; ?>
-                        <a href="attendanbce_rewards.blade.php" class="dropdown-item">Attendance Leaderboards</a>
+                        <a href="attendance_rewards.blade.php" class="dropdown-item">Attendance Leaderboards</a>
                         <?php    if ($role === 'Staff' || $role === 'Admin'): ?>
                         <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="assign-students.blade.php" class="dropdown-item">Student Assign</a>
@@ -326,12 +326,7 @@
         <div class="owl-carousel header-carousel position-relative">
             <?php foreach ($announcements as $announcement): ?>
                 <div class="owl-carousel-item position-relative">
-                <img class="img-fluid" 
-                            src="<?= htmlspecialchars($announcement['pic']) ?>" 
-                            alt="Announcement Image" 
-                            onerror="this.onerror=null; this.src='Sekolah.png';" 
-                            style="width: 1366px; height: 768px; object-fit: cover; max-width: 100%; max-height: 100%; display: block;">
-
+                    <img class="img-fluid" src=<?= htmlspecialchars($announcement['pic']) ?> alt="Announcement Image">
                     <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
                         <div class="container">
                             <div class="row justify-content-start">
@@ -452,7 +447,7 @@
                 <?php endif; ?>
                 
                 
-                <?php    if ($role === 'Staff'): ?>
+                <?php    if ($role === 'Staff' || $role === 'Admin'): ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
                         <a href="assign-student.blade.php" target="_blank">
@@ -465,7 +460,7 @@
                     </div>
                 </div>
                 <?php endif; ?>
-                <?php    if ($role === 'Staff'): ?>
+                <?php    if ($role === 'Staff'|| $role === 'Admin'): ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
                         <a href="Teacher Assign.blade.php" target="_blank">
@@ -500,7 +495,7 @@
                         </a>
                     </div>
                 </div>
-                <?php    if ($role === 'Teacher' || $role === 'Staff'): ?>
+                <?php    if ($role === 'Teacher' || $role === 'Staff'|| $role === 'Admin'): ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
                         <a href="Attendance Analytics.blade.php" target="_blank">

@@ -82,7 +82,7 @@ include('db_connection.php');
                         <?php    if ($role === 'Student'): ?>
                         <a href="student_attendance.blade.php" class="dropdown-item">Attendance Record Management</a>
                         <?php endif; ?>
-                        <a href="attendanbce_rewards.blade.php" class="dropdown-item">Attendance Leaderboards</a>
+                        <a href="attendance_rewards.blade.php" class="dropdown-item">Attendance Leaderboards</a>
                         <?php    if ($role === 'Staff' || $role === 'Admin'): ?>
                         <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="assign-students.blade.php" class="dropdown-item">Student Assign</a>
@@ -100,6 +100,7 @@ include('db_connection.php');
             <a href="profile.blade.php" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Hi, <?= htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8') ?><i class="fa fa-arrow-right ms-3"></i></a>
         </div>
     </nav>
+
     <!-- Navbar End -->
 
 

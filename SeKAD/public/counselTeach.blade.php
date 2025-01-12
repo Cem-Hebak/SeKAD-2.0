@@ -94,7 +94,9 @@ if ($resultAccepted->num_rows > 0) {
         $acceptedSessionsTable[] = $row;
     }
 }
-
+// Ensure the session variable for name is set
+$full_name = $_SESSION['name'] ?? 'User'; // Fallback to 'User' if the name is not set
+$first_name = explode(' ', $full_name)[0]; // Extract the first name
 
 $conn->close();
 ?>
@@ -174,7 +176,7 @@ $conn->close();
                         <?php    if ($role === 'Student'): ?>
                         <a href="student_attendance.blade.php" class="dropdown-item">Attendance Record Management</a>
                         <?php endif; ?>
-                        <a href="attendanbce_rewards.blade.php" class="dropdown-item">Attendance Leaderboards</a>
+                        <a href="attendance_rewards.blade.php" class="dropdown-item">Attendance Leaderboards</a>
                         <?php    if ($role === 'Staff' || $role === 'Admin'): ?>
                         <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
                         <a href="assign-students.blade.php" class="dropdown-item">Student Assign</a>
