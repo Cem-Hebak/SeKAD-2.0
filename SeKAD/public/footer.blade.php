@@ -3,9 +3,7 @@ session_start(); // Start the session
 include('db_connection.php'); // Include database connection
 
     
-
     // Retrieve user data from the session
-    $id = htmlspecialchars($_SESSION['id'], ENT_QUOTES, 'UTF-8');
     $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
     $email = htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8');
     $mobilenumber = htmlspecialchars($_SESSION['mobilenumber'], ENT_QUOTES, 'UTF-8');
@@ -29,24 +27,20 @@ include('db_connection.php'); // Include database connection
     $blood_type = htmlspecialchars($_SESSION['blood_type'] ?? 'Unknown', ENT_QUOTES, 'UTF-8');
     $allergies = htmlspecialchars($_SESSION['allergies'] ?? 'None', ENT_QUOTES, 'UTF-8');
 
-    $form = isset($_GET['form']) ? $_GET['form'] : '1';
-    $class = isset($_GET['class']) ? $_GET['class'] : 'CENDEKIAWAN';
-    $present = isset($row['present']) ? $row['present'] : 0;  // Default to 0 if not set
-    $checked = ($present == 1) ? "checked" : "";  // Apply 'checked' if present == 1
-
 ?>
 
-<!DOCTYPE html>;
+<!DOCTYPE html>
 <html lang="en">
-<!-- "include('db_connection.php')" ni untuk import database -->
+
 <head>
     <meta charset="utf-8">
-    <title>eLEARNING - eLearning HTML Template</title>
+    <title>Profile</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
 
-  
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,10 +60,9 @@ include('db_connection.php'); // Include database connection
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-    <link href="css/font-size.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 
-    <link id="light-mode" rel="stylesheet" href="{{ asset('css/light.css') }}">
-    <link id="dark-mode" rel="stylesheet" href="{{ asset('css/dark.css') }}" disabled>
+    <link href="css/font-size.css" rel="stylesheet">
 </head>
 
 <body>
@@ -80,6 +73,7 @@ include('db_connection.php'); // Include database connection
         </div>
     </div>
     <!-- Spinner End -->
+
 
     
     <!-- Navbar Start -->
@@ -119,138 +113,184 @@ include('db_connection.php'); // Include database connection
     </nav>
     <!-- Navbar End -->
 
+    <!-- Header Start -->
     <div class="container-fluid bg-primary py-5 mb-5 page-header">
         <div class="container py-5">
             <div class="row justify-content-center">
                 <div class="col-lg-10 text-center">
                     <h1 class="display-3 text-white animated slideInDown">
-                        SeKAD
+                        Hi, <?php echo $name; ?>
                         
                     </h1>
                     
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb justify-content-center">
                             <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
-                            <li class="breadcrumb-item"><a class="text-white" href="#">Attendance Record</a></li>
+                            <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
+                            <li class="breadcrumb-item text-white active" aria-current="page">Profile</li>
                         </ol>
                     </nav>
                 </div>
             </div>
         </div>
     </div>
-
+    <!-- Header End -->
+     
     <div style="width: 90%; margin: 0 auto;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 0;">Biodata</h4>
+        <a href="editProfile.blade.php" class="btn btn-primary py-md-3 px-md-5 animated slideInLeft" style="color: white;">Edit Profile</a>
+    </div>
 
-    <div class="container mt-5">
-    <h2 class="mb-4">Attendance Record</h2>
+    <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
+                                    <thead>
+                                        
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th style="width: 150px;">Name</th>
+                                            <td><?php echo $name; ?></td>
+                                            
+                                        </tr>
+                                         <tr>
+                                            <th style="width: 150px;">Date of Birth</th>
+                                            <td><?php echo htmlspecialchars($_SESSION['date_of_birth']); ?></td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 150px;">Gender</th>
+                                            <td><?php echo $gender; ?></td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 150px;">Identification Card Number</th>
+                                            <td><?php echo $ic_number; ?></td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 150px;">Nationality</th>
+                                            <td><?php echo $nationality; ?></td>
+                                           
+                                            
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 150px;">Address</th>
+                                            <td><?php echo $address; ?></td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 150px;">Role</th>
+                                            <td><?php echo $role; ?></td>
+                                        
+                                            
+                                        </tr>
+                                        <?php    if ($role === 'Student'): ?>
+                                        <tr>
+                                            <th style="width: 150px;">Class</th>
+                                            <td><?php echo $class; ?></td>
+                                        </tr>
 
-    <?php
-    // Handle GET parameters and set defaults
-    $form = isset($_GET['form']) ? $_GET['form'] : '1'; // Default to Form 1
-    $class = isset($_GET['class']) ? $_GET['class'] : 'Cendekiawan'; // Default to CENDEKIAWAN
-    $date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d'); // Default to today's date
-    ?>
+                                        <?php    elseif ($role === 'Teacher'): ?>
+                                            <tr>
+                                            <th style="width: 150px;">Class Teacher</th>
+                                            <td><?php echo $class; ?></td>
+                                            </tr>
 
-    <!-- Filter Form -->
-    <form method="GET" action="">
-        <div class="row mb-3">
-            <!-- Form Dropdown -->
-            <div class="col-md-4">
-                <label for="formSelect">Select Form:</label>
-                <select name="form" id="formSelect" class="form-control">
-                    <option value="1" <?php echo ($form === '1') ? 'selected' : ''; ?>>Form 1</option>
-                    <option value="2" <?php echo ($form === '2') ? 'selected' : ''; ?>>Form 2</option>
-                    <option value="3" <?php echo ($form === '3') ? 'selected' : ''; ?>>Form 3</option>
-                    <option value="4" <?php echo ($form === '4') ? 'selected' : ''; ?>>Form 4</option>
-                    <option value="5" <?php echo ($form === '5') ? 'selected' : ''; ?>>Form 5</option>
-                </select>
-            </div>
+                                        <?php    elseif ($role === 'Staff'): ?>
+                                        <tr>
+                                        <th style="width: 150px;">Location</th>
+                                        <td><?php echo $class; ?></td>
+                                        </tr>
 
-            <!-- Class Dropdown -->
-            <div class="col-md-4">
-                <label for="classSelect">Select Class:</label>
-                <select name="class" id="classSelect" class="form-control">
-                    <option value="Cendekiawan" <?php echo ($class === 'Cendekiawan') ? 'selected' : ''; ?>>Cendekiawan</option>
-                    <option value="Pendeta" <?php echo ($class === 'Pendeta') ? 'selected' : ''; ?>>Pendeta</option>
-                    <option value="Sarjana" <?php echo ($class === 'Sarjana') ? 'selected' : ''; ?>>Sarjana</option>
-                    <option value="Intelek" <?php echo ($class === 'Intelek') ? 'selected' : ''; ?>>Intelek</option>
-                </select>
-            </div>
+                                        <?php    elseif ($role === 'Admin'): ?>
+                                        <?php endif; ?>
 
-            <!-- Date Picker -->
-            <div class="col-md-4">
-                <label for="dateSelect">Select Date:</label>
-                <input type="date" name="date" id="dateSelect" class="form-control" 
-                       value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
-            </div>
-        </div>
+                                        <tr>
+                                            <th style="width: 150px;">Contact</th>
+                                            <td><?php echo $mobilenumber; ?></td>
+                                        </tr>
 
-        <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary">Filter</button>
-    </form>
-
-    <!-- Attendance Table -->
-    <form method="POST" action="update_attendance.php">
-        <table class="table table-striped table-bordered mt-3">
-            <thead>
-                <tr>
-                    <th style="width: 40%;">Name</th>
-                    <th style="width: 40%;">IC Number</th>
-                    <th style="width: 20%; text-align: center;">Attendance</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                try {
-                    if (isset($_GET['form']) && isset($_GET['class'])) {
-                        $targetName = $form . " " . $class;
-                    
-                        $sql = "SELECT b.id, b.name, b.class, u.ic_number, a.present
-                                FROM biodata_stud b
-                                JOIN users u ON b.id = u.id
-                                LEFT JOIN attendance a ON b.id = a.user_id AND a.date = ?
-                                WHERE b.class = ? AND u.role = 'Student'";
-                        $params = [$date, $targetName];
-                    
-                        // Execute query
-                        $stmt = $pdo->prepare($sql);
-                        $stmt->execute($params);
-                        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    }
-
-                    if (!empty($students)) {
-                        foreach ($students as $row) {
-                            $present = $row['present'] ?? 0; // Default to 0 if 'present' key is missing
-                            $checked = $present == 1 ? "checked" : "";
-                            echo "<tr>";
-                            echo "<td>" . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . "</td>";
-                            echo "<td>" . htmlspecialchars($row['ic_number'], ENT_QUOTES, 'UTF-8') . "</td>";
-                            echo "<td style='text-align: center;'>";
-                            echo "<input type='checkbox' name='attendance[" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "]' value='1' $checked>";
-                            echo "<input type='hidden' name='user_ids[]' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>";
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='3' style='text-align: center;'>No records found for Form $form - $class on $date.</td></tr>";
-                    }
-                } catch (PDOException $e) {
-                    die("Error: " . $e->getMessage());
-                }
-                ?>
-            </tbody>
-        </table>
-
-        <!-- Pass Date for Submission -->
-        <input type="hidden" name="date" value="<?php echo htmlspecialchars($date, ENT_QUOTES, 'UTF-8'); ?>">
-
-        <!-- Submit Attendance Button -->
-        <button type="submit" class="btn btn-success">Update Attendance</button>
-    </form>
-</div>
-</div>
+                                        <tr>
+                                            <th style="width: 150px;">Email</th>
+                                            <td><?php echo $email; ?></td>
+                                        </tr>
+                                        
 
 
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                
+
+                                    <div style="width: 90%; margin: 0 auto;">
+    <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Family Information</h4>
+    <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
+                                    <thead>
+                                        
+                                    </thead>
+                                    <tbody>
+                                         <tr>
+                                            <th style="width: 150px;">Father's Name</th>
+                                            <td><?php echo $fname; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 150px;">Father's Contact</th>
+                                            <td><?php echo $fcontact; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 150px;">Father's Occupation</th>
+                                            <td><?php echo $foccupation; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 150px;">Mother's Name</th>
+                                            <td><?php echo $mname; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 150px;">Mother's Contact</th>
+                                            <td><?php echo $mcontact; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 150px;">Mother's Occupation</th>
+                                            <td><?php echo $moccupation; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 150px;">Guardian's Name</th>
+                                            <td><?php echo $gname; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 150px;">Guardian's Contact</th>
+                                            <td><?php echo $gcontact; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 150px;">Guardian's Occupation</th>
+                                            <td><?php echo $goccupation; ?></td>
+                                        </tr>
+                                    </tbody>
+                                    </table>
+                                    </div>
+
+                                    <div style="width: 90%; margin: 0 auto;">
+    <h4 class="card-title" style="font-size: 20px; text-align: left; margin-bottom: 20px;">Health Information</h4>
+    <table class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
+                                    <thead>
+                                        
+                                    </thead>
+                                    <tbody>
+                                         <tr>
+                                            <th style="width: 150px;">Blood Type</th>
+                                            <td><?php echo $blood_type; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 150px;">Allergies</th>
+                                            <td><?php echo $allergies; ?></td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                    </table>
+                                    </div>
+
+                                  
+    <!-- Team End -->
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
@@ -288,6 +328,8 @@ include('db_connection.php'); // Include database connection
         </div>
     </div>
 </div>
+
+
     <!-- Footer End -->
 
 
@@ -303,7 +345,6 @@ include('db_connection.php'); // Include database connection
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="assets/global.js"></script>
-
     <script type="text/javascript">
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
@@ -317,6 +358,15 @@ include('db_connection.php'); // Include database connection
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <!-- <script>
+        // Example: Simulated authenticated user data
+        const authenticatedUser = {
+            name: "John Doe"
+        };
+
+        // Insert user name into the HTML
+        document.getElementById("user-name").textContent = `Welcome, ${authenticatedUser.name}`;
+    </script> -->
 </body>
 
 </html>

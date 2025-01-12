@@ -224,7 +224,41 @@ $status_labels = [
 
     <!-- Footer -->
     <footer class="text-center mt-5">
-        <p>&copy; 2024 Your Website. All Rights Reserved.</p>
+    <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="row g-5 justify-content-center text-center">
+            <!-- Quick Links -->
+            
+            <!-- Contact Information -->
+            <div class="">
+                <h4 class="text-white mb-4">Contact</h4>
+                <p class="mb-2">
+                    <i class="fa fa-map-marker-alt me-3"></i>
+                    Sekolah Menengah Sains Labuan, <br>
+                    Jalan Sungai Pagar 87032, <br> Wilayah Persekutuan Labuan
+                </p>
+                <p class="mb-2">
+                    <i class="fa fa-phone-alt me-3"></i>
+                    (+60) 87 461525 (Office),<br>
+                      (+60) 87 462835 (Fax)
+                </p>
+                <div class="d-flex justify-content-center pt-2">
+                    <a class="btn btn-outline-light btn-social me-2" href="https://www.facebook.com/share/1Ar5pkmhEn/?mibextid=wwXIfr">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="copyright d-flex flex-column align-items-center">
+            <div class="text-center mb-3">
+                &copy; <a class="text-light border-bottom" href="index.blade.php">SeKAD</a>, All Rights Reserved.
+            </div>
+            
+        </div>
+    </div>
+</div>
     </footer>
 
     <!-- Include Scripts -->
