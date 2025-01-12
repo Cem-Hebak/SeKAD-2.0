@@ -1,7 +1,10 @@
 <?php
 session_start(); // Start the session
 include('db_connection.php'); // Include database connection
-
+// Ensure the session variable for name is set
+$full_name = $_SESSION['name'] ?? 'User'; // Fallback to 'User' if the name is not set
+$first_name = explode(' ', $full_name)[0]; // Extract the first name
+$role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
     
     // Retrieve user data from the session
     $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
@@ -151,7 +154,7 @@ include('db_connection.php'); // Include database connection
                         <a href="attendance_rewards.blade.php" class="dropdown-item">Attendance Leaderboards</a>
                         <?php    if ($role === 'Staff' || $role === 'Admin'): ?>
                         <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
-                        <a href="assign-students.blade.php" class="dropdown-item">Student Assign</a>
+                        <a href="assign-student.blade.php" class="dropdown-item">Student Assign</a>
                         <?php endif; ?>
                         <a href="Facility_And_Equipment_Booking_Teacher.blade.php" class="dropdown-item">Venue Bookings</a>
                         
