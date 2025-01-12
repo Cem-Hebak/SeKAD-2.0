@@ -271,11 +271,12 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
                 <a href="index.blade.php" class="nav-item nav-link active">Home</a>
-                <a href="about.html" class="nav-item nav-link">About</a>
                 <a href="login.blade.php" class="nav-item nav-link">Log In</a>
                 <a href="register.blade.php" class="nav-item nav-link">Register</a>
                 <a href="profile.blade.php" class="nav-item nav-link">Profile</a>
+                <?php    if ($role === 'Student'): ?>
                 <a href="counselStud.blade.php" class="nav-item nav-link">Counselling Session</a>
+                <?php endif; ?>
                 <a href="AdminInsight.blade.php" class="nav-item nav-link">Admin Insight</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
@@ -307,7 +308,7 @@
         <div class="owl-carousel header-carousel position-relative">
             <?php foreach ($announcements as $announcement): ?>
                 <div class="owl-carousel-item position-relative">
-                    <img class="img-fluid" src="img/gambar 1.jpeg" alt="Announcement Image">
+                    <img class="img-fluid" src=<?= htmlspecialchars($announcement['pic']) ?> alt="Announcement Image">
                     <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
                         <div class="container">
                             <div class="row justify-content-start">
