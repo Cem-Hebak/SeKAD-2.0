@@ -159,8 +159,13 @@
                 <div style="margin-bottom: 15px;">
                     <label for="poster" style="font-weight: bold; display: block; margin-bottom: 5px;">Event Poster (Optional)</label>
                     <input type="file" id="poster" name="poster" accept="image/*" 
-                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" onchange="handleImageUpload(event)">
                 </div>
+                <div id="preview-container" style="margin-top: 15px; display: none;">
+                    <canvas id="preview-canvas" style="border: 1px solid #ccc; max-width: 100%;"></canvas>
+                    <button onclick="downloadCroppedImage()" style="margin-top: 10px; padding: 8px 12px; border: none; background-color: #007BFF; color: white; border-radius: 4px; cursor: pointer;">Download Cropped Image</button>
+                </div>
+
                 <div style="text-align: right; margin-top: 20px;">
                     <button type="submit" style="background-color: #007BFF; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
                         Submit Event
@@ -222,6 +227,52 @@
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="assets/global.js"></script>
+    <script>
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const img = new Image();
+        const canvas = document.getElementById('preview-canvas');
+        const ctx = canvas.getContext('2d');
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            img.src = e.target.result;
+        };
+
+        img.onload = function() {
+            // Set the canvas size to 1366x768
+            const width = 1366;
+            const height = 768;
+
+            canvas.width = width;
+            canvas.height = height;
+
+            // Calculate the scaling factor to fit the image into the canvas
+            const scale = Math.min(width / img.width, height / img.height);
+            const x = (width - img.width * scale) / 2;
+            const y = (height - img.height * scale) / 2;
+
+            // Draw the image onto the canvas
+            ctx.clearRect(0, 0, width, height);
+            ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+
+            // Show the preview container
+            document.getElementById('preview-container').style.display = 'block';
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    function downloadCroppedImage() {
+        const canvas = document.getElementById('preview-canvas');
+        const link = document.createElement('a');
+        link.download = 'cropped-image.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }
+</script>
 
     <script type="text/javascript">
     function googleTranslateElementInit() {
