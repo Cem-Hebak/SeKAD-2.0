@@ -323,9 +323,9 @@
                     </div>
                 </div>
             <?php endforeach; ?>
-            <?php foreach ($eventann as $eventanns): ?>
+            <!-- <?php foreach ($eventann as $eventanns): ?>
                 <div class="owl-carousel-item position-relative">
-                    <img class="img-fluid" src="img/gambar 1.jpeg" alt="Announcement Image">
+                    <img class="img-fluid" src=<?= htmlspecialchars($eventanns['pic']) ?> alt="Announcement Image">
                     <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
                         <div class="container">
                             <div class="row justify-content-start">
@@ -341,7 +341,7 @@
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
+            <?php endforeach; ?> -->
         </div>
     </div>
     
