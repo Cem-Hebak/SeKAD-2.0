@@ -166,6 +166,9 @@
     } catch (PDOException $e) {
         die("Error fetching announcements: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
     }
+    // Ensure the session variable for name is set
+    $full_name = $_SESSION['name'] ?? 'User'; // Fallback to 'User' if the name is not set
+    $first_name = explode(' ', $full_name)[0]; // Extract the first name
 ?>
 
 
@@ -269,34 +272,49 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="navbar-nav ms-auto p-4 p-lg-0">
+            <div class="navbar-nav ms-auto p-5 p-lg-0">
                 <a href="index.blade.php" class="nav-item nav-link active">Home</a>
-                <a href="login.blade.php" class="nav-item nav-link">Log In</a>
+                <?php    if ($role === 'Staff' || $role === 'Admin'): ?>
                 <a href="register.blade.php" class="nav-item nav-link">Register</a>
-                <a href="profile.blade.php" class="nav-item nav-link">Profile</a>
+                <?php endif; ?>
+                <!-- <a href="profile.blade.php" class="nav-item nav-link">Profile</a> -->
                 <?php    if ($role === 'Student'): ?>
                 <a href="counselStud.blade.php" class="nav-item nav-link">Counselling Session</a>
                 <?php endif; ?>
+                <?php    if ($role === 'Teacher' || $role === 'Staff'): ?>
+                <a href="counselTeach.blade.php" class="nav-item nav-link">Counselling Session</a>
+                <?php endif; ?>
+                <?php    if ($role === 'Admin' || $role === 'Staff'): ?>
                 <a href="AdminInsight.blade.php" class="nav-item nav-link">Admin Insight</a>
+                <?php endif; ?>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
-                        <a href="team.html" class="dropdown-item">Our Team</a>
+                        <?php    if ($role === 'Staff' || $role === 'Teacher' || $role === 'Admin'): ?>
                         <a href="Attendance Analytics.blade.php" class="dropdown-item">Attendance Analytics</a>
+                        <a href="attendanceRecordFiltered.blade.php" class="dropdown-item">Attendance Record Management</a>
+                        <a href="announce.blade.php" class="dropdown-item">Maintenance Announcement Form</a>
+                        <a href="event.blade.php" class="dropdown-item">Event & Cahrity Announcement Form</a>
+                        <?php endif; ?>
+                        <?php    if ($role === 'Student'): ?>
+                        <a href="student_attendance.blade.php" class="dropdown-item">Attendance Record Management</a>
+                        <?php endif; ?>
+                        <a href="attendanbce_rewards.blade.php" class="dropdown-item">Attendance Leaderboards</a>
+                        <?php    if ($role === 'Staff' || $role === 'Admin'): ?>
                         <a href="Teacher Assign.blade.php" class="dropdown-item">Teacher Assign</a>
-                        <a href="Facility_And_Equipment_Booking_Teacher.blade.php" class="dropdown-item">Venue Booking</a>
-                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                        <a href="404.html" class="dropdown-item">404 Page</a>
-                        <a href="login.php" class="dropdown-item">Log In</a>
-                        <a href="register.php" class="dropdown-item">Register</a>
-                        <a href="showCalendar.php" class="dropdown-item">Calendar</a>
+                        <a href="assign-students.blade.php" class="dropdown-item">Student Assign</a>
+                        <?php endif; ?>
+                        <a href="Facility_And_Equipment_Booking_Teacher.blade.php" class="dropdown-item">Venue Bookings</a>
+                        
                         <a href="editProfile.blade.php" class="dropdown-item">Edit Profile</a>
-                        <a href="Facility_And_Equipment_Booking_Student.php" class="dropdown-item">Venue Student</a>
+                        <a href="setting.blade.php" class="dropdown-item">Settings</a>
+
+                        <a href="login.blade.php" class="dropdown-item">Log out</a>
                     </div>
                 </div>
-                <a href="contact.html" class="nav-item nav-link">Contact</a>
+                
             </div>
-            <a href="" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
+            <a href="profile.blade.php" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Hi, <?= htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8') ?><i class="fa fa-arrow-right ms-3"></i></a>
         </div>
     </nav>
     <!-- Navbar End -->
@@ -406,7 +424,7 @@
                         </a>
                     </div>
                 </div>
-                <?php    if ($role === 'Teacher'): ?>
+                <?php    if ($role === 'Teacher' || $role === 'Staff'): ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
                         <a href="counselTeach.blade.php" target="_blank">
