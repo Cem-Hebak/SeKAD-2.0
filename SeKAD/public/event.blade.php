@@ -159,13 +159,8 @@
                 <div style="margin-bottom: 15px;">
                     <label for="poster" style="font-weight: bold; display: block; margin-bottom: 5px;">Event Poster (Optional)</label>
                     <input type="file" id="poster" name="poster" accept="image/*" 
-                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" onchange="handleImageUpload(event)">
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
                 </div>
-                <div id="preview-container" style="margin-top: 15px; display: none;">
-                    <canvas id="preview-canvas" style="border: 1px solid #ccc; max-width: 100%;"></canvas>
-                    <button onclick="downloadCroppedImage()" style="margin-top: 10px; padding: 8px 12px; border: none; background-color: #007BFF; color: white; border-radius: 4px; cursor: pointer;">Download Cropped Image</button>
-                </div>
-
                 <div style="text-align: right; margin-top: 20px;">
                     <button type="submit" style="background-color: #007BFF; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
                         Submit Event

@@ -308,7 +308,12 @@
         <div class="owl-carousel header-carousel position-relative">
             <?php foreach ($announcements as $announcement): ?>
                 <div class="owl-carousel-item position-relative">
-                    <img class="img-fluid" src=<?= htmlspecialchars($announcement['pic']) ?> alt="Announcement Image">
+                <img class="img-fluid" 
+                            src="<?= htmlspecialchars($announcement['pic']) ?>" 
+                            alt="Announcement Image" 
+                            onerror="this.onerror=null; this.src='Sekolah.png';" 
+                            style="width: 1366px; height: 768px; object-fit: cover; max-width: 100%; max-height: 100%; display: block;">
+
                     <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
                         <div class="container">
                             <div class="row justify-content-start">

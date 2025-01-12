@@ -224,6 +224,89 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+    const form = document.getElementById('upload-form');
+    const canvas = document.getElementById('preview-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let croppedImageData = null;
+
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const img = new Image();
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            img.src = e.target.result;
+        };
+
+        img.onload = function() {
+            // Set the canvas size to 1366x768
+            const width = 1366;
+            const height = 768;
+
+            canvas.width = width;
+            canvas.height = height;
+
+            // Calculate the scaling factor to fit the image into the canvas
+            const scale = Math.min(width / img.width, height / img.height);
+            const x = (width - img.width * scale) / 2;
+            const y = (height - img.height * scale) / 2;
+
+            // Draw the image onto the canvas
+            ctx.clearRect(0, 0, width, height);
+            ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+
+            // Convert the canvas content to a Base64 string
+            croppedImageData = canvas.toDataURL('image/jpeg');
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        if (!croppedImageData) {
+            alert('Please upload an image first.');
+            return;
+        }
+
+        // Convert Base64 data to Blob
+        const blob = dataURItoBlob(croppedImageData);
+
+        // Create a FormData object for the POST request
+        const formData = new FormData();
+        formData.append('poster', blob, 'cropped-image.jpg');
+
+        // Submit the form data via fetch
+        fetch('upload.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+
+    // Utility function: Convert Base64 to Blob
+    function dataURItoBlob(dataURI) {
+        const byteString = atob(dataURI.split(',')[1]);
+        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], { type: mimeString });
+    }
+</script>
 </body>
 
 </html>
