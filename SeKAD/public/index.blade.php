@@ -150,6 +150,22 @@
     } catch (PDOException $e) {
         die("Error fetching attendance data: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
     }
+    try {
+        $query = "SELECT id, name AS Title, description AS Description, date_of_reporting AS start, date_of_repair_completion AS end, picture AS pic FROM maintenance_reports ORDER BY created_at DESC LIMIT 2";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+        $announcements = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        die("Error fetching announcements: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
+    }
+    try {
+        $query = "SELECT id, event_name AS Title, description AS Description, start_date AS startdate, finish_date AS finishdate, start_time AS start, finish_time AS end, poster_path AS pic FROM events ORDER BY created_at DESC LIMIT 2";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+        $eventann = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        die("Error fetching announcements: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
+    }
 ?>
 
 
@@ -287,19 +303,39 @@
 
     <!-- Carousel Start -->
      
-    <!-- <div class="container-fluid p-0 mb-5">
+    <div class="container-fluid p-0 mb-5">
         <div class="owl-carousel header-carousel position-relative">
             <?php foreach ($announcements as $announcement): ?>
                 <div class="owl-carousel-item position-relative">
-                    <img class="img-fluid" src="img/carousel-placeholder.jpg" alt="Announcement Image">
+                    <img class="img-fluid" src="img/gambar 1.jpeg" alt="Announcement Image">
                     <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
                         <div class="container">
                             <div class="row justify-content-start">
                                 <div class="col-sm-10 col-lg-8">
-                                    <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Announcement</h5>
-                                    <h1 class="display-3 text-white animated slideInDown"><?= htmlspecialchars($announcement['Title']) ?></h1>
+                                    <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Facility Maintenance Announcement</h5>
+                                    <h1 class="display-3 text-white animated slideInDown">Maintenance</h1>
                                     <p class="fs-5 text-white mb-4 pb-2"><?= htmlspecialchars($announcement['Description']) ?></p>
-                                    <a href="#" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
+                                    <h1 class="display-3 text-white animated slideInDown"><?= htmlspecialchars($announcement['start']) ?>   To   <?= htmlspecialchars($announcement['end']) ?></h1>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+            <?php foreach ($eventann as $eventanns): ?>
+                <div class="owl-carousel-item position-relative">
+                    <img class="img-fluid" src="img/gambar 1.jpeg" alt="Announcement Image">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(24, 29, 56, .7);">
+                        <div class="container">
+                            <div class="row justify-content-start">
+                                <div class="col-sm-10 col-lg-8">
+                                    <h5 class="text-primary text-uppercase mb-3 animated slideInDown">Event And Charity Announcement</h5>
+                                    <h1 class="display-3 text-white animated slideInDown"><?= htmlspecialchars($eventanns['Title']) ?></h1>
+                                    <p class="fs-5 text-white mb-4 pb-2"><?= htmlspecialchars($eventanns['Description']) ?></p>
+                                    <h1 class="display-3 text-white animated slideInDown"><?= htmlspecialchars($eventanns['startdate']) ?>   Until   <?= htmlspecialchars($eventanns['finishdate']) ?></h1>
+                                    <h1 class="display-3 text-white animated slideInDown"><?= htmlspecialchars($eventanns['start']) ?>   To   <?= htmlspecialchars($eventanns['end']) ?></h1>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -307,9 +343,10 @@
                 </div>
             <?php endforeach; ?>
         </div>
-    </div> from database nanti
-     -->
-    <div class="container-fluid p-0 mb-5">
+    </div>
+    
+     
+    <!-- <div class="container-fluid p-0 mb-5">
         <div class="owl-carousel header-carousel position-relative">
             <div class="owl-carousel-item position-relative">
                 <img class="img-fluid" src="img/carousel-2.jpg" alt="">
@@ -344,7 +381,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- Carousel End -->
 
     <!-- <a href="https://www.google.com" target="_blank"> Link to the first page -->
@@ -507,7 +544,7 @@
                 <?php endif; ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
-                        <a href="https://www.google.com" target="_blank">
+                        <a href="settings.blade.php" target="_blank">
                         <div class="p-4">
                             <i class="fa fa-3x fa-cog text-primary mb-4"></i>
                             <h5 class="mb-3">Settings</h5>

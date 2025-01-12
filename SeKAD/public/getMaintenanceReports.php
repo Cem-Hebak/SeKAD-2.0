@@ -1,20 +1,27 @@
 <?php
-header('Content-Type: application/json');
+// Database connection
+$host = "localhost";
+$username = "root";
+$password = "";
+$dbname = "your_database_name";
 
-try {
-    $pdo = new PDO("mysql:host=localhost;dbname=maintenance", "root", "");
+$conn = new mysqli($host, $username, $password, $dbname);
 
-    $query = $pdo->prepare("
-        SELECT id, name, date_of_reporting, date_of_repair_completion, picture, description
-        FROM maintenance_reports
-        ORDER BY created_at DESC
-        LIMIT 2
-    ");
-    $query->execute();
-
-    $reports = $query->fetchAll(PDO::FETCH_ASSOC);
-
-    echo json_encode($reports);
-} catch (Exception $e) {
-    echo json_encode(['error' => 'Unable to fetch reports: ' . $e->getMessage()]);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
+
+// Fetch the two latest maintenance reports
+$sql = "SELECT name, date_of_reporting, date_of_repair_completion, description FROM maintenance_reports ORDER BY created_at DESC LIMIT 2";
+$result = $conn->query($sql);
+
+$reports = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $reports[] = $row;
+    }
+}
+
+$conn->close();
+?>
