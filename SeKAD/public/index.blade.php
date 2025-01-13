@@ -292,12 +292,12 @@
                     <div class="dropdown-menu fade-down m-0">
                         <?php    if ($role === 'Staff' || $role === 'Teacher' || $role === 'Admin'): ?>
                         <a href="Attendance Analytics.blade.php" class="dropdown-item">Attendance Analytics</a>
-                        <a href="attendanceRecordFiltered.blade.php" class="dropdown-item">Attendance Record Management</a>
-                        <a href="announce.blade.php" class="dropdown-item">Maintenance Announcement Form</a>
-                        <a href="event.blade.php" class="dropdown-item">Event & Cahrity Announcement Form</a>
+                        <a href="attendanceRecordFiltered.blade.php" class="dropdown-item">Attendance Record <br> Management</a>
+                        <a href="announce.blade.php" class="dropdown-item">Maintenance Announcement <br> Form</a>
+                        <a href="event.blade.php" class="dropdown-item">Event & Charity <br> Announcement Form</a>
                         <?php endif; ?>
                         <?php    if ($role === 'Student'): ?>
-                        <a href="student_attendance.blade.php" class="dropdown-item">Attendance Record Management</a>
+                        <a href="student_attendance.blade.php" class="dropdown-item">Attendance Record <br> Management</a>
                         <?php endif; ?>
                         <a href="attendance_rewards.blade.php" class="dropdown-item">Attendance Leaderboards</a>
                         <?php    if ($role === 'Staff' || $role === 'Admin'): ?>
@@ -472,6 +472,17 @@
                             <i class="fa fa-3x fa-chalkboard text-primary mb-4"></i>
                             <h5 class="mb-3">Teacher Class Management</h5>
                             <p>Assign a teachers class here</p>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3">
+                        <a href="Approve_Booking.blade.php" target="_blank">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-clipboard text-primary mb-4"></i>
+                            <h5 class="mb-3">Facility & Equipment Management</h5>
+                            <p> Manage Facility and Equipment here !</p>
                         </div>
                         </a>
                     </div>

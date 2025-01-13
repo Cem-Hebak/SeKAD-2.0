@@ -107,16 +107,16 @@ $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
                 <a href="AdminInsight.blade.php" class="nav-item nav-link">Admin Insight</a>
                 <?php endif; ?>
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-down m-0">
                         <?php    if ($role === 'Staff' || $role === 'Teacher' || $role === 'Admin'): ?>
                         <a href="Attendance Analytics.blade.php" class="dropdown-item">Attendance Analytics</a>
-                        <a href="attendanceRecordFiltered.blade.php" class="dropdown-item">Attendance Record Management</a>
-                        <a href="announce.blade.php" class="dropdown-item">Maintenance Announcement Form</a>
-                        <a href="event.blade.php" class="dropdown-item">Event & Cahrity Announcement Form</a>
+                        <a href="attendanceRecordFiltered.blade.php" class="dropdown-item">Attendance Record <br> Management</a>
+                        <a href="announce.blade.php" class="dropdown-item">Maintenance Announcement <br> Form</a>
+                        <a href="event.blade.php" class="dropdown-item">Event & Charity <br> Announcement Form</a>
                         <?php endif; ?>
                         <?php    if ($role === 'Student'): ?>
-                        <a href="student_attendance.blade.php" class="dropdown-item">Attendance Record Management</a>
+                        <a href="student_attendance.blade.php" class="dropdown-item">Attendance Record <br> Management</a>
                         <?php endif; ?>
                         <a href="attendance_rewards.blade.php" class="dropdown-item">Attendance Leaderboards</a>
                         <?php    if ($role === 'Staff' || $role === 'Admin'): ?>
