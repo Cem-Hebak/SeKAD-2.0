@@ -140,6 +140,8 @@ $conn->close();
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
+    <link href="css/calendar.css" rel="stylesheet">
+
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
 </head>

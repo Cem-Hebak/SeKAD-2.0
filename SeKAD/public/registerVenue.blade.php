@@ -121,8 +121,8 @@ include('db_connection.php'); // Include database connection
             <label for="venue_picture">Venue Picture:</label>
             <input type="file" id="venue_picture" name="venue_picture" accept=".jpg, .jpeg, .png" required>
 
-            <label for="capacity">Capacity:</label>
-            <input type="number" id="capacity" name="capacity" min="1" placeholder="Enter maximum capacity" required>
+            <!-- <label for="capacity">Capacity:</label>
+            <input type="number" id="capacity" name="capacity" min="1" placeholder="Enter maximum capacity" required> -->
         </div>
 
         <!-- Facilities Section -->

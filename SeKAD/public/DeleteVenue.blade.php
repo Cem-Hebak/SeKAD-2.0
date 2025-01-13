@@ -2,6 +2,8 @@
 session_start(); // Start the session
 include('db_connection.php'); // Include database connection
 
+$full_name = $_SESSION['name'] ?? 'User'; // Fallback to 'User' if the name is not set
+$first_name = explode(' ', $full_name)[0]; 
     
     // Retrieve user data from the session
     $name = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8');
