@@ -16,6 +16,7 @@ try {
             venue.venue_name 
         FROM booking
         JOIN venue ON booking.venue_id = venue.id
+        WHERE booking.status = 1
     ";
 
     // Add condition for venue filter if applicable

@@ -57,9 +57,12 @@ $bookings = $bookingStmt->fetchAll(PDO::FETCH_ASSOC);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'], $_POST['status'])) {
     $bookingId = intval($_POST['booking_id']);
     $status = intval($_POST['status']);
-    $updateQuery = "UPDATE bookings SET status = :status WHERE id = :id";
+
+    $updateQuery = "UPDATE booking SET status = :status WHERE id = :id";
     $updateStmt = $pdo->prepare($updateQuery);
+
     $updateStmt->execute([':status' => $status, ':id' => $bookingId]);
+    
     echo json_encode(['success' => true]);
     exit;
 }
