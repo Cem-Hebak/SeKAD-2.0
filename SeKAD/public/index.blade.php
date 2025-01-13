@@ -428,7 +428,7 @@
                         </a>
                     </div>
                 </div>
-                <?php    if ($role === 'Teacher' || $role === 'Staff'): ?>
+                <?php    if ($role === 'Teacher' || $role === 'Staff'||  $role === 'Admin'): ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
                         <a href="counselTeach.blade.php" target="_blank">
@@ -528,7 +528,7 @@
                     </div>
                 </div>
                 <?php endif; ?>
-                <?php    if ($role === 'Teacher' || $role === 'Staff'): ?>
+                <?php    if ($role === 'Teacher' || $role === 'Staff' ||  $role === 'Admin'): ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
                         <a href="attendanceRecordFiltered.blade.php" target="_blank">
@@ -567,7 +567,7 @@
                     </div>
                 </div>
                 <?php endif; ?>
-                <?php    if ($role === 'Staff' || $role === 'Teacher'): ?>
+                <?php    if ($role === 'Staff' || $role === 'Teacher'||  $role === 'Admin'): ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
                         <a href="announce.blade.php" target="_blank">
@@ -580,7 +580,7 @@
                     </div>
                 </div>
                 <?php endif; ?>
-                <?php    if ($role === 'Staff' || $role === 'Teacher'): ?>
+                <?php    if ($role === 'Staff' || $role === 'Teacher'||  $role === 'Admin'): ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
                         <a href="event.blade.php" target="_blank">
