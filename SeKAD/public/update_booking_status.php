@@ -11,24 +11,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
 
     try {
-        // Create PDO instance
-        $pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
+        // Create a PDO instance
+        $pdo = new PDO("mysql:host=$dbHost;dbname=$dbName;charset=utf8mb4", $dbUser, $dbPass);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Get input data from POST request
-        $bookingId = $_POST['booking_id'] ?? null;
-        $status = $_POST['status'] ?? null;
+        $bookingId = filter_input(INPUT_POST, 'booking_id', FILTER_VALIDATE_INT);
+        $status = filter_input(INPUT_POST, 'status', FILTER_VALIDATE_INT);
 
         // Validate inputs
-        if ($bookingId === null || $status === null) {
+        if ($bookingId === null || $bookingId === false || $status === null || $status === false) {
             echo json_encode(['success' => false, 'error' => 'Invalid input data.']);
             exit;
         }
 
-        // Handle deletion if status is 4
-        if ((int) $status === 4) {
-            $stmt = $pdo->prepare("DELETE FROM booking WHERE booking_id = :booking_id");
-            $stmt->bindParam(':booking_id', $bookingId, PDO::PARAM_INT);
+        // Check if status is for deletion
+        if ($status === 4) {
+            $stmt = $pdo->prepare("DELETE FROM booking WHERE id = :id");
+            $stmt->bindParam(':id', $bookingId, PDO::PARAM_INT);
 
             if ($stmt->execute()) {
                 echo json_encode(['success' => true, 'message' => 'Booking deleted successfully.']);
@@ -39,9 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Handle status updates
-        $stmt = $pdo->prepare("UPDATE booking SET status = :status WHERE booking_id = :booking_id");
+        $stmt = $pdo->prepare("UPDATE booking SET status = :status WHERE id = :id");
         $stmt->bindParam(':status', $status, PDO::PARAM_INT);
-        $stmt->bindParam(':booking_id', $bookingId, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $bookingId, PDO::PARAM_INT);
 
         if ($stmt->execute()) {
             echo json_encode(['success' => true, 'message' => 'Status updated successfully.']);
