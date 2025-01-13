@@ -221,7 +221,7 @@
     </div>
     <!-- Header End -->
 <!-- Venue Booking Form Start -->
-<?php    if ($role === 'Staff' || $role === 'Admin' ): ?>
+<?php    if ($role === 'Staff' || $role === 'Admin' || $role === 'Teacher' ): ?>
     
 <div class="container2">
     <h4 style="margin-bottom: 20px; font-family: Arial, sans-serif;">Venue Booking Form</h4>
