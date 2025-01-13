@@ -1,3 +1,12 @@
 {
-    "rewrites": [{ "source": "/(.*)", "destination": "/index.blaade.php" }]
-  }
+    "routes": [
+        {
+            "src": "/",
+            "dest": "/"
+        },
+        {
+            "src": "/test",
+            "dest": "/"
+        }
+    ]
+}
