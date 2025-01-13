@@ -21,7 +21,7 @@ try {
 
     // Add condition for venue filter if applicable
     if ($venueType) {
-        $query .= " WHERE venue_type = :venueType";
+        $query .= " AND venue.venue_type = :venueType";
     }
 
     $stmt = $pdo->prepare($query);
