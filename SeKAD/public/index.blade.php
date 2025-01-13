@@ -534,7 +534,7 @@
                         <a href="attendanceRecordFiltered.blade.php" target="_blank">
                         <div class="p-4">
                             <i class="fa fa-3x fa-list text-primary mb-4"></i>
-                            <h5 class="mb-3">Attendance Record Management</h5>
+                            <h5 class="mb-3">Absence Record Management</h5>
                             <p>Approve Or Decline Student Medical Certificate / Other Reason for student absence</p>
                         </div>
                         </a>
@@ -547,14 +547,26 @@
                         <a href="student_attendance.blade.php" target="_blank">
                         <div class="p-4">
                             <i class="fa fa-3x fa-list text-primary mb-4"></i>
-                            <h5 class="mb-3">Attendance Record Management</h5>
+                            <h5 class="mb-3">Absence Record Management</h5>
                             <p>Upload your Medical Certificate or Other Certificate for your absence</p>
                         </div>
                         </a>
                     </div>
                 </div>
                 <?php endif; ?>
-                
+                <?php    if ($role === 'Staff' || $role === 'Teacher'||  $role === 'Admin'): ?>
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3">
+                        <a href="attendanceRecord1.blade.php" target="_blank">
+                        <div class="p-4">
+                            <i class="fa fa-3x fa-list text-primary mb-4"></i>
+                            <h5 class="mb-3">Attendance Record Management</h5>
+                            <p>Sumbit student attendance management here!</p>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+                <?php endif; ?>
                 <?php    if ($role === 'Staff' || $role === 'Teacher'): ?>
                 <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="service-item text-center pt-3">
