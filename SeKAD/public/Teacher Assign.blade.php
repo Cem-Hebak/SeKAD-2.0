@@ -229,10 +229,10 @@ $role = htmlspecialchars($_SESSION['role'], ENT_QUOTES, 'UTF-8');
 
                                         // Form 5
                                         
-                                        <option value='5 Pendeta' " . ($currentClass === '1 Pendeta' ? "selected" : "") . ">5 Pendeta</option>
-                                        <option value='5 Cendekiawan' " . ($currentClass === '1 Cendekiawan' ? "selected" : "") . ">5 Cendekiawan</option>
-                                        <option value='5 Intelek' " . ($currentClass === '1 Intelek' ? "selected" : "") . ">5 Intelek</option>
-                                        <option value='5 Sarjana' " . ($currentClass === '1 Sarjana' ? "selected" : "") . ">5 Sarjana</option>
+                                        <option value='5 Pendeta' " . ($currentClass === '5 Pendeta' ? "selected" : "") . ">5 Pendeta</option>
+                                        <option value='5 Cendekiawan' " . ($currentClass === '5 Cendekiawan' ? "selected" : "") . ">5 Cendekiawan</option>
+                                        <option value='5 Intelek' " . ($currentClass === '5 Intelek' ? "selected" : "") . ">5 Intelek</option>
+                                        <option value='5 Sarjana' " . ($currentClass === '5 Sarjana' ? "selected" : "") . ">5 Sarjana</option>
                                         
                                     </select>
                                 </form>
